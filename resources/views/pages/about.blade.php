@@ -4,7 +4,7 @@
 
 @section('content')
   <!-- Start Hero Section -->
-  <section class="cs_page_heading cs_bg_filed cs_center text-center cs_heading_bg" data-src="{{ asset('assets/img/page_heading_bg.jpg') }}">
+  <section class="cs_page_heading cs_bg_filed cs_center text-center cs_heading_bg" data-src="{{ asset('img/page_heading_bg.jpg') }}">
     <div class="container">
       <h1 class="cs_fs_51 cs_white_color cs_mb_11">About Us</h1>
       <ol class="breadcrumb">
@@ -18,11 +18,11 @@
   <!-- Start About Section -->
   <section class="cs_shape_wrap">
     <div class="cs_height_140 cs_height_lg_70"></div>
-    <div class="cs_shape cs_shape_position_1"><img src="{{ asset('assets/img/nature/about_shape_1.svg') }}" alt=""></div>
+    <div class="cs_shape cs_shape_position_1"><img src="{{ asset('img/nature/about_shape_1.svg') }}" alt=""></div>
     <div class="container">
       <div class="row align-items-center cs_gap_y_50">
         <div class="col-lg-6">
-          <a href="https://www.youtube.com/embed/rRid6GCJtgc" class="cs_video_block cs_style_1 cs_bg_filed cs_video_open cs_center" data-src="{{ asset('assets/img/nature/video_block_bg.jpg') }}">
+          <a href="https://www.youtube.com/embed/rRid6GCJtgc" class="cs_video_block cs_style_1 cs_bg_filed cs_video_open cs_center" data-src="{{ asset('img/nature/video_block_bg.jpg') }}">
             <span class="cs_player_btn cs_white_color">
               <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M35 0C15.7004 0 0 15.7004 0 35C0 54.2996 15.7004 70 35 70C54.2996 70 70 54.2996 70 35C70 15.7004 54.2996 0 35 0ZM35 64.1667C18.9175 64.1667 5.83333 51.0825 5.83333 35C5.83333 18.9175 18.9175 5.83333 35 5.83333C51.0825 5.83333 64.1667 18.9175 64.1667 35C64.1667 51.0825 51.0825 64.1667 35 64.1667ZM23.3333 51.4704L52.6167 35L23.3333 18.5296V51.4733V51.4704ZM29.1667 28.5017L40.7167 35L29.1667 41.4983V28.5017Z" fill="currentColor"/>
@@ -90,7 +90,7 @@
         <div class="col-xl-3 col-md-6">
           <div class="cs_iconbox cs_style_6 cs_shadow_1 text-center cs_white_bg">
             <div class="cs_iconbox_icon cs_accent_bg cs_mb_30 cs_center">
-              <img src="{{ asset('assets/img/others/feature_icon_1.svg') }}" alt="">
+              <img src="{{ asset('img/others/feature_icon_1.svg') }}" alt="">
             </div>
             <h3 class="cs_iconbox_title cs_fs_28 cs_semibold cs_mb_24">Environmental Education</h3>
             <p class="mb-0">We provide educational resources, articles, and guides on various environmental topics to raise awareness and empower individuals to make informed choices.</p>
@@ -99,7 +99,7 @@
         <div class="col-xl-3 col-md-6">
           <div class="cs_iconbox cs_style_6 cs_shadow_1 text-center cs_white_bg">
             <div class="cs_iconbox_icon cs_accent_bg cs_mb_30 cs_center">
-              <img src="{{ asset('assets/img/others/feature_icon_2.svg') }}" alt="">
+              <img src="{{ asset('img/others/feature_icon_2.svg') }}" alt="">
             </div>
             <h3 class="cs_iconbox_title cs_fs_28 cs_semibold cs_mb_24">Advocacy and <br>Action</h3>
             <p class="mb-0">We lead and support environmental advocacy campaigns and initiatives aimed at addressing pressing issues and inspiring positive change.</p>
@@ -108,7 +108,7 @@
         <div class="col-xl-3 col-md-6">
           <div class="cs_iconbox cs_style_6 cs_shadow_1 text-center cs_white_bg">
             <div class="cs_iconbox_icon cs_accent_bg cs_mb_30 cs_center">
-              <img src="{{ asset('assets/img/others/feature_icon_3.svg') }}" alt="">
+              <img src="{{ asset('img/others/feature_icon_3.svg') }}" alt="">
             </div>
             <h3 class="cs_iconbox_title cs_fs_28 cs_semibold cs_mb_24">Community <br>Building</h3>
             <p class="mb-0">We foster a community of environmentally conscious individuals, encouraging engagement, collaboration, and the sharing of ideas and initiatives.</p>
@@ -117,7 +117,7 @@
         <div class="col-xl-3 col-md-6">
           <div class="cs_iconbox cs_style_6 cs_shadow_1 text-center cs_white_bg">
             <div class="cs_iconbox_icon cs_accent_bg cs_mb_30 cs_center">
-              <img src="{{ asset('assets/img/others/feature_icon_4.svg') }}" alt="">
+              <img src="{{ asset('img/others/feature_icon_4.svg') }}" alt="">
             </div>
             <h3 class="cs_iconbox_title cs_fs_28 cs_semibold cs_mb_24">Promoting Sustainability</h3>
             <p class="mb-0">We promote sustainable living practices, eco-friendly products, and actionable tips to help individuals and communities reduce their environmental footprint.</p>
@@ -191,11 +191,11 @@
         <div class="col-lg-6">
           <div class="row cs_gap_y_30">
             <div class="col-sm-6">
-              <img src="{{ asset('assets/img/nature/about_img_1.jpg') }}" alt="" class="w-100">
+              <img src="{{ asset('img/nature/about_img_1.jpg') }}" alt="" class="w-100">
             </div>
             <div class="col-sm-6">
               <div class="cs_height_30 cs_height_lg_0"></div>
-              <img src="{{ asset('assets/img/nature/about_img_2.jpg') }}" alt="" class="w-100">
+              <img src="{{ asset('img/nature/about_img_2.jpg') }}" alt="" class="w-100">
             </div>
           </div>
         </div>

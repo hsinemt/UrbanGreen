@@ -586,3 +586,56 @@
   document.addEventListener('mousemove', cursorMovingAnimation);
   // End Cursor Pointer
 })(jQuery); // End of use strict
+
+document.addEventListener('DOMContentLoaded', function() {
+    const loginBtn = document.getElementById('loginBtn');
+    const authModal = document.getElementById('authModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const showSignup = document.getElementById('showSignup');
+    const showLogin = document.getElementById('showLogin');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function() {
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    function closeAuthModal() {
+        authModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    if (closeModal) {
+        closeModal.addEventListener('click', closeAuthModal);
+    }
+
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', closeAuthModal);
+    }
+
+    if (showSignup) {
+        showSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginForm.classList.add('cs_hidden');
+            signupForm.classList.remove('cs_hidden');
+        });
+    }
+
+    if (showLogin) {
+        showLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupForm.classList.add('cs_hidden');
+            loginForm.classList.remove('cs_hidden');
+        });
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && authModal.classList.contains('active')) {
+            closeAuthModal();
+        }
+    });
+});
