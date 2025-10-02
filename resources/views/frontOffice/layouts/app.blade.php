@@ -5,6 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Laralink">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('frontOffice/img/favicon.png') }}">
     <title>@yield('title', 'Ecozone')</title>
 
@@ -18,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('frontOffice/css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('frontOffice/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontOffice/css/loginstyle.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('frontOffice/css/auth-styles.css') }}">
 
     @stack('styles')
 </head>
