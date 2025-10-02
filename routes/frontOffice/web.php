@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GreenSpaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,3 +117,14 @@ Route::get('/causes/ocean-life', function () {
 Route::get('/causes/recycling', function () {
     return view('frontOffice.pages.causes.recycling');
 })->name('causes.recycling');
+
+// GreenSpaces CRUD page (UI)
+Route::get('/greenspaces', function () {
+    return view('frontOffice.pages.greenspaces');
+})->name('greenspaces.page');
+
+Route::get('/green-spaces', [GreenSpaceController::class, 'index']);
+Route::post('/green-spaces', [GreenSpaceController::class, 'store']);
+Route::get('/green-spaces/{id}', [GreenSpaceController::class, 'show']);
+Route::put('/green-spaces/{id}', [GreenSpaceController::class, 'update']);
+Route::delete('/green-spaces/{id}', [GreenSpaceController::class, 'destroy']);
