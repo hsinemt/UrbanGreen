@@ -72,8 +72,8 @@
         <div class="cs_footer_widget">
           <h2 class="cs_footer_widget_title cs_fs_21 cs_white_color cs_semibold cs_mb_32">Contact Info</h2>
           <ul class="cs_footer_widget_menu">
-            <li>1321 Gateway Atlantic City, Florida (FL), 54012</li>
-            <li><a href="tel:+444547800112">+44 454 7800 112</a></li>
+            <li>25 Nahli, Ariana, Tunisia</li>
+            <li><a href="tel:+216 71 325 146">+216 71 325 146</a></li>
             <li><a href="mailto:infodesk@ecozone.com">infodesk@ecozone.com</a></li>
           </ul>
         </div>
@@ -83,7 +83,7 @@
   <div class="cs_footer_bottom cs_white_color">
     <div class="container">
       <div class="cs_footer_bottom_in">
-        <p class="cs_copyright mb-0">All Right Reserved Copyright © 2024 <a href="#">Laralink</a></p>
+        <p class="cs_copyright mb-0">All Right Reserved Copyright © 2025 <a href="#">Hunters</a></p>
         <ul class="cs_footer_widget_menu">
           <li><a href="#">Privacy & Cookie Policy</a></li>
         </ul>
