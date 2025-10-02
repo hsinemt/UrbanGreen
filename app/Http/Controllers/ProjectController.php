@@ -36,7 +36,21 @@ class ProjectController extends Controller
         }
 
         $projects = $query->get();
-        return view('frontOffice.pages.projects.show', compact('projects'));
+        
+        // Statistics
+        $stats = [
+            'total' => Projet::count(),
+            'by_status' => Projet::selectRaw('status, COUNT(*) as count')
+                ->groupBy('status')
+                ->pluck('count', 'status')
+                ->toArray(),
+            'total_budget' => Projet::sum('budget'),
+            'avg_progress' => Projet::avg('progress_percentage'),
+            'completed_count' => Projet::where('status', 'completed')->count(),
+            'in_progress_count' => Projet::where('status', 'in_progress')->count(),
+        ];
+        
+        return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
     }
 
     /**
@@ -64,8 +78,16 @@ class ProjectController extends Controller
      */
     public function show(Projet $projet)
     {
-        // For now, show redirects to index since the design uses a list page
-        return redirect()->route('projects.index');
+        // Load relationships
+        $projet->load(['risks', 'issues']);
+        
+        // Get related projects (same status)
+        $relatedProjects = Projet::where('id', '!=', $projet->id)
+            ->where('status', $projet->status)
+            ->limit(3)
+            ->get();
+
+        return view('frontOffice.pages.projects.details', compact('projet', 'relatedProjects'));
     }
 
     /**

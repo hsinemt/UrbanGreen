@@ -18,6 +18,42 @@
       <div class="cs_notice cs_style_1 cs_green_bg cs_white_color cs_mb_30">{{ session('success') }}</div>
     @endif
 
+    <!-- Statistics Cards -->
+    <div class="row cs_mb_30">
+      <div class="col-lg-3 col-md-6 cs_mb_20">
+        <div class="cs_card cs_style_1 cs_white_bg" style="border-left: 4px solid #28a745;">
+          <div class="cs_card_in text-center">
+            <h3 class="cs_fs_32 cs_semibold cs_accent_color cs_mb_5">{{ $stats['total'] }}</h3>
+            <p class="cs_mb_0">Total Projects</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 cs_mb_20">
+        <div class="cs_card cs_style_1 cs_white_bg" style="border-left: 4px solid #f39c12;">
+          <div class="cs_card_in text-center">
+            <h3 class="cs_fs_32 cs_semibold cs_accent_color cs_mb_5">{{ $stats['in_progress_count'] }}</h3>
+            <p class="cs_mb_0">In Progress</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 cs_mb_20">
+        <div class="cs_card cs_style_1 cs_white_bg" style="border-left: 4px solid #28a745;">
+          <div class="cs_card_in text-center">
+            <h3 class="cs_fs_32 cs_semibold cs_accent_color cs_mb_5">{{ $stats['completed_count'] }}</h3>
+            <p class="cs_mb_0">Completed</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 cs_mb_20">
+        <div class="cs_card cs_style_1 cs_white_bg" style="border-left: 4px solid #007bff;">
+          <div class="cs_card_in text-center">
+            <h3 class="cs_fs_32 cs_semibold cs_accent_color cs_mb_5">{{ number_format($stats['total_budget'], 0) }} DT</h3>
+            <p class="cs_mb_0">Total Budget</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center cs_mb_30">
       <h2 class="cs_fs_38 cs_semibold mb-0">Project List</h2>
       <a href="{{ route('projects.create') }}" class="cs_btn cs_style_1">
@@ -91,8 +127,8 @@
                 <h3 class="cs_fs_21 cs_semibold mb-0">Budget : {{ number_format((float) $projet->budget, 0) }} DT</h3>
               </div>
               <div class="d-flex gap-2">
-                <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
-                  Edit
+                <a href="{{ route('projects.show', $projet) }}" class="cs_btn cs_style_1">
+                  View Details
                   <i>
                     <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -101,6 +137,9 @@
                       <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                   </i>
+                </a>
+                <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
+                  Edit
                 </a>
                 <form action="{{ route('projects.destroy', $projet) }}" method="POST" onsubmit="return confirm('Are you sure to delete this project?')">
                   @csrf

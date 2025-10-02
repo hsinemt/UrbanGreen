@@ -16,14 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('status');
-            $table->string('slug')->unique();
-            $table->unsignedTinyInteger('priority')->default(3); // 1=high,5=low
-            $table->enum('visibility', ['public', 'private'])->default('public');
-            $table->json('tags')->nullable();
             $table->date('start_date');
-            $table->date('end_date')->nullable();
+            $table->date('end_date');
             $table->integer('progress_percentage');
-            $table->decimal('budget', 12, 2);
+            $table->float('budget');
             $table->timestamps();
         });
     }

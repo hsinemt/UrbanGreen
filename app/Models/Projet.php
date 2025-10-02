@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
 
 class Projet extends Model
 {
@@ -17,10 +16,6 @@ class Projet extends Model
         'name',
         'description',
         'status',
-        'slug',
-        'priority',
-        'visibility',
-        'tags',
         'start_date',
         'end_date',
         'progress_percentage',
@@ -35,7 +30,6 @@ class Projet extends Model
         'end_date' => 'date',
         'progress_percentage' => 'integer',
         'budget' => 'decimal:2',
-        'tags' => 'array',
     ];
 
     /**
@@ -62,40 +56,16 @@ class Projet extends Model
     // Relations
     public function risks()
     {
-        return $this->hasMany(\App\Models\ProjectRisk::class);
+        return $this->hasMany(\App\Models\ProjectRisk::class, 'projet_id');
     }
 
     public function issues()
     {
-        return $this->hasMany(\App\Models\ProjectIssue::class);
+        return $this->hasMany(\App\Models\ProjectIssue::class, 'projet_id');
     }
 
     public function statusChanges()
     {
-        return $this->hasMany(\App\Models\ProjectStatusChange::class);
-    }
-
-    // Hooks
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function (Projet $projet) {
-            if (empty($projet->slug)) {
-                $projet->slug = Str::slug(Str::limit($projet->name, 50, ''));
-            }
-        });
-    }
-
-    // Workflow guard
-    public static function canTransition(string $from, string $to): bool
-    {
-        $allowed = [
-            self::STATUS_PLANNED => [self::STATUS_IN_PROGRESS, self::STATUS_CANCELLED],
-            self::STATUS_IN_PROGRESS => [self::STATUS_COMPLETED, self::STATUS_CANCELLED],
-            self::STATUS_COMPLETED => [],
-            self::STATUS_CANCELLED => [],
-        ];
-        return in_array($to, $allowed[$from] ?? [], true);
+        return $this->hasMany(\App\Models\ProjectStatusChange::class, 'projet_id');
     }
 }
