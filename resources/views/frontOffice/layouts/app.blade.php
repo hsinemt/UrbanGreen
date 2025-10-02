@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('frontOffice/css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('frontOffice/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontOffice/css/loginstyle.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontOffice/css/donations.css') }}">
 
 
     @stack('styles')

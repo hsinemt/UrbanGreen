@@ -116,3 +116,6 @@ Route::get('/causes/ocean-life', function () {
 Route::get('/causes/recycling', function () {
     return view('frontOffice.pages.causes.recycling');
 })->name('causes.recycling');
+
+// Donations CRUD for Front Office
+Route::resource('donations', App\Http\Controllers\DonationController::class);

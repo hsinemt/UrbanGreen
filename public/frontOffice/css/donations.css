@@ -1,0 +1,709 @@
+/* Styles spécifiques pour les pages de donations */
+
+/* Statut des donations */
+.cs_status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.cs_status.cs_success {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+/* Boîte d'information pour les statistiques */
+.cs_donation_stats {
+  padding: 40px;
+  border-radius: 15px;
+  position: sticky;
+  top: 20px;
+}
+
+.cs_stat_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: rgba(45, 152, 218, 0.05);
+  margin-bottom: 20px;
+}
+
+.cs_stat_number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.cs_stat_label {
+  font-size: 14px;
+  color: rgba(45, 152, 218, 0.8);
+  font-weight: 500;
+}
+
+/* Actions des tableaux */
+.cs_table_action {
+  display: flex;
+  gap: 5px;
+}
+
+.cs_btn.cs_style_2 {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.cs_btn.cs_style_3 {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.cs_btn.cs_style_4 {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.cs_btn.cs_style_2:hover {
+  background-color: #545b62;
+  border-color: #4e5556;
+}
+
+.cs_btn.cs_style_3:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+}
+
+.cs_btn.cs_style_4:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* Tableaux stylisés */
+.cs_table_wrap {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-top: 30px;
+}
+
+.cs_table.cs_style_1 {
+  margin-bottom: 0;
+  border: none;
+}
+
+.cs_table.cs_style_1 thead th {
+  background-color: rgba(45, 152, 218, 0.1);
+  color: rgba(45, 152, 218, 1);
+  font-weight: 600;
+  border: none;
+  padding: 20px 15px;
+  font-size: 14px;
+}
+
+.cs_table.cs_style_1 tbody td {
+  padding: 20px 15px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  vertical-align: middle;
+}
+
+.cs_table.cs_style_1 tbody tr:hover {
+  background-color: rgba(45, 152, 218, 0.02);
+}
+
+/* Empty state */
+.cs_empty_state {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.cs_empty_state_icon img {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+/* Informations box */
+.cs_info_box {
+  background-color: rgba(45, 152, 218, 0.03);
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.cs_info_list {
+  margin-top: 20px;
+}
+
+.cs_info_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cs_info_item:last-child {
+  border-bottom: none;
+}
+
+.cs_info_label {
+  font-weight: 500;
+  color: rgba(45, 152, 218, 0.8);
+}
+
+.cs_info_value {
+  font-weight: 600;
+}
+
+/* Box d'impact */
+.cs_impact_box {
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.cs_impact_icon {
+  margin-bottom: 20px;
+}
+
+/* Box des projets */
+.cs_project_box {
+  padding: 20px;
+  background-color: rgba(45, 152, 218, 0.03);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.cs_project_icon img {
+  width: 40px;
+  height: 40px;
+  opacity: 0.7;
+}
+
+/* Styles pour les formulaires */
+.cs_input_group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cs_input_append {
+  background-color: rgba(45, 152, 218, 0.1);
+  border: 1px solid rgba(45, 152, 218, 0.2);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 15px;
+  color: rgba(45, 152, 218, 0.8);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.cs_input_group .cs_form_input {
+  border-radius: 8px 0 0 8px;
+}
+
+.cs_light_bg {
+  background-color: rgba(45, 152, 218, 0.05);
+}
+
+/* Styles de validation */
+.cs_invalid_feedback {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.cs_form_input.is-invalid {
+  border-color: #dc3545;
+}
+
+.cs_form_select.is-invalid {
+  border-color: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cs_donation_stats {
+    position: static;
+    margin-top: 30px;
+  }
+  
+  .cs_table_action {
+    flex-direction: column;
+  }
+  
+  .cs_info_item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+
+/* Animations lors du chargement */
+.cs_table.cs_style_1 tbody tr {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === FILTRES === */
+.cs_filters_wrap {
+  padding: 30px;
+  margin-bottom: 40px;
+  border-radius: 15px;
+}
+
+.cs_filters_form {
+  margin-top: 20px;
+}
+
+.cs_form_label {
+  display: block;
+  font-weight: 600;
+  color: rgba(45, 152, 218, 0.8);
+  margin-bottom: 8px;
+}
+
+.cs_form_select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid rgba(45, 152, 218, 0.2);
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.cs_form_select:focus {
+  outline: none;
+  border-color: rgba(45, 152, 218, 0.6);
+  box-shadow: 0 0 0 3px rgba(45, 152, 218, 0.1);
+}
+
+.cs_btn_full {
+  width: 100%;
+}
+
+.cs_btn_sm {
+  padding: 10px 16px;
+  font-size: 14px;
+}
+
+/* Filtres actifs */
+.cs_active_filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(45, 152, 218, 0.05);
+  border-radius: 10px;
+  border-left: 4px solid rgba(45, 152, 218, 0.3);
+}
+
+.cs_filter_label {
+  font-weight: 600;
+  color: rgba(45, 152, 218, 0.8);
+  font-size: 14px;
+}
+
+.cs_filter_tag {
+  padding: 4px 12px;
+  background-color: rgba(45, 152, 218, 0.1);
+  color: rgba(45, 152, 218, 1);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cs_currency_tag {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.cs_payment_tag {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.cs_clear_filters {
+  margin-left: auto;
+  color: rgba(45, 152, 218, 0.7);
+  text-decoration: none;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.cs_clear_filters:hover {
+  background-color: rgba(45, 152, 218, 0.1);
+  color: rgba(45, 152, 218, 1);
+}
+
+/* === NOUVEAUX BOUTONS D'ACTION === */
+.cs_action_buttons_group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cs_action_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.cs_action_btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cs_action_btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.cs_action_btn:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.cs_view_btn {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+}
+
+.cs_view_btn:hover {
+  background: linear-gradient(135deg, #138496, #117a8b);
+  color: white;
+}
+
+.cs_edit_btn {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: #212529;
+}
+
+.cs_edit_btn:hover {
+  background: linear-gradient(135deg, #e0a800, #d39e00);
+  color: #212529;
+}
+
+.cs_delete_btn {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+}
+
+.cs_delete_btn:hover {
+  background: linear-gradient(135deg, #c82333, #bd2130);
+  color: white;
+}
+
+/* === AMÉLIORATIONS DU TABLEAU === */
+.cs_table_header {
+  padding: 20px 30px 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cs_table_title {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(45, 152, 218, 0.8);
+  margin: 0;
+}
+
+.cs_donation_id {
+  background-color: rgba(45, 152, 218, 0.1);
+  color: rgba(45, 152, 218, 1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.cs_amount {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.cs_amount.EUR {
+  color: #007bff;
+}
+
+.cs_amount.USD {
+  color: #28a745;
+}
+
+.cs_amount.GBP {
+  color: #dc3545;
+}
+
+.cs_amount.CHF {
+  color: #6c757d;
+}
+
+.cs_amount.TND {
+  color: #28a745;
+}
+
+/* Montants convertis en TND */
+.cs_amount_tnd {
+  font-weight: 700;
+  font-size: 16px;
+  color: #28a745;
+}
+
+.cs_currency_converted_from {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: rgba(40, 167, 69, 0.8);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 5px;
+  font-style: italic;
+}
+
+.cs_amount_show_tnd,
+.cs_amount_edit_tnd {
+  font-weight: 700;
+  color: #28a745;
+  font-size: 18px;
+}
+
+.cs_amount_original {
+  font-size: 12px;
+  color: rgba(108, 117, 125, 0.7);
+  font-style: italic;
+  margin-left: 8px;
+}
+
+.cs_currency_symbol {
+  background-color: rgba(45, 152, 218, 0.1);
+  color: rgba(45, 152, 218, 0.8);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.cs_date {
+  font-weight: 500;
+  color: rgba(45, 152, 218, 0.7);
+}
+
+.cs_payment_badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.cs_payment_badge.cs_card {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.cs_payment_badge.cs_paypal {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.cs_payment_badge.cs_bank_transfer {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.cs_payment_badge.cs_cash {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #b45309;
+}
+
+.cs_payment_badge.cs_check {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: #495057;
+}
+
+.cs_payment_badge.cs_cryptocurrency {
+  background-color: rgba(255, 87, 51, 0.1);
+  color: #ff5733;
+}
+
+/* === STATISTIQUES SUPPLÉMENTAIRES === */
+.cs_currency_stats,
+.cs_payment_stats {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: rgba(45, 152, 218, 0.02);
+  border-radius: 10px;
+  border-left: 4px solid rgba(45, 152, 218, 0.3);
+}
+
+.cs_currency_item,
+.cs_payment_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cs_currency_item:last-child,
+.cs_payment_item:last-child {
+  border-bottom: none;
+}
+
+.cs_currency_label,
+.cs_payment_label {
+  font-weight: 500;
+  color: rgba(45, 152, 218, 0.7);
+}
+
+.cs_currency_amount,
+.cs_payment_count {
+  background-color: rgba(45, 152, 218, 0.1);
+  color: rgba(45, 152, 218, 1);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Styles pour les nouvelles statistiques */
+.cs_currency_info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cs_currency_conversion {
+  font-size: 14px;
+  font-weight: 700;
+  color: #28a745;
+}
+
+.cs_currency_meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+}
+
+.cs_currency_count {
+  color: rgba(45, 152, 218, 0.7);
+  font-weight: 500;
+}
+
+.cs_currency_original {
+  color: rgba(108, 117, 125, 0.6);
+  font-style: italic;
+}
+
+/* === BOUTONS CLASS === */
+.cs_padding_medium {
+  padding: 30px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .cs_action_buttons_group {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .cs_action_btn {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .cs_filters_wrap {
+    padding: 20px;
+  }
+  
+  .cs_active_filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .cs_clear_filters {
+    margin-left: 0;
+  }
+  
+  .cs_table_header {
+    padding: 15px 20px 10px;
+  }
+}
+
+/* === ANIMATIONS SUPPLÉMENTAIRES === */
+.cs_action_btn {
+  animation: pulse 2s infinite;
+}
+
+.cs_action_btn:hover {
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(45, 152, 218, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(45, 152, 218, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(45, 152, 218, 0);
+  }
+}
+
+/* === ÉTAT VIDe AVEC FILTRES === */
+.cs_empty_state.cs_filtered_state {
+  background-color: rgba(45, 152, 218, 0.02);
+  border: 2px dashed rgba(45, 152, 218, 0.2);
+  border-radius: 15px;
+}
+
+.cs_empty_state.cs_filtered_state h3 {
+  color: rgba(45, 152, 218, 0.7);
+}
+
+.cs_empty_state.cs_filtered_state p {
+  color: rgba(45, 152, 218, 0.6);
+}
