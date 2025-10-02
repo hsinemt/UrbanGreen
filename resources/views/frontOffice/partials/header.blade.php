@@ -25,6 +25,7 @@
                                     <li><a href="{{ route('events.show', ['slug' => 'event-details']) }}">Event Details</a></li>
                                     <li><a href="{{ route('projects.show', ['slug' => 'project-details']) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
+                                    <li><a href="{{ route('greenspaces.page') }}">Green Space</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>

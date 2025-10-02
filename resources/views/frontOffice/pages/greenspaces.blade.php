@@ -3,31 +3,31 @@
 
 @section('content')
     <div class="container py-5">
-        <h1 class="mb-4">Gestion des Espaces Verts</h1>
+        <h1 class="mb-4">Green Spaces Management</h1>
 
         <div class="card mb-4">
-            <div class="card-header">Créer / Modifier</div>
+            <div class="card-header">Create / Edit</div>
             <div class="card-body">
                 <form id="greenSpaceForm">
                     <input type="hidden" id="gs-id">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Nom</label>
+                            <label class="form-label">Name</label>
                             <input type="text" id="gs-name" class="form-control" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Localisation</label>
+                            <label class="form-label">Location</label>
                             <input type="text" id="gs-location" class="form-control" required>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">Surface (m²)</label>
+                            <label class="form-label">Area (m²)</label>
                             <input type="number" step="0.01" id="gs-surface" class="form-control" required>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">Disponible</label>
+                            <label class="form-label">Available</label>
                             <select id="gs-availability" class="form-select">
-                                <option value="1">Oui</option>
-                                <option value="0">Non</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -40,8 +40,8 @@
                         </div>
                     </div>
                     <div class="mt-3 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary" id="submitBtn">Enregistrer</button>
-                        <button type="button" class="btn btn-secondary" id="resetBtn">Réinitialiser</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
+                        <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
                     </div>
                 </form>
             </div>
@@ -49,17 +49,17 @@
 
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Liste des Espaces Verts</span>
-                <input type="search" id="searchInput" class="form-control" style="max-width: 260px;" placeholder="Rechercher...">
+                <span>Green Spaces List</span>
+                <input type="search" id="searchInput" class="form-control" style="max-width: 260px;" placeholder="Search...">
             </div>
             <div class="table-responsive">
                 <table class="table table-striped mb-0">
                     <thead>
                         <tr>
-                            <th>Nom</th>
-                            <th>Localisation</th>
-                            <th>Surface</th>
-                            <th>Disponible</th>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Area</th>
+                            <th>Available</th>
                             <th>Type</th>
                             <th>Actions</th>
                         </tr>
@@ -99,11 +99,17 @@
             <td>${escapeHtml(g.name ?? '')}</td>
             <td>${escapeHtml(g.location ?? '')}</td>
             <td>${Number(g.surface).toFixed(2)}</td>
-            <td>${g.availability ? 'Oui' : 'Non'}</td>
+            <td>${g.availability ? 'Yes' : 'No'}</td>
             <td>${escapeHtml(g.type ?? '')}</td>
             <td>
-                <button class="btn btn-sm btn-outline-primary me-2" data-action="edit" data-id="${g.id}">Éditer</button>
-                <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${g.id}">Supprimer</button>
+                <button class="btn btn-sm btn-outline-primary me-2" data-action="edit" data-id="${g.id}">Edit</button>
+                <button class="btn btn-sm btn-outline-danger me-2" data-action="delete" data-id="${g.id}">Delete</button>
+                <button class="btn btn-sm ${g.availability ? 'btn-success' : 'btn-secondary'}"
+                        data-action="book"
+                        data-id="${g.id}"
+                        ${!g.availability ? 'disabled' : ''}>
+                    ${g.availability ? 'Book' : 'Unavailable'}
+                </button>
             </td>
         `;
         return tr;
@@ -120,7 +126,7 @@
 
     async function fetchAll() {
         const res = await fetch(baseUrl);
-        if (!res.ok) throw new Error('Erreur chargement');
+        if (!res.ok) throw new Error('Loading error');
         const data = await res.json();
         allRows = data;
         render(data);
@@ -150,7 +156,7 @@
             },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('Échec de création');
+        if (!res.ok) throw new Error('Creation failed');
         return res.json();
     }
 
@@ -163,7 +169,7 @@
             },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('Échec de mise à jour');
+        if (!res.ok) throw new Error('Update failed');
         return res.json();
     }
 
@@ -174,13 +180,24 @@
                 'X-CSRF-TOKEN': csrfToken
             }
         });
-        if (!res.ok) throw new Error('Échec de suppression');
+        if (!res.ok) throw new Error('Deletion failed');
+    }
+
+    async function book(id) {
+        const res = await fetch(`${baseUrl}/${id}/book`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        if (!res.ok) throw new Error('Booking failed');
+        return res.json();
     }
 
     function resetForm() {
         idEl.value = '';
         form.reset();
-        submitBtn.textContent = 'Enregistrer';
+        submitBtn.textContent = 'Save';
     }
 
     tbody.addEventListener('click', async (e) => {
@@ -198,12 +215,25 @@
             availEl.value = g.availability ? '1' : '0';
             typeEl.value = g.type ?? '';
             descEl.value = g.description ?? '';
-            submitBtn.textContent = 'Mettre à jour';
+            submitBtn.textContent = 'Update';
         } else if (action === 'delete') {
-            if (!confirm('Supprimer cet élément ?')) return;
+            if (!confirm('Delete this item?')) return;
             try {
                 await remove(id);
                 await fetchAll();
+            } catch (err) {
+                alert(err.message);
+            }
+        } else if (action === 'book') {
+            const g = allRows.find(x => String(x.id) === String(id));
+            if (!g || !g.availability) return;
+
+            if (!confirm(`Do you want to book the green space "${g.name}"?`)) return;
+
+            try {
+                await book(id);
+                await fetchAll();
+                alert('Green space booked successfully!');
             } catch (err) {
                 alert(err.message);
             }

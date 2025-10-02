@@ -7,13 +7,12 @@ use Illuminate\Http\Request;
 
 class GreenSpaceController extends Controller
 {
-    // Liste tous les espaces verts
+
     public function index()
     {
         return GreenSpace::all();
     }
 
-    // Crée un nouvel espace vert
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -27,13 +26,11 @@ class GreenSpaceController extends Controller
         return GreenSpace::create($validated);
     }
 
-    // Affiche un espace vert spécifique
     public function show($id)
     {
         return GreenSpace::findOrFail($id);
     }
 
-    // Met à jour un espace vert
     public function update(Request $request, $id)
     {
         $greenSpace = GreenSpace::findOrFail($id);
@@ -49,11 +46,26 @@ class GreenSpaceController extends Controller
         return $greenSpace;
     }
 
-    // Supprime un espace vert
     public function destroy($id)
     {
         $greenSpace = GreenSpace::findOrFail($id);
         $greenSpace->delete();
-        return response()->json(['message' => 'Supprimé avec succès']);
+        return response()->json(['message' => 'Deleted successfully']);
+    }
+
+    public function book($id)
+    {
+        $greenSpace = GreenSpace::findOrFail($id);
+
+        if (!$greenSpace->availability) {
+            return response()->json(['error' => 'This green space is not available'], 400);
+        }
+
+        $greenSpace->update(['availability' => false]);
+
+        return response()->json([
+            'message' => 'Green space booked successfully',
+            'greenSpace' => $greenSpace
+        ]);
     }
 }

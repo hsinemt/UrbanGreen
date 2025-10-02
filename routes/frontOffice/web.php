@@ -128,3 +128,4 @@ Route::post('/green-spaces', [GreenSpaceController::class, 'store']);
 Route::get('/green-spaces/{id}', [GreenSpaceController::class, 'show']);
 Route::put('/green-spaces/{id}', [GreenSpaceController::class, 'update']);
 Route::delete('/green-spaces/{id}', [GreenSpaceController::class, 'destroy']);
+Route::post('/green-spaces/{id}/book', [GreenSpaceController::class, 'book']);
