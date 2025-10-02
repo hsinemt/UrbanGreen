@@ -2,12 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GreenSpaceController;
+use App\Http\Controllers\UsersController;
 
-/*
-|--------------------------------------------------------------------------
-| FRONT OFFICE ROUTES
-|--------------------------------------------------------------------------
-*/
+
 
 // Homepage
 Route::get('/', function () {
@@ -129,3 +126,16 @@ Route::get('/green-spaces/{id}', [GreenSpaceController::class, 'show']);
 Route::put('/green-spaces/{id}', [GreenSpaceController::class, 'update']);
 Route::delete('/green-spaces/{id}', [GreenSpaceController::class, 'destroy']);
 Route::post('/green-spaces/{id}/book', [GreenSpaceController::class, 'book']);
+Route::post('/register', [UsersController::class, 'register'])->name('register');
+Route::post('/login', [UsersController::class, 'login'])->name('login');
+Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    // Front Office Profile (Main user profile)
+    Route::get('/profile', [UsersController::class, 'userProfile'])->name('user.profile');
+    Route::put('/profile', [UsersController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/avatar', [UsersController::class, 'updateAvatar'])->name('profile.avatar');
+
+//    // Back Office Dashboard (Optional - for admin area)
+//    Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
+});

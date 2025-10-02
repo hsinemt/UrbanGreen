@@ -33,6 +33,13 @@
                     <span>Users</span>
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('resources.index') }}" class="{{ request()->routeIs('resources.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:box-outline" class="menu-icon"></iconify-icon>
+                    <span>Resources</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>
