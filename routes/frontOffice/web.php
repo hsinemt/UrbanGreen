@@ -87,11 +87,6 @@ Route::get('/projects/{slug}', function ($slug) {
     return view('frontOffice.pages.projects.show', compact('slug'));
 })->name('projects.show');
 
-// Events
-Route::get('/events/{slug}', function ($slug) {
-    return view('frontOffice.pages.events.show', compact('slug'));
-})->name('events.show');
-
 // Causes
 Route::get('/causes/agriculture', function () {
     return view('frontOffice.pages.causes.agriculture');
@@ -116,3 +111,9 @@ Route::get('/causes/ocean-life', function () {
 Route::get('/causes/recycling', function () {
     return view('frontOffice.pages.causes.recycling');
 })->name('causes.recycling');
+
+// Events Resource Routes
+use App\Http\Controllers\EventController;
+Route::resource('events', App\Http\Controllers\EventController::class);
+Route::post('events/bulk-delete', [App\Http\Controllers\EventController::class, 'bulkDelete'])->name('events.bulk-delete');
+Route::get('events/search/live', [App\Http\Controllers\EventController::class, 'search'])->name('events.search');
