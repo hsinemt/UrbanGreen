@@ -1,12 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
 
-/*
-|--------------------------------------------------------------------------
-| FRONT OFFICE ROUTES
-|--------------------------------------------------------------------------
-*/
+
 
 // Homepage
 Route::get('/', function () {
@@ -116,3 +113,17 @@ Route::get('/causes/ocean-life', function () {
 Route::get('/causes/recycling', function () {
     return view('frontOffice.pages.causes.recycling');
 })->name('causes.recycling');
+
+Route::post('/register', [UsersController::class, 'register'])->name('register');
+Route::post('/login', [UsersController::class, 'login'])->name('login');
+Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    // Front Office Profile (Main user profile)
+    Route::get('/profile', [UsersController::class, 'userProfile'])->name('user.profile');
+    Route::put('/profile', [UsersController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/avatar', [UsersController::class, 'updateAvatar'])->name('profile.avatar');
+
+//    // Back Office Dashboard (Optional - for admin area)
+//    Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
+});

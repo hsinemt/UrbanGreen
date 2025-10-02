@@ -737,98 +737,98 @@
     </section>
     <!-- End CTA Section -->
     <!-- Start Blog Section -->
-    <section class="cs_shape_wrap">
-        <div class="cs_height_145 cs_height_lg_75"></div>
-        <div class="cs_shape cs_shape_position_4"><img src="{{asset('frontOffice/img/nature/blog_shape_1.png')}} " alt=""></div>
-        <div class="cs_shape cs_shape_position_5"><img src="{{asset('frontOffice/img/nature/blog_shape_2.png')}} " alt=""></div>
-        <div class="container">
-            <div class="cs_section_heading cs_style_1 text-center">
-                <h3 class="cs_fs_21 cs_semibold cs_accent_color cs_mb_13 wow fadeIn" data-wow-duration="0.8s" data-wow-delay="0.25s">Blog Post</h3>
-                <h2 class="cs_fs_51 mb-0 wow fadeInUp" data-wow-duration="0.8s" data-wow-delay="0.25s">Our Latest News & Updates</h2>
-            </div>
-            <div class="cs_height_90 cs_height_lg_50"></div>
-            <div class="row cs_gap_y_40">
-                <div class="col-lg-4">
-                    <div class="cs_post cs_style_1">
-                        <a href="blog-details.html" class="cs_post_thumb">
-                            <img src="{{asset('frontOffice/img/nature/post_img_1.jpg')}} " alt="Post">
-                        </a>
-                        <div class="cs_post_info cs_shadow_1">
-                            <ul class="cs_post_meta cs_mp_0">
-                                <li><i class="fa-solid fa-user-pen"></i>Bob marline</li>
-                                <li><i class="fa-solid fa-tag"></i>Environment</li>
-                            </ul>
-                            <h2 class="cs_post_title cs_semibold cs_fs_28 cs_mb_22"><a href="blog-details.html">How Reforestation Can Save Our Planet</a></h2>
-                            <p class="cs_post_subtitle cs_mb_16">Discover the incredible impact of reforest on our environment and the critical role trees play in mitigating climate...</p>
-                            <a href="blog-details.html" class="cs_btn cs_style_2 cs_heading_color">
-                                Learn More
-                                <i>
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="cs_post cs_style_1">
-                        <a href="blog-details.html" class="cs_post_thumb">
-                            <img src="{{asset('frontOffice/img/nature/post_img_2.jpg')}} " alt="Post">
-                        </a>
-                        <div class="cs_post_info cs_shadow_1">
-                            <ul class="cs_post_meta cs_mp_0">
-                                <li><i class="fa-solid fa-user-pen"></i>Bob marline</li>
-                                <li><i class="fa-solid fa-tag"></i>Environment</li>
-                            </ul>
-                            <h2 class="cs_post_title cs_semibold cs_fs_28 cs_mb_22"><a href="blog-details.html">Unmasking the Hidden Threat to Our Oceans</a></h2>
-                            <p class="cs_post_subtitle cs_mb_16">Dive into the disturbing reality of plastic pollution in our oceans. This blog sheds light on the consequences of single...</p>
-                            <a href="blog-details.html" class="cs_btn cs_style_2 cs_heading_color">
-                                Learn More
-                                <i>
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="cs_post cs_style_1">
-                        <a href="blog-details.html" class="cs_post_thumb">
-                            <img src="{{asset('frontOffice/img/nature/post_img_3.jpg')}} " alt="Post">
-                        </a>
-                        <div class="cs_post_info cs_shadow_1">
-                            <ul class="cs_post_meta cs_mp_0">
-                                <li><i class="fa-solid fa-user-pen"></i>Bob marline</li>
-                                <li><i class="fa-solid fa-tag"></i>Environment</li>
-                            </ul>
-                            <h2 class="cs_post_title cs_semibold cs_fs_28 cs_mb_22"><a href="blog-details.html">Tips for Sustainable Green Spaces in Home</a></h2>
-                            <p class="cs_post_subtitle cs_mb_16">Discover the incredible impact of reforest on our environment and the critical role trees play in mitigating climate...</p>
-                            <a href="blog-details.html" class="cs_btn cs_style_2 cs_heading_color">
-                                Learn More
-                                <i>
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="cs_height_150 cs_height_lg_80"></div>
-    </section>
+{{--    <section class="cs_shape_wrap">--}}
+{{--        <div class="cs_height_145 cs_height_lg_75"></div>--}}
+{{--        <div class="cs_shape cs_shape_position_4"><img src="{{asset('frontOffice/img/nature/blog_shape_1.png')}} " alt=""></div>--}}
+{{--        <div class="cs_shape cs_shape_position_5"><img src="{{asset('frontOffice/img/nature/blog_shape_2.png')}} " alt=""></div>--}}
+{{--        <div class="container">--}}
+{{--            <div class="cs_section_heading cs_style_1 text-center">--}}
+{{--                <h3 class="cs_fs_21 cs_semibold cs_accent_color cs_mb_13 wow fadeIn" data-wow-duration="0.8s" data-wow-delay="0.25s">Blog Post</h3>--}}
+{{--                <h2 class="cs_fs_51 mb-0 wow fadeInUp" data-wow-duration="0.8s" data-wow-delay="0.25s">Our Latest News & Updates</h2>--}}
+{{--            </div>--}}
+{{--            <div class="cs_height_90 cs_height_lg_50"></div>--}}
+{{--            <div class="row cs_gap_y_40">--}}
+{{--                <div class="col-lg-4">--}}
+{{--                    <div class="cs_post cs_style_1">--}}
+{{--                        <a href="blog-details.html" class="cs_post_thumb">--}}
+{{--                            <img src="{{asset('frontOffice/img/nature/post_img_1.jpg')}} " alt="Post">--}}
+{{--                        </a>--}}
+{{--                        <div class="cs_post_info cs_shadow_1">--}}
+{{--                            <ul class="cs_post_meta cs_mp_0">--}}
+{{--                                <li><i class="fa-solid fa-user-pen"></i>Bob marline</li>--}}
+{{--                                <li><i class="fa-solid fa-tag"></i>Environment</li>--}}
+{{--                            </ul>--}}
+{{--                            <h2 class="cs_post_title cs_semibold cs_fs_28 cs_mb_22"><a href="blog-details.html">How Reforestation Can Save Our Planet</a></h2>--}}
+{{--                            <p class="cs_post_subtitle cs_mb_16">Discover the incredible impact of reforest on our environment and the critical role trees play in mitigating climate...</p>--}}
+{{--                            <a href="blog-details.html" class="cs_btn cs_style_2 cs_heading_color">--}}
+{{--                                Learn More--}}
+{{--                                <i>--}}
+{{--                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>--}}
+{{--                                    </svg>--}}
+{{--                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>--}}
+{{--                                    </svg>--}}
+{{--                                </i>--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-4">--}}
+{{--                    <div class="cs_post cs_style_1">--}}
+{{--                        <a href="blog-details.html" class="cs_post_thumb">--}}
+{{--                            <img src="{{asset('frontOffice/img/nature/post_img_2.jpg')}} " alt="Post">--}}
+{{--                        </a>--}}
+{{--                        <div class="cs_post_info cs_shadow_1">--}}
+{{--                            <ul class="cs_post_meta cs_mp_0">--}}
+{{--                                <li><i class="fa-solid fa-user-pen"></i>Bob marline</li>--}}
+{{--                                <li><i class="fa-solid fa-tag"></i>Environment</li>--}}
+{{--                            </ul>--}}
+{{--                            <h2 class="cs_post_title cs_semibold cs_fs_28 cs_mb_22"><a href="blog-details.html">Unmasking the Hidden Threat to Our Oceans</a></h2>--}}
+{{--                            <p class="cs_post_subtitle cs_mb_16">Dive into the disturbing reality of plastic pollution in our oceans. This blog sheds light on the consequences of single...</p>--}}
+{{--                            <a href="blog-details.html" class="cs_btn cs_style_2 cs_heading_color">--}}
+{{--                                Learn More--}}
+{{--                                <i>--}}
+{{--                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>--}}
+{{--                                    </svg>--}}
+{{--                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>--}}
+{{--                                    </svg>--}}
+{{--                                </i>--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-4">--}}
+{{--                    <div class="cs_post cs_style_1">--}}
+{{--                        <a href="blog-details.html" class="cs_post_thumb">--}}
+{{--                            <img src="{{asset('frontOffice/img/nature/post_img_3.jpg')}} " alt="Post">--}}
+{{--                        </a>--}}
+{{--                        <div class="cs_post_info cs_shadow_1">--}}
+{{--                            <ul class="cs_post_meta cs_mp_0">--}}
+{{--                                <li><i class="fa-solid fa-user-pen"></i>Bob marline</li>--}}
+{{--                                <li><i class="fa-solid fa-tag"></i>Environment</li>--}}
+{{--                            </ul>--}}
+{{--                            <h2 class="cs_post_title cs_semibold cs_fs_28 cs_mb_22"><a href="blog-details.html">Tips for Sustainable Green Spaces in Home</a></h2>--}}
+{{--                            <p class="cs_post_subtitle cs_mb_16">Discover the incredible impact of reforest on our environment and the critical role trees play in mitigating climate...</p>--}}
+{{--                            <a href="blog-details.html" class="cs_btn cs_style_2 cs_heading_color">--}}
+{{--                                Learn More--}}
+{{--                                <i>--}}
+{{--                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>--}}
+{{--                                    </svg>--}}
+{{--                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                        <path d="M1 9L9 1M9 1L1 1M9 1L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>--}}
+{{--                                    </svg>--}}
+{{--                                </i>--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="cs_height_150 cs_height_lg_80"></div>--}}
+{{--    </section>--}}
     <!-- End Blog Section -->
 @endsection
