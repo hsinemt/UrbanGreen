@@ -22,7 +22,7 @@
                                     <li><a href="{{ route('team') }}">Team</a></li>
                                     <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
                                     <li><a href="{{ route('campaigns.show', ['slug' => 'campaign-details']) }}">Campaign Details</a></li>
-                                    <li><a href="{{ route('events.show', ['slug' => 'event-details']) }}">Event Details</a></li>
+                                    <li><a href="{{ route('events.index') }}">Events</a></li>
                                     <li><a href="{{ route('projects.show', ['slug' => 'project-details']) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
                                     <li><a href="{{ route('greenspaces.page') }}">Green Space</a></li>
