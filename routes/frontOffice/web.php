@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\GreenSpaceController;
+use App\Http\Controllers\UsersController;
 
-/*
-|--------------------------------------------------------------------------
-| FRONT OFFICE ROUTES
-|--------------------------------------------------------------------------
-*/
+
 
 // Homepage
 Route::get('/', function () {
@@ -82,15 +81,16 @@ Route::get('/services/{slug}', function ($slug) {
     return view('frontOffice.pages.services.show', compact('slug'));
 })->name('services.show');
 
-// Projects
-Route::get('/projects/{slug}', function ($slug) {
-    return view('frontOffice.pages.projects.show', compact('slug'));
-})->name('projects.show');
-
-// Events
-Route::get('/events/{slug}', function ($slug) {
-    return view('frontOffice.pages.events.show', compact('slug'));
-})->name('events.show');
+// Projects (CRUD)
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+// Backward-compatible link from old static page
+Route::get('/projects/project-details', function () { return redirect()->route('projects.index'); });
+Route::get('/projects/{projet}', [ProjectController::class, 'show'])->name('projects.show');
+Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
+Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
 // Causes
 Route::get('/causes/agriculture', function () {
@@ -119,3 +119,32 @@ Route::get('/causes/recycling', function () {
 
 // Donations CRUD for Front Office
 Route::resource('donations', App\Http\Controllers\DonationController::class);
+// Events Resource Routes
+use App\Http\Controllers\EventController;
+Route::resource('events', App\Http\Controllers\EventController::class);
+Route::post('events/bulk-delete', [App\Http\Controllers\EventController::class, 'bulkDelete'])->name('events.bulk-delete');
+Route::get('events/search/live', [App\Http\Controllers\EventController::class, 'search'])->name('events.search');
+// GreenSpaces CRUD page (UI)
+Route::get('/greenspaces', function () {
+    return view('frontOffice.pages.greenspaces');
+})->name('greenspaces.page');
+
+Route::get('/green-spaces', [GreenSpaceController::class, 'index']);
+Route::post('/green-spaces', [GreenSpaceController::class, 'store']);
+Route::get('/green-spaces/{id}', [GreenSpaceController::class, 'show']);
+Route::put('/green-spaces/{id}', [GreenSpaceController::class, 'update']);
+Route::delete('/green-spaces/{id}', [GreenSpaceController::class, 'destroy']);
+Route::post('/green-spaces/{id}/book', [GreenSpaceController::class, 'book']);
+Route::post('/register', [UsersController::class, 'register'])->name('register');
+Route::post('/login', [UsersController::class, 'login'])->name('login');
+Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    // Front Office Profile (Main user profile)
+    Route::get('/profile', [UsersController::class, 'userProfile'])->name('user.profile');
+    Route::put('/profile', [UsersController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/avatar', [UsersController::class, 'updateAvatar'])->name('profile.avatar');
+
+//    // Back Office Dashboard (Optional - for admin area)
+//    Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
+});
