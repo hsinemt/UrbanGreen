@@ -54,15 +54,15 @@ class Projet extends Model
     }
 
     // Relations
-    public function risks()
-    {
-        return $this->hasMany(\App\Models\ProjectRisk::class, 'projet_id');
-    }
+//    public function risks()
+//    {
+//        return $this->hasMany(\App\Models\ProjectRisk::class, 'projet_id');
+//    }
 
-    public function issues()
-    {
-        return $this->hasMany(\App\Models\ProjectIssue::class, 'projet_id');
-    }
+//    public function issues()
+//    {
+//        return $this->hasMany(\App\Models\ProjectIssue::class, 'projet_id');
+//    }
 
     public function statusChanges()
     {

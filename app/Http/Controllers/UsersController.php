@@ -168,6 +168,82 @@ class UsersController extends Controller
 
         return back()->with('success', 'Profile picture updated successfully!');
     }
+    /**
+     * Display the specified user (for modal view)
+     */
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+
+        return response()->json([
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'bio' => $user->bio,
+            'avatar_url' => $user->avatar_url,
+            'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+            'created_at_human' => $user->created_at->diffForHumans(),
+            'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
+            'updated_at_human' => $user->updated_at->diffForHumans(),
+        ]);
+    }
+
+    /**
+     * Update the specified user (for admin)
+     */
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->bio = $request->bio;
+        $user->save();
+
+        return redirect()->route('back.users.index')
+            ->with('success', 'User updated successfully!');
+    }
+
+    /**
+     * Remove the specified user
+     */
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Optional: Prevent deleting yourself
+        if (Auth::id() === $user->id) {
+            return redirect()->route('back.users.index')
+                ->with('error', 'You cannot delete your own account!');
+        }
+
+        // Delete avatar if exists
+        if ($user->avatar && \Storage::disk('public')->exists($user->avatar)) {
+            \Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->delete();
+
+        return redirect()->route('back.users.index')
+            ->with('success', 'User deleted successfully!');
+    }
 
     /**
      * Display a listing of users (for admin)
@@ -175,6 +251,6 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::latest()->paginate(10);
-        return view('dashboard.users.index', compact('users'));
+        return view('dashboard.components.users.user', compact('users'));
     }
 }

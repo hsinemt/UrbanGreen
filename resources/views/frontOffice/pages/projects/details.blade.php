@@ -18,7 +18,7 @@
     <div class="row cs_gap_y_80">
       <div class="col-lg-8">
         <div class="cs_details_content">
-          
+
           <div class="d-flex justify-content-between align-items-start cs_mb_30">
             <div>
               <h2 class="cs_fs_42 cs_semibold cs_mb_15">{{ $projet->name }}</h2>
@@ -93,63 +93,63 @@
             </div>
           </div>
 
-          @if($projet->risks && $projet->risks->count() > 0)
-            <div class="cs_card cs_style_1 cs_white_bg cs_shadow_1 cs_mb_40" style="border-left: 4px solid #ff9800;">
-              <div class="cs_card_in">
-                <h3 class="cs_fs_24 cs_semibold cs_mb_20">
-                  <i class="fa-solid fa-exclamation-triangle cs_mr_10 cs_accent_color"></i>
-                  Project Risks
-                </h3>
-                @foreach($projet->risks as $risk)
-                  <div class="cs_card cs_style_1 cs_gray_bg cs_mb_15">
-                    <div class="cs_card_in">
-                      <div class="d-flex justify-content-between align-items-start cs_mb_10">
-                        <h4 class="cs_fs_18 cs_semibold cs_mb_0">{{ $risk->title }}</h4>
-                        <span class="cs_badge" style="background-color: {{ match($risk->probability) { 'low' => '#28a745', 'medium' => '#f39c12', 'high' => '#dc3545', default => '#6c757d' } }}; color:#fff; padding: 4px 8px; border-radius: 12px;">
-                          {{ ucfirst($risk->probability) }} Risk
-                        </span>
-                      </div>
-                      @if($risk->description)
-                        <p class="cs_mb_10 cs_fs_16">{{ $risk->description }}</p>
-                      @endif
-                      @if($risk->mitigation)
-                        <div class="cs_mb_0">
-                          <p class="cs_fs_14 cs_semibold cs_mb_5" style="color: #28a745;">Mitigation Strategy:</p>
-                          <p class="cs_fs_14 cs_mb_0">{{ $risk->mitigation }}</p>
-                        </div>
-                      @endif
-                    </div>
-                  </div>
-                @endforeach
-              </div>
-            </div>
-          @endif
+{{--          @if($projet->risks && $projet->risks->count() > 0)--}}
+{{--            <div class="cs_card cs_style_1 cs_white_bg cs_shadow_1 cs_mb_40" style="border-left: 4px solid #ff9800;">--}}
+{{--              <div class="cs_card_in">--}}
+{{--                <h3 class="cs_fs_24 cs_semibold cs_mb_20">--}}
+{{--                  <i class="fa-solid fa-exclamation-triangle cs_mr_10 cs_accent_color"></i>--}}
+{{--                  Project Risks--}}
+{{--                </h3>--}}
+{{--                @foreach($projet->risks as $risk)--}}
+{{--                  <div class="cs_card cs_style_1 cs_gray_bg cs_mb_15">--}}
+{{--                    <div class="cs_card_in">--}}
+{{--                      <div class="d-flex justify-content-between align-items-start cs_mb_10">--}}
+{{--                        <h4 class="cs_fs_18 cs_semibold cs_mb_0">{{ $risk->title }}</h4>--}}
+{{--                        <span class="cs_badge" style="background-color: {{ match($risk->probability) { 'low' => '#28a745', 'medium' => '#f39c12', 'high' => '#dc3545', default => '#6c757d' } }}; color:#fff; padding: 4px 8px; border-radius: 12px;">--}}
+{{--                          {{ ucfirst($risk->probability) }} Risk--}}
+{{--                        </span>--}}
+{{--                      </div>--}}
+{{--                      @if($risk->description)--}}
+{{--                        <p class="cs_mb_10 cs_fs_16">{{ $risk->description }}</p>--}}
+{{--                      @endif--}}
+{{--                      @if($risk->mitigation)--}}
+{{--                        <div class="cs_mb_0">--}}
+{{--                          <p class="cs_fs_14 cs_semibold cs_mb_5" style="color: #28a745;">Mitigation Strategy:</p>--}}
+{{--                          <p class="cs_fs_14 cs_mb_0">{{ $risk->mitigation }}</p>--}}
+{{--                        </div>--}}
+{{--                      @endif--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+{{--                @endforeach--}}
+{{--              </div>--}}
+{{--            </div>--}}
+{{--          @endif--}}
 
-          @if($projet->issues && $projet->issues->count() > 0)
-            <div class="cs_card cs_style_1 cs_white_bg cs_shadow_1 cs_mb_40" style="border-left: 4px solid #f44336;">
-              <div class="cs_card_in">
-                <h3 class="cs_fs_24 cs_semibold cs_mb_20">
-                  <i class="fa-solid fa-bug cs_mr_10 cs_accent_color"></i>
-                  Project Issues
-                </h3>
-                @foreach($projet->issues as $issue)
-                  <div class="cs_card cs_style_1 cs_gray_bg cs_mb_15">
-                    <div class="cs_card_in">
-                      <div class="d-flex justify-content-between align-items-start cs_mb_10">
-                        <h4 class="cs_fs_18 cs_semibold cs_mb_0">{{ $issue->title }}</h4>
-                        <span class="cs_badge" style="background-color: {{ match($issue->severity) { 'minor' => '#28a745', 'major' => '#f39c12', 'critical' => '#dc3545', default => '#6c757d' } }}; color:#fff; padding: 4px 8px; border-radius: 12px;">
-                          {{ ucfirst($issue->severity) }}
-                        </span>
-                      </div>
-                      @if($issue->description)
-                        <p class="cs_mb_0 cs_fs_16">{{ $issue->description }}</p>
-                      @endif
-                    </div>
-                  </div>
-                @endforeach
-              </div>
-            </div>
-          @endif
+{{--          @if($projet->issues && $projet->issues->count() > 0)--}}
+{{--            <div class="cs_card cs_style_1 cs_white_bg cs_shadow_1 cs_mb_40" style="border-left: 4px solid #f44336;">--}}
+{{--              <div class="cs_card_in">--}}
+{{--                <h3 class="cs_fs_24 cs_semibold cs_mb_20">--}}
+{{--                  <i class="fa-solid fa-bug cs_mr_10 cs_accent_color"></i>--}}
+{{--                  Project Issues--}}
+{{--                </h3>--}}
+{{--                @foreach($projet->issues as $issue)--}}
+{{--                  <div class="cs_card cs_style_1 cs_gray_bg cs_mb_15">--}}
+{{--                    <div class="cs_card_in">--}}
+{{--                      <div class="d-flex justify-content-between align-items-start cs_mb_10">--}}
+{{--                        <h4 class="cs_fs_18 cs_semibold cs_mb_0">{{ $issue->title }}</h4>--}}
+{{--                        <span class="cs_badge" style="background-color: {{ match($issue->severity) { 'minor' => '#28a745', 'major' => '#f39c12', 'critical' => '#dc3545', default => '#6c757d' } }}; color:#fff; padding: 4px 8px; border-radius: 12px;">--}}
+{{--                          {{ ucfirst($issue->severity) }}--}}
+{{--                        </span>--}}
+{{--                      </div>--}}
+{{--                      @if($issue->description)--}}
+{{--                        <p class="cs_mb_0 cs_fs_16">{{ $issue->description }}</p>--}}
+{{--                      @endif--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+{{--                @endforeach--}}
+{{--              </div>--}}
+{{--            </div>--}}
+{{--          @endif--}}
         </div>
       </div>
 
@@ -212,7 +212,7 @@
         </div>
 
         <div class="cs_height_50 cs_height_lg_40"></div>
-        
+
         <div class="cs_card cs_style_1 cs_white_bg cs_shadow_1">
           <div class="cs_card_in">
             <h3 class="cs_fs_24 cs_semibold cs_mb_20">

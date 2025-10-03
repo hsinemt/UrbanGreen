@@ -36,7 +36,7 @@ class ProjectController extends Controller
         }
 
         $projects = $query->get();
-        
+
         // Statistics
         $stats = [
             'total' => Projet::count(),
@@ -49,7 +49,7 @@ class ProjectController extends Controller
             'completed_count' => Projet::where('status', 'completed')->count(),
             'in_progress_count' => Projet::where('status', 'in_progress')->count(),
         ];
-        
+
         return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
     }
 
@@ -78,9 +78,9 @@ class ProjectController extends Controller
      */
     public function show(Projet $projet)
     {
-        // Load relationships
-        $projet->load(['risks', 'issues']);
-        
+//        // Load relationships
+//        $projet->load(['risks', 'issues']);
+
         // Get related projects (same status)
         $relatedProjects = Projet::where('id', '!=', $projet->id)
             ->where('status', $projet->status)

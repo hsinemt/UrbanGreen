@@ -17,3 +17,10 @@ Route::prefix('admin')->group(function () {
     Route::get('resources/{resource}/details', [ResourceController::class, 'details'])->name('resources.details');
     Route::resource('resources', ResourceController::class);
 });
+
+Route::prefix('admin')->group(function () {
+    Route::get('users', [UsersController::class, 'index'])->name('back.users.index');
+    Route::get('users/{id}', [UsersController::class, 'show'])->name('back.users.show');
+    Route::put('users/{id}', [UsersController::class, 'update'])->name('back.users.update');
+    Route::delete('users/{id}', [UsersController::class, 'destroy'])->name('back.users.destroy');
+});
