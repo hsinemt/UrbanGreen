@@ -117,6 +117,8 @@ Route::get('/causes/recycling', function () {
     return view('frontOffice.pages.causes.recycling');
 })->name('causes.recycling');
 
+// Donations CRUD for Front Office
+Route::resource('donations', App\Http\Controllers\DonationController::class);
 // Events Resource Routes
 use App\Http\Controllers\EventController;
 Route::resource('events', App\Http\Controllers\EventController::class);
