@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
 
@@ -80,10 +81,16 @@ Route::get('/services/{slug}', function ($slug) {
     return view('frontOffice.pages.services.show', compact('slug'));
 })->name('services.show');
 
-// Projects
-Route::get('/projects/{slug}', function ($slug) {
-    return view('frontOffice.pages.projects.show', compact('slug'));
-})->name('projects.show');
+// Projects (CRUD)
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+// Backward-compatible link from old static page
+Route::get('/projects/project-details', function () { return redirect()->route('projects.index'); });
+Route::get('/projects/{projet}', [ProjectController::class, 'show'])->name('projects.show');
+Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
+Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
 // Causes
 Route::get('/causes/agriculture', function () {
