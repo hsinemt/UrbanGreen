@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CompetitionController;
 
 
 
@@ -83,14 +84,40 @@ Route::get('/services/{slug}', function ($slug) {
 
 // Projects (CRUD)
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
-Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
-Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+// Public route to see all projects regardless of role or login
+Route::get('/projects/all', function () {
+    $projects = \App\Models\Projet::latest()->with('user')->get();
+    $stats = [
+        'total' => \App\Models\Projet::count(),
+        'by_status' => \App\Models\Projet::selectRaw('status, COUNT(*) as count')->groupBy('status')->pluck('count', 'status')->toArray(),
+        'total_budget' => \App\Models\Projet::sum('budget'),
+        'avg_progress' => \App\Models\Projet::avg('progress_percentage'),
+        'completed_count' => \App\Models\Projet::where('status', 'completed')->count(),
+        'in_progress_count' => \App\Models\Projet::where('status', 'in_progress')->count(),
+    ];
+    return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
+})->name('projects.all');
+
+// Competitions
+Route::get('/competitions', [CompetitionController::class, 'index'])->name('competitions.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/competitions/create', [CompetitionController::class, 'create'])->name('competitions.create');
+    Route::post('/competitions', [CompetitionController::class, 'store'])->name('competitions.store');
+    Route::get('/competitions/{competition}/edit', [CompetitionController::class, 'edit'])->whereNumber('competition')->name('competitions.edit');
+    Route::put('/competitions/{competition}', [CompetitionController::class, 'update'])->whereNumber('competition')->name('competitions.update');
+    Route::delete('/competitions/{competition}', [CompetitionController::class, 'destroy'])->whereNumber('competition')->name('competitions.destroy');
+});
+Route::get('/competitions/{competition}', [CompetitionController::class, 'show'])->whereNumber('competition')->name('competitions.show');
+Route::middleware('auth')->group(function () {
+    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+});
 // Backward-compatible link from old static page
 Route::get('/projects/project-details', function () { return redirect()->route('projects.index'); });
 Route::get('/projects/{projet}', [ProjectController::class, 'show'])->name('projects.show');
-Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
-Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
 // Causes
 Route::get('/causes/agriculture', function () {
