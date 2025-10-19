@@ -44,6 +44,7 @@
                             </li>
                             <li><a href="{{ route('blog.index') }}">Blog</a></li>
                             <li><a href="{{ route('donations.index') }}">Donations</a></li>
+                            <li><a href="{{ route('chatbot.front.index') }}">Assistant IA</a></li>
                             <li><a href="{{ route('contact') }}">Contact</a></li>
                         </ul>
                     </div>

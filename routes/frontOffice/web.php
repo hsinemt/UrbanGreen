@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ChatBotController;
 
 
 
@@ -149,6 +150,11 @@ Route::delete('/plants/{plant}', [App\Http\Controllers\PlantController::class, '
 Route::post('/register', [UsersController::class, 'register'])->name('register');
 Route::post('/login', [UsersController::class, 'login'])->name('login');
 Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
+
+// ChatBot IA pour les clients
+Route::get('/assistant-ia', [ChatBotController::class, 'frontIndex'])->name('chatbot.front.index');
+Route::post('/assistant-ia/send', [ChatBotController::class, 'sendMessage'])->name('chatbot.front.send');
+Route::get('/assistant-ia/history', [ChatBotController::class, 'getHistory'])->name('chatbot.front.history');
 
 Route::middleware(['auth'])->group(function () {
     // Front Office Profile (Main user profile)

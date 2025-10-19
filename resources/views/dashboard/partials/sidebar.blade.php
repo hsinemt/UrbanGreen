@@ -54,6 +54,13 @@
                     <span>Plantes</span>
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('admin.chatbot.index') }}" class="{{ request()->routeIs('admin.chatbot.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:chat-round-outline" class="menu-icon"></iconify-icon>
+                    <span>Assistant IA</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>
