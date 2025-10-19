@@ -135,6 +135,17 @@ Route::get('/green-spaces/{id}', [GreenSpaceController::class, 'show']);
 Route::put('/green-spaces/{id}', [GreenSpaceController::class, 'update']);
 Route::delete('/green-spaces/{id}', [GreenSpaceController::class, 'destroy']);
 Route::post('/green-spaces/{id}/book', [GreenSpaceController::class, 'book']);
+
+// Plants CRUD page (UI)
+Route::get('/plants-page', function () {
+    return view('frontOffice.pages.plants');
+})->name('plants.page');
+
+Route::get('/plants', [App\Http\Controllers\PlantController::class, 'index']);
+Route::post('/plants', [App\Http\Controllers\PlantController::class, 'store']);
+Route::get('/plants/{plant}', [App\Http\Controllers\PlantController::class, 'show']);
+Route::put('/plants/{plant}', [App\Http\Controllers\PlantController::class, 'update']);
+Route::delete('/plants/{plant}', [App\Http\Controllers\PlantController::class, 'destroy']);
 Route::post('/register', [UsersController::class, 'register'])->name('register');
 Route::post('/login', [UsersController::class, 'login'])->name('login');
 Route::post('/logout', [UsersController::class, 'logout'])->name('logout');

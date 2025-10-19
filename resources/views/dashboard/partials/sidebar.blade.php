@@ -40,6 +40,20 @@
                     <span>Resources</span>
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('admin.green-spaces.index') }}" class="{{ request()->routeIs('admin.green-spaces.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:leaf-outline" class="menu-icon"></iconify-icon>
+                    <span>Espaces Verts</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.plants.index') }}" class="{{ request()->routeIs('admin.plants.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:plant-outline" class="menu-icon"></iconify-icon>
+                    <span>Plantes</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>

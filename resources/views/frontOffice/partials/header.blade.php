@@ -27,6 +27,7 @@
                                     <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
                                     <li><a href="{{ route('greenspaces.page') }}">Green Space</a></li>
+                                    <li><a href="{{ route('plants.page') }}">Plantes</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
