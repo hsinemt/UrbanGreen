@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\GreenSpace;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class GreenSpaceController extends Controller
 {
-
     public function index()
     {
         return GreenSpace::all();
@@ -70,21 +70,18 @@ class GreenSpaceController extends Controller
             $phoneNumber = $request->input('phone_number');
             $smsService = new SmsService();
 
-            // Formater le numéro pour Twilio (validation sera faite dans le service)
             $formattedPhone = $smsService->formatPhoneNumber($phoneNumber);
 
-            // Valider le format du numéro de téléphone après formatage
             if (!$smsService->validatePhoneNumber($formattedPhone)) {
                 return response()->json([
                     'error' => 'Format de numéro de téléphone invalide. Veuillez utiliser le format international (ex: +21612345678)'
                 ], 400);
             }
 
-            // Mettre à jour la disponibilité
+            // Mettre à jour la disponibilité avant l'envoi
             $greenSpace->update(['availability' => false]);
 
-            // Envoyer le SMS de confirmation
-            $smsSent = $smsService->sendBookingConfirmation(
+            $smsResult = $smsService->sendBookingConfirmation(
                 $formattedPhone,
                 $greenSpace->name,
                 $greenSpace->location
@@ -93,22 +90,29 @@ class GreenSpaceController extends Controller
             $response = [
                 'message' => 'Green space booked successfully',
                 'greenSpace' => $greenSpace,
-                'sms_sent' => $smsSent
+                'sms_sent' => (bool) ($smsResult['ok'] ?? false)
             ];
 
-            if (!$smsSent) {
+            if (!($smsResult['ok'] ?? false)) {
                 $response['warning'] = 'La réservation a été effectuée mais l\'envoi du SMS a échoué.';
+                if (!empty($smsResult['error'])) {
+                    $response['sms_error'] = $smsResult['error'];
+                }
+                Log::warning('SMS non envoyé pour la réservation', [
+                    'green_space_id' => $greenSpace->id,
+                    'to' => $formattedPhone,
+                    'error' => $smsResult['error'] ?? null
+                ]);
             }
 
             return response()->json($response);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'error' => 'Données invalides',
                 'details' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la réservation: ' . $e->getMessage());
+            Log::error('Erreur lors de la réservation: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Une erreur est survenue lors de la réservation'
             ], 500);

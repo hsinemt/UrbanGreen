@@ -17,11 +17,11 @@ Ajoutez ces variables à votre fichier `.env` :
 
 ```env
 # Configuration Twilio
-TWILIO_SID=AC5645210141f5caebb21d32ba2aa05d66
-TWILIO_TOKEN=49413244653dfde9e7d5f3d1386938ae
-TWILIO_FROM=+12346574773
-```
+TWILIO_SID=ACbc50b0e1a502ed182a6dcea17a458345
+TWILIO_TOKEN=769af803fbba8970aebfe04525729a95
+TWILIO_FROM=+13158093819
 
+```
 ### 4. Test de la configuration
 Une fois configuré, la fonctionnalité de booking demandera automatiquement le numéro de téléphone et enverra un SMS de confirmation.
 
