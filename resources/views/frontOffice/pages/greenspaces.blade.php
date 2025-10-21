@@ -184,14 +184,48 @@
     }
 
     async function book(id) {
+        // Demander le numéro de téléphone
+        const phoneNumber = prompt('Veuillez entrer votre numéro de téléphone pour recevoir la confirmation SMS (format: +21612345678 ou 12345678):');
+        
+        if (!phoneNumber) {
+            throw new Error('Numéro de téléphone requis pour la réservation');
+        }
+
+        // Validation basique du format (plus flexible)
+        const cleaned = phoneNumber.replace(/[^\d+]/g, '');
+        if (!cleaned.match(/^(\+?[1-9]\d{7,14})$/)) {
+            throw new Error('Format de numéro de téléphone invalide. Utilisez le format international (ex: +21612345678)');
+        }
+
         const res = await fetch(`${baseUrl}/${id}/book`, {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN': csrfToken
-            }
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                phone_number: phoneNumber
+            })
         });
-        if (!res.ok) throw new Error('Booking failed');
-        return res.json();
+        
+        if (!res.ok) {
+            let errorMessage = 'Erreur lors de la réservation';
+            try {
+                const errorData = await res.json();
+                errorMessage = errorData.error || errorMessage;
+            } catch (e) {
+                // Si la réponse n'est pas du JSON, utiliser le message par défaut
+                console.error('Erreur de parsing JSON:', e);
+            }
+            throw new Error(errorMessage);
+        }
+        
+        try {
+            return await res.json();
+        } catch (e) {
+            throw new Error('Réponse invalide du serveur');
+        }
     }
 
     function resetForm() {
@@ -231,11 +265,19 @@
             if (!confirm(`Do you want to book the green space "${g.name}"?`)) return;
 
             try {
-                await book(id);
+                const result = await book(id);
                 await fetchAll();
-                alert('Green space booked successfully!');
+                
+                let message = 'Espace vert réservé avec succès !';
+                if (result.sms_sent) {
+                    message += '\n\n📱 Un SMS de confirmation a été envoyé à votre numéro de téléphone.';
+                } else if (result.warning) {
+                    message += '\n\n⚠️ ' + result.warning;
+                }
+                
+                alert(message);
             } catch (err) {
-                alert(err.message);
+                alert('Erreur: ' + err.message);
             }
         }
     });

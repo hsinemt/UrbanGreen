@@ -44,21 +44,21 @@
             <li>
                 <a href="{{ route('admin.green-spaces.index') }}" class="{{ request()->routeIs('admin.green-spaces.*') ? 'active-page' : '' }}">
                     <iconify-icon icon="solar:leaf-outline" class="menu-icon"></iconify-icon>
-                    <span>Espaces Verts</span>
+                    <span>Green Spaces</span>
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.plants.index') }}" class="{{ request()->routeIs('admin.plants.*') ? 'active-page' : '' }}">
                     <iconify-icon icon="solar:plant-outline" class="menu-icon"></iconify-icon>
-                    <span>Plantes</span>
+                    <span>Plants</span>
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.chatbot.index') }}" class="{{ request()->routeIs('admin.chatbot.*') ? 'active-page' : '' }}">
                     <iconify-icon icon="solar:chat-round-outline" class="menu-icon"></iconify-icon>
-                    <span>Assistant IA</span>
+                    <span>AI Assistant</span>
                 </a>
             </li>
         </ul>
