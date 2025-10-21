@@ -22,9 +22,17 @@
                                     <li><a href="{{ route('team') }}">Team</a></li>
                                     <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
                                     <li><a href="{{ route('campaigns.show', ['slug' => 'campaign-details']) }}">Campaign Details</a></li>
-                                    <li><a href="{{ route('events.show', ['slug' => 'event-details']) }}">Event Details</a></li>
-                                    <li><a href="{{ route('projects.show', ['slug' => 'project-details']) }}">Project Details</a></li>
+                                    <li class="menu-item-has-children">
+                                        <a href="{{ route('projects.index') }}">Projects</a>
+                                        <ul>
+                                            <li><a href="{{ route('projects.index') }}">My Projects</a></li>
+                                            <li><a href="{{ route('projects.all') }}">All Projects</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{{ route('events.index') }}">Events</a></li>
+                                    <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
+                                    <li><a href="{{ route('greenspaces.page') }}">Green Space</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
@@ -40,6 +48,7 @@
                                 </ul>
                             </li>
                             <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                            <li><a href="{{ route('donations.index') }}">Donations</a></li>
                             <li><a href="{{ route('contact') }}">Contact</a></li>
                         </ul>
                     </div>
@@ -179,21 +188,25 @@
                     <form action="{{ route('register') }}" method="POST">
                         @csrf
                         <div class="cs_form_group cs_mb_20">
-                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">First Name</label>
-                            <input type="text" name="first_name" class="cs_form_input @error('first_name') is-invalid @enderror"
-                                   placeholder="John" value="{{ old('first_name') }}" required>
-                        </div>
-
-                        <div class="cs_form_group cs_mb_20">
-                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Last Name</label>
-                            <input type="text" name="last_name" class="cs_form_input @error('last_name') is-invalid @enderror"
-                                   placeholder="Doe" value="{{ old('last_name') }}" required>
+                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Full Name</label>
+                            <input type="text" name="name" class="cs_form_input @error('name') is-invalid @enderror"
+                                   placeholder="John Doe" value="{{ old('name') }}" required>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Email Address</label>
                             <input type="email" name="email" class="cs_form_input @error('email') is-invalid @enderror"
                                    placeholder="your@email.com" value="{{ old('email') }}" required>
+                        </div>
+
+                        <div class="cs_form_group cs_mb_20">
+                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Role</label>
+                            <select name="role" class="cs_form_input @error('role') is-invalid @enderror">
+                                <option value="association" {{ old('role') === 'association' ? 'selected' : '' }}>Association</option>
+                                <option value="partner" {{ old('role') === 'partner' ? 'selected' : '' }}>Partner</option>
+                                <option value="volunteer" {{ old('role') === 'volunteer' ? 'selected' : '' }}>Volunteer</option>
+                                <option value="admin" {{ old('role')== 'admin' ? 'selected' : ''}}> Admin</option>
+                            </select>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
