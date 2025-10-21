@@ -10,6 +10,12 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const ROLE_ASSOCIATION = 'association';
+    public const ROLE_PARTNER = 'partner';
+    public const ROLE_VOLUNTEER = 'volunteer';
+
+    public const ROLE_ADMIN = 'admin';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +29,7 @@ class User extends Authenticatable
         'avatar',
         'bio',
         'phone',
+        'role',
     ];
 
     /**
@@ -53,6 +60,41 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public static function allowedRoles(): array
+    {
+        return [
+            self::ROLE_ASSOCIATION,
+            self::ROLE_PARTNER,
+            self::ROLE_VOLUNTEER,
+            self::ROLE_ADMIN,
+        ];
+    }
+
+    public function isAssociation(): bool
+    {
+        return $this->role === self::ROLE_ASSOCIATION;
+    }
+
+    public function isPartner(): bool
+    {
+        return $this->role === self::ROLE_PARTNER;
+    }
+
+    public function isVolunteer(): bool
+    {
+        return $this->role === self::ROLE_VOLUNTEER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function projets()
+    {
+        return $this->hasMany(Projet::class);
     }
 
     /**

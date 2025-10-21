@@ -16,10 +16,10 @@ class UsersController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'nullable|in:association,partner,volunteer',
         ]);
 
         if ($validator->fails()) {
@@ -29,11 +29,18 @@ class UsersController extends Controller
                 ->with('showSignup', true);
         }
 
+        // Split full name into first and last names
+        $fullName = trim($request->name);
+        $nameParts = preg_split('/\s+/', $fullName, -1, PREG_SPLIT_NO_EMPTY);
+        $firstName = $nameParts[0] ?? '';
+        $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->input('role', \App\Models\User::ROLE_VOLUNTEER),
         ]);
 
         Auth::login($user);
@@ -113,6 +120,7 @@ class UsersController extends Controller
             'bio' => 'nullable|string|max:500',
             'current_password' => 'nullable|required_with:password',
             'password' => 'nullable|min:8|confirmed',
+            'role' => 'nullable|in:association,partner,volunteer',
         ]);
 
         if ($validator->fails()) {
@@ -125,6 +133,9 @@ class UsersController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->bio = $request->bio;
+        if ($request->filled('role')) {
+            $user->role = $request->role;
+        }
 
         // Update password if provided
         if ($request->filled('current_password')) {
