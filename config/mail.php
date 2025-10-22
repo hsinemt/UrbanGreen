@@ -47,6 +47,15 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            // Development-only: bypass SSL verification to avoid STARTTLS certificate issues on local machines without a CA bundle
+            // Do NOT rely on this in production; the condition ensures it's only active in local environment
+            'stream' => (env('APP_ENV') === 'local') ? [
+                'ssl' => [
+                    'allow_self_signed' => true,
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ] : [],
         ],
 
         'ses' => [

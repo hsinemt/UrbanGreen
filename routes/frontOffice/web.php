@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
 
-
-
-// Homepage
+// Home
 Route::get('/', function () {
     return view('frontOffice.pages.home');
 })->name('home');
@@ -83,7 +84,6 @@ Route::get('/services/{slug}', function ($slug) {
 
 // Projects (CRUD)
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
-// Public route to see all projects regardless of role or login
 Route::get('/projects/all', function () {
     $projects = \App\Models\Projet::latest()->with('user')->get();
     $stats = [
@@ -96,6 +96,7 @@ Route::get('/projects/all', function () {
     ];
     return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
 })->name('projects.all');
+
 Route::middleware('auth')->group(function () {
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
@@ -103,8 +104,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
     Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 });
-// Backward-compatible link from old static page
-Route::get('/projects/project-details', function () { return redirect()->route('projects.index'); });
+
+Route::get('/projects/project-details', function () {
+    return redirect()->route('projects.index');
+});
 Route::get('/projects/{projet}', [ProjectController::class, 'show'])->name('projects.show');
 
 // Causes
@@ -132,14 +135,40 @@ Route::get('/causes/recycling', function () {
     return view('frontOffice.pages.causes.recycling');
 })->name('causes.recycling');
 
-// Donations CRUD for Front Office
+// Donations CRUD
 Route::resource('donations', App\Http\Controllers\DonationController::class);
+
 // Events Resource Routes
-use App\Http\Controllers\EventController;
-Route::resource('events', App\Http\Controllers\EventController::class);
-Route::post('events/bulk-delete', [App\Http\Controllers\EventController::class, 'bulkDelete'])->name('events.bulk-delete');
-Route::get('events/search/live', [App\Http\Controllers\EventController::class, 'search'])->name('events.search');
-// GreenSpaces CRUD page (UI)
+Route::resource('events', EventController::class);
+Route::post('events/bulk-delete', [EventController::class, 'bulkDelete'])->name('events.bulk-delete');
+Route::get('events/search/live', [EventController::class, 'search'])->name('events.search');
+
+// ==================== FEEDBACK ROUTES ====================
+
+// Public feedback routes (no authentication required)
+Route::get('events/{event}/feedback', [FeedbackController::class, 'show'])->name('feedback.show');
+Route::get('api/events/{event}/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+
+// Protected feedback routes (authentication required)
+Route::middleware(['auth'])->group(function () {
+    // Create feedback (comment with rating or reply)
+    Route::post('events/{event}/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+
+    // Update feedback (only owner can update)
+    Route::put('feedback/{feedback}', [FeedbackController::class, 'update'])->name('feedback.update');
+
+    // Delete feedback (owner or admin can delete)
+    Route::delete('feedback/{feedback}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
+
+    // Like/Unlike feedback
+    Route::post('feedback/{feedback}/like', [FeedbackController::class, 'like'])->name('feedback.like');
+    Route::post('feedback/{feedback}/unlike', [FeedbackController::class, 'unlike'])->name('feedback.unlike');
+
+    // Report inappropriate feedback
+    Route::post('feedback/{feedback}/report', [FeedbackController::class, 'report'])->name('feedback.report');
+});
+
+// GreenSpaces
 Route::get('/greenspaces', function () {
     return view('frontOffice.pages.greenspaces');
 })->name('greenspaces.page');
@@ -150,16 +179,43 @@ Route::get('/green-spaces/{id}', [GreenSpaceController::class, 'show']);
 Route::put('/green-spaces/{id}', [GreenSpaceController::class, 'update']);
 Route::delete('/green-spaces/{id}', [GreenSpaceController::class, 'destroy']);
 Route::post('/green-spaces/{id}/book', [GreenSpaceController::class, 'book']);
+
+// Authentication Routes
 Route::post('/register', [UsersController::class, 'register'])->name('register');
 Route::post('/login', [UsersController::class, 'login'])->name('login');
 Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
 
+// Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
-    // Front Office Profile (Main user profile)
+    // User Profile
     Route::get('/profile', [UsersController::class, 'userProfile'])->name('user.profile');
     Route::put('/profile', [UsersController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/avatar', [UsersController::class, 'updateAvatar'])->name('profile.avatar');
+});
 
-//    // Back Office Dashboard (Optional - for admin area)
-//    Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
+// Supplier-Only Routes - Protected by auth middleware
+Route::middleware(['auth'])->group(function () {
+    // Add resource to event (Show form)
+    Route::get('events/{event}/add-resource', [ResourceController::class, 'addToEvent'])
+        ->name('resources.add-to-event');
+
+    // Store resource to event
+    Route::post('events/{event}/add-resource', [ResourceController::class, 'storeToEvent'])
+        ->name('resources.store-to-event');
+
+    // Edit supplier's own resource
+    Route::get('resources/{resource}/edit', [ResourceController::class, 'editSupplier'])
+        ->name('resources.edit-supplier');
+
+    // Update supplier's own resource
+    Route::put('resources/{resource}', [ResourceController::class, 'updateSupplier'])
+        ->name('resources.update-supplier');
+
+    // Delete supplier's own resource
+    Route::delete('resources/{resource}', [ResourceController::class, 'destroySupplier'])
+        ->name('resources.destroy-supplier');
+
+    // Get event resources as JSON
+    Route::get('events/{event}/resources', [ResourceController::class, 'getEventResources'])
+        ->name('resources.event-resources');
 });

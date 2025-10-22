@@ -350,17 +350,11 @@
                             Editing User ID: <strong>${data.id}</strong>
                         </div>
                         <div class="row g-3">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                    First Name <span class="text-danger-600">*</span>
+                                    Full Name <span class="text-danger-600">*</span>
                                 </label>
-                                <input type="text" name="first_name" class="form-control radius-8" value="${data.first_name}" required>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                    Last Name <span class="text-danger-600">*</span>
-                                </label>
-                                <input type="text" name="last_name" class="form-control radius-8" value="${data.last_name}" required>
+                                <input type="text" name="full_name" class="form-control radius-8" value="${data.full_name}" required>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-semibold text-primary-light text-sm mb-8">

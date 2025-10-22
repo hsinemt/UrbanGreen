@@ -14,7 +14,7 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $query = Event::query();
-        
+
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -24,7 +24,7 @@ class EventController extends Controller
                   ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
-        
+
         $events = $query->latest()->get();
         return view('frontOffice.pages.events.index', compact('events'));
     }
@@ -64,11 +64,47 @@ public function create()
     /**
      * Display the specified resource.
      */
+//    public function show(string $id)
+//    {
+//        $event = Event::findOrFail($id);
+//        return view('frontOffice.pages.events.show', compact('event'));
+//    }
+
+    /**
+     * Display the specified resource.
+     */
     public function show(string $id)
     {
         $event = Event::findOrFail($id);
-        return view('frontOffice.pages.events.show', compact('event'));
+        $eventResources = $event->resources()
+            ->with('supplier')
+            ->latest()
+            ->get();
+
+        // Load feedback statistics and data
+        $averageRating = \App\Models\Feedback::getAverageRatingForEvent($event->id) ?? 0;
+        $totalFeedbackCount = $event->feedback()->active()->count();
+
+        // Load paginated feedback with replies
+        $topLevelFeedback = $event->feedback()
+            ->topLevel()
+            ->active()
+            ->latest()
+            ->with(['user', 'replies' => function ($query) {
+                $query->with('user')->latest();
+            }])
+            ->paginate(10);
+
+        return view('frontOffice.pages.events.show', compact(
+            'event',
+            'eventResources',
+            'averageRating',
+            'totalFeedbackCount',
+            'topLevelFeedback'
+        ));
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -85,7 +121,7 @@ public function create()
     public function update(Request $request, string $id)
     {
         $event = Event::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
@@ -100,7 +136,7 @@ public function create()
             if ($event->image && Storage::disk('public')->exists($event->image)) {
                 Storage::disk('public')->delete($event->image);
             }
-            
+
             $validated['image'] = $request->file('image')->store('events', 'public');
         } else {
             // Keep the existing image if no new image is uploaded
@@ -118,7 +154,7 @@ public function create()
     public function destroy(string $id)
     {
         $event = Event::findOrFail($id);
-        
+
         // Delete associated image if exists
         if ($event->image && Storage::disk('public')->exists($event->image)) {
             Storage::disk('public')->delete($event->image);
@@ -140,7 +176,7 @@ public function create()
         ]);
 
         $events = Event::whereIn('id', $request->event_ids)->get();
-        
+
         // Delete associated images
         foreach ($events as $event) {
             if ($event->image && Storage::disk('public')->exists($event->image)) {
@@ -161,7 +197,7 @@ public function create()
     public function search(Request $request)
     {
         $query = Event::query();
-        
+
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -171,9 +207,9 @@ public function create()
                   ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
-        
+
         $events = $query->latest()->get();
-        
+
         // Return JSON response for AJAX
         if ($request->ajax()) {
             return response()->json([
@@ -181,7 +217,7 @@ public function create()
                 'count' => $events->count()
             ]);
         }
-        
+
         return view('frontOffice.pages.events.index', compact('events'));
     }
 }
