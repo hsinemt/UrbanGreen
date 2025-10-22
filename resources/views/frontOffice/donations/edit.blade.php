@@ -69,6 +69,24 @@
 
             <div class="row cs_gap_y_30">
               <div class="col-md-6">
+                <label for="wallet_id" class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Wallet de Destination *</label>
+                <div class="cs_form_group cs_mb_20">
+                  <select class="cs_form_select @error('wallet_id') is-invalid @enderror" id="wallet_id" name="wallet_id" required>
+                    <option value="">Choisir un wallet</option>
+                    @foreach($wallets as $wallet)
+                      <option value="{{ $wallet->id }}" {{ old('wallet_id', $donation->wallet_id) == $wallet->id ? 'selected' : '' }}>
+                        {{ $wallet->name }} - {{ $wallet->event->name ?? 'N/A' }}
+                        ({{ number_format($wallet->total_amount, 2) }}€ / {{ number_format($wallet->target_amount, 2) }}€)
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('wallet_id')
+                    <div class="cs_invalid_feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+              </div>
+
+              <div class="col-md-6">
                 <label for="date" class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Date *</label>
                 <div class="cs_form_group cs_mb_20">
                   <input type="date" class="cs_form_input @error('date') is-invalid @enderror" 
@@ -78,7 +96,9 @@
                   @enderror
                 </div>
               </div>
+            </div>
 
+            <div class="row cs_gap_y_30">
               <div class="col-md-6">
                 <label for="payment_method" class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Méthode de Paiement *</label>
                 <div class="cs_form_group cs_mb_20">

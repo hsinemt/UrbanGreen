@@ -55,7 +55,7 @@
                   </select>
                 </div>
                 
-                <div class="col-md-5">
+                <div class="col-md-4">
                   <label for="payment_method" class="cs_form_label cs_fs_16 cs_semibold cs_mb_8">Méthode de Paiement</label>
                   <select class="cs_form_select" id="payment_method" name="payment_method">
                     <option value="">Toutes les méthodes</option>
@@ -71,6 +71,18 @@
                     @endforeach
                   </select>
                 </div>
+
+                <div class="col-md-3">
+                  <label for="wallet_id" class="cs_form_label cs_fs_16 cs_semibold cs_mb_8">Wallet</label>
+                  <select class="cs_form_select" id="wallet_id" name="wallet_id">
+                    <option value="">Tous les wallets</option>
+                    @foreach($wallets as $wallet)
+                      <option value="{{ $wallet->id }}" {{ request('wallet_id') == $wallet->id ? 'selected' : '' }}>
+                        {{ $wallet->name }} - {{ $wallet->event->name ?? 'N/A' }}
+                      </option>
+                    @endforeach
+                  </select>
+                </div>
             
                 <div class="col-md-2">
                   <button type="submit" class="cs_btn cs_style_1 cs_btn_full cs_btn_sm">
@@ -79,7 +91,7 @@
                 </div>
               </div>
               
-              @if(request()->has(['currency', 'payment_method']) && !empty(array_filter(request()->only(['currency', 'payment_method']))))
+              @if(request()->has(['currency', 'payment_method', 'wallet_id']) && !empty(array_filter(request()->only(['currency', 'payment_method', 'wallet_id']))))
                 <div class="cs_active_filters cs_mt_20">
                   <span class="cs_filter_label">Filtres actifs :</span>
                   @if(request('currency'))
@@ -87,6 +99,12 @@
                   @endif
                   @if(request('payment_method'))
                     <span class="cs_filter_tag cs_payment_tag">{{ request('payment_method') }}</span>
+                  @endif
+                  @if(request('wallet_id'))
+                    @php
+                      $selectedWallet = $wallets->firstWhere('id', request('wallet_id'));
+                    @endphp
+                    <span class="cs_filter_tag cs_wallet_tag">{{ $selectedWallet ? $selectedWallet->name : 'Wallet #' . request('wallet_id') }}</span>
                   @endif
                   <a href="{{ route('donations.index') }}" class="cs_clear_filters">
                     <i class="fas fa-times"></i> Effacer tout
@@ -120,6 +138,7 @@
                   <tr>
                     <th>ID</th>
                     <th>Montant</th>
+                    <th>Wallet</th>
                     <th>Date</th>
                     <th>Méthode</th>
                     <th>Actions</th>
@@ -136,6 +155,16 @@
                           {{ App\Helpers\CurrencyHelper::formatTND(App\Helpers\CurrencyHelper::convertToTND($donation->amount, $donation->currency)) }}
                           <span class="cs_currency_converted_from">{{ $donation->currency }}</span>
                         </span>
+                      </td>
+                      <td>
+                        @if($donation->wallet)
+                          <div class="cs_wallet_info">
+                            <span class="cs_wallet_name">{{ $donation->wallet->name }}</span>
+                            <span class="cs_wallet_event">{{ $donation->wallet->event->name ?? 'N/A' }}</span>
+                          </div>
+                        @else
+                          <span class="cs_no_wallet">Aucun wallet</span>
+                        @endif
                       </td>
                       <td>
                         <span class="cs_date">{{ $donation->date->format('d/m/Y') }}</span>

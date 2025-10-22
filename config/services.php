@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    'exchangerate' => [
+        'api_key' => env('EXCHANGERATE_API_KEY'),
+        'base_url' => env('EXCHANGERATE_BASE_URL', 'https://api.exchangerate-api.com/v4/latest/'),
+        'cache_duration' => env('EXCHANGERATE_CACHE_DURATION', 3600), // 1 heure par défaut
+    ],
+
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+        'public' => env('STRIPE_PUBLIC'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
+
 ];

@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\DonationController;
 
 
 
@@ -28,6 +30,12 @@ Route::get('/gallery', function () {
 Route::get('/team', function () {
     return view('frontOffice.pages.team');
 })->name('team');
+
+// Currency Exchange Routes
+Route::get('/currency', [CurrencyController::class, 'index'])->name('currency.index');
+Route::post('/currency/convert', [CurrencyController::class, 'convert'])->name('currency.convert');
+Route::get('/currency/rates', [CurrencyController::class, 'getRates'])->name('currency.rates');
+Route::get('/currency/rate', [CurrencyController::class, 'getRate'])->name('currency.rate');
 
 Route::get('/cart', function () {
     return view('frontOffice.pages.cart');
@@ -83,14 +91,29 @@ Route::get('/services/{slug}', function ($slug) {
 
 // Projects (CRUD)
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
-Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
-Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+// Public route to see all projects regardless of role or login
+Route::get('/projects/all', function () {
+    $projects = \App\Models\Projet::latest()->with('user')->get();
+    $stats = [
+        'total' => \App\Models\Projet::count(),
+        'by_status' => \App\Models\Projet::selectRaw('status, COUNT(*) as count')->groupBy('status')->pluck('count', 'status')->toArray(),
+        'total_budget' => \App\Models\Projet::sum('budget'),
+        'avg_progress' => \App\Models\Projet::avg('progress_percentage'),
+        'completed_count' => \App\Models\Projet::where('status', 'completed')->count(),
+        'in_progress_count' => \App\Models\Projet::where('status', 'in_progress')->count(),
+    ];
+    return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
+})->name('projects.all');
+Route::middleware('auth')->group(function () {
+    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+});
 // Backward-compatible link from old static page
 Route::get('/projects/project-details', function () { return redirect()->route('projects.index'); });
 Route::get('/projects/{projet}', [ProjectController::class, 'show'])->name('projects.show');
-Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
-Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
 // Causes
 Route::get('/causes/agriculture', function () {
@@ -119,6 +142,10 @@ Route::get('/causes/recycling', function () {
 
 // Donations CRUD for Front Office
 Route::resource('donations', App\Http\Controllers\DonationController::class);
+// Stripe Checkout routes
+Route::post('/donations/checkout', [DonationController::class, 'checkout'])->name('donations.stripe.checkout');
+Route::get('/donations/stripe/success', [DonationController::class, 'success'])->name('donations.stripe.success');
+Route::get('/donations/stripe/cancel', [DonationController::class, 'cancel'])->name('donations.stripe.cancel');
 // Events Resource Routes
 use App\Http\Controllers\EventController;
 Route::resource('events', App\Http\Controllers\EventController::class);

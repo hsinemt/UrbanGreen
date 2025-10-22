@@ -20,4 +20,10 @@ class Event extends Model
     protected $casts = [
         'date' => 'date',
     ];
+
+    // Relation avec Wallets
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class);
+    }
 }

@@ -40,6 +40,13 @@
                     <span>Resources</span>
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('admin.wallets.index') }}" class="{{ request()->routeIs('admin.wallets.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:wallet-money-outline" class="menu-icon"></iconify-icon>
+                    <span>Wallets</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>

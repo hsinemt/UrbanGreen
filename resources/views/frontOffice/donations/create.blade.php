@@ -47,13 +47,22 @@
               <div class="col-md-6">
                 <label for="currency" class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Devise *</label>
                 <div class="cs_form_group cs_mb_20">
-                  <select class="cs_form_select @error('currency') is-invalid @enderror" id="currency" name="currency" required>
+                  <select class="cs_form_select @error('currency') is-invalid @enderror" id="currency" name="currency" required onchange="updateCurrencyConversion()">
                     <option value="">Choisir une devise</option>
                     <option value="TND" {{ old('currency') == 'TND' ? 'selected' : '' }}>د.ت TND - Dinar Tunisien</option>
                     <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>€ EUR - Euro</option>
                     <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>$ USD - Dollar US</option>
                     <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>£ GBP - Livre Sterling</option>
                     <option value="CHF" {{ old('currency') == 'CHF' ? 'selected' : '' }}>CHF - Franc Suisse</option>
+                    <option value="CAD" {{ old('currency') == 'CAD' ? 'selected' : '' }}>C$ CAD - Dollar Canadien</option>
+                    <option value="AUD" {{ old('currency') == 'AUD' ? 'selected' : '' }}>A$ AUD - Dollar Australien</option>
+                    <option value="JPY" {{ old('currency') == 'JPY' ? 'selected' : '' }}>¥ JPY - Yen Japonais</option>
+                    <option value="CNY" {{ old('currency') == 'CNY' ? 'selected' : '' }}>¥ CNY - Yuan Chinois</option>
+                    <option value="AED" {{ old('currency') == 'AED' ? 'selected' : '' }}>د.إ AED - Dirham Émirati</option>
+                    <option value="SAR" {{ old('currency') == 'SAR' ? 'selected' : '' }}>ر.س SAR - Riyal Saoudien</option>
+                    <option value="EGP" {{ old('currency') == 'EGP' ? 'selected' : '' }}>£ EGP - Livre Égyptienne</option>
+                    <option value="MAD" {{ old('currency') == 'MAD' ? 'selected' : '' }}>د.م. MAD - Dirham Marocain</option>
+                    <option value="DZD" {{ old('currency') == 'DZD' ? 'selected' : '' }}>د.ج DZD - Dinar Algérien</option>
                   </select>
                   @error('currency')
                     <div class="cs_invalid_feedback">{{ $message }}</div>
@@ -62,7 +71,48 @@
               </div>
             </div>
 
+            <!-- Convertisseur en temps réel -->
             <div class="row cs_gap_y_30">
+              <div class="col-12">
+                <div class="cs_currency_converter cs_light_bg cs_padding_medium cs_mb_20">
+                  <h5 class="cs_fs_18 cs_semibold cs_mb_15 cs_accent_color">
+                    <i class="fas fa-exchange-alt"></i> Conversion en Temps Réel
+                  </h5>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div id="conversionResult" class="cs_conversion_display">
+                        <span class="cs_conversion_text">Entrez un montant pour voir la conversion</span>
+                      </div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                      <a href="{{ route('currency.index') }}" class="cs_btn cs_style_2 cs_btn_sm">
+                        <i class="fas fa-calculator"></i> Convertisseur Complet
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row cs_gap_y_30">
+              <div class="col-md-6">
+                <label for="wallet_id" class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Wallet de Destination *</label>
+                <div class="cs_form_group cs_mb_20">
+                  <select class="cs_form_select @error('wallet_id') is-invalid @enderror" id="wallet_id" name="wallet_id" required>
+                    <option value="">Choisir un wallet</option>
+                    @foreach($wallets as $wallet)
+                      <option value="{{ $wallet->id }}" {{ old('wallet_id') == $wallet->id ? 'selected' : '' }}>
+                        {{ $wallet->name }} - {{ $wallet->event->name ?? 'N/A' }}
+                        ({{ number_format($wallet->total_amount, 2) }}€ / {{ number_format($wallet->target_amount, 2) }}€)
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('wallet_id')
+                    <div class="cs_invalid_feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+              </div>
+
               <div class="col-md-6">
                 <label for="date" class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Date *</label>
                 <div class="cs_form_group cs_mb_20">
@@ -73,7 +123,9 @@
                   @enderror
                 </div>
               </div>
+            </div>
 
+            <div class="row cs_gap_y_30">
               <div class="col-md-6">
                 <label for="payment_method" class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Méthode de Paiement *</label>
                 <div class="cs_form_group cs_mb_20">
@@ -102,17 +154,14 @@
                 </a>
               </div>
               <div class="col-md-6 text-md-end">
-                <button type="submit" class="cs_btn cs_style_1">
-                  <i class="fas fa-heart"></i> Enregistrer la Donation
-                  <i>
-                    <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                    <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </i>
-                </button>
+                <div class="d-flex gap-2 justify-content-end">
+                  <button type="submit" class="cs_btn cs_style_2">
+                    <i class="fas fa-save"></i> Enregistrer (sans paiement)
+                  </button>
+                  <button type="submit" class="cs_btn cs_style_1" formaction="{{ route('donations.stripe.checkout') }}" formmethod="POST">
+                    <i class="fab fa-stripe"></i> Payer avec Stripe
+                  </button>
+                </div>
               </div>
             </div>
           </form>
@@ -123,4 +172,52 @@
   <div class="cs_height_150 cs_height_lg_80"></div>
 </section>
 <!-- End Create Donation Section -->
+
+<script>
+function updateCurrencyConversion() {
+    const amount = document.getElementById('amount').value;
+    const currency = document.getElementById('currency').value;
+    const resultDiv = document.getElementById('conversionResult');
+    
+    if (!amount || amount <= 0 || !currency) {
+        resultDiv.innerHTML = '<span class="cs_conversion_text">Entrez un montant pour voir la conversion</span>';
+        return;
+    }
+    
+    resultDiv.innerHTML = '<span class="cs_conversion_text"><i class="fas fa-spinner fa-spin"></i> Conversion...</span>';
+    
+    fetch('{{ route("currency.convert") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            amount: parseFloat(amount),
+            from: currency,
+            to: 'TND'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            resultDiv.innerHTML = `
+                <div class="cs_conversion_success">
+                    <strong>${amount} ${currency}</strong> = <strong>${data.formatted}</strong>
+                    <br><small class="text-muted">Taux: 1 ${currency} = ${data.rate.toFixed(4)} TND</small>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `<span class="cs_conversion_error">Erreur de conversion</span>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<span class="cs_conversion_error">Erreur de connexion</span>`;
+    });
+}
+
+// Conversion automatique lors du changement des valeurs
+document.getElementById('amount').addEventListener('input', updateCurrencyConversion);
+document.getElementById('currency').addEventListener('change', updateCurrencyConversion);
+</script>
 @endsection
