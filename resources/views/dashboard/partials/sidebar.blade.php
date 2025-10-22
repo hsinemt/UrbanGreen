@@ -35,7 +35,7 @@
             </li>
 
             <li>
-                <a href="{{ route('resources.index') }}" class="{{ request()->routeIs('resources.*') ? 'active-page' : '' }}">
+                <a href="{{ route('resource.index') }}" class="{{ request()->routeIs('resource.*') ? 'active-page' : '' }}">
                     <iconify-icon icon="solar:box-outline" class="menu-icon"></iconify-icon>
                     <span>Resources</span>
                 </a>

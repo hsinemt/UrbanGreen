@@ -54,6 +54,8 @@
 <script src="{{ asset('frontOffice/js/ripples.min.js') }}"></script>
 <script src="{{ asset('frontOffice/js/gsap.min.js') }}"></script>
 <script src="{{ asset('frontOffice/js/wow.min.js') }}"></script>
+<!-- Add Bootstrap 5 bundle (includes Popper) for dropdowns/modals/tooltips -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('frontOffice/js/main.js') }}"></script>
 
 <!-- Assistant IA Widget Flottant -->

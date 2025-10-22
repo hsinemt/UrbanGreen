@@ -99,7 +99,7 @@
                                             title="Edit">
                                         <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
                                     </button>
-                                    <form action="{{ route('resources.destroy', $resource) }}"
+                                    <form action="{{ route('resource.destroy', $resource) }}"
                                           method="POST"
                                           class="d-inline"
                                           onsubmit="return confirm('Are you sure you want to delete this resource?')">
@@ -151,7 +151,7 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="createResourceForm" action="{{ route('resources.store') }}" method="POST">
+                <form id="createResourceForm" action="{{ route('resource.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">

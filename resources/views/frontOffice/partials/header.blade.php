@@ -22,7 +22,13 @@
                                     <li><a href="{{ route('team') }}">Team</a></li>
                                     <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
                                     <li><a href="{{ route('campaigns.show', ['slug' => 'campaign-details']) }}">Campaign Details</a></li>
-                                    <li><a href="{{ route('projects.index') }}">Projects</a></li>
+                                    <li class="menu-item-has-children">
+                                        <a href="{{ route('projects.index') }}">Projects</a>
+                                        <ul>
+                                            <li><a href="{{ route('projects.index') }}">My Projects</a></li>
+                                            <li><a href="{{ route('projects.all') }}">All Projects</a></li>
+                                        </ul>
+                                    </li>
                                     <li><a href="{{ route('events.index') }}">Events</a></li>
                                     <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
@@ -54,7 +60,7 @@
                         <div class="cs_user_menu">
                             <button class="cs_btn cs_style_1 cs_btn_sm cs_user_btn" id="userMenuBtn">
                                 <i class="fa-solid fa-user"></i>
-                                <span>{{ Auth::user()->first_name }}</span>
+                                <span>{{ Auth::user()->full_name }}</span>
                                 <i class="fa-solid fa-chevron-down cs_dropdown_arrow"></i>
                             </button>
                             <div class="cs_user_dropdown" id="userDropdown">
@@ -142,7 +148,7 @@
                         </button>
 
                         <div class="cs_auth_divider cs_mb_20">
-                            <span>or continue with</span>
+                            <span>or sign in with</span>
                         </div>
 
                         <div class="cs_social_login cs_mb_25">
@@ -159,16 +165,16 @@
 
                         <p class="cs_auth_switch text-center">
                             Don't have an account?
-                            <a href="#" class="cs_accent_color cs_semibold" id="showSignup">Sign Up</a>
+                            <a href="#" class="cs_accent_color cs_semibold" id="showSignup">Create Account</a>
                         </p>
                     </form>
                 </div>
 
                 <!-- Signup Form -->
-                <div class="cs_auth_form {{ session('showSignup') ? '' : 'cs_hidden' }}" id="signupForm">
+                <div class="cs_auth_form {{ session('showSignup') || $errors->any() ? '' : 'cs_hidden' }}" id="signupForm">
                     <div class="cs_auth_header">
-                        <h2 class="cs_fs_38 cs_semibold cs_mb_15">Join Our Community</h2>
-                        <p class="cs_mb_30">Start making a difference for our planet today</p>
+                        <h2 class="cs_fs_38 cs_semibold cs_mb_15">Join Us Today!</h2>
+                        <p class="cs_mb_30">Start making a difference for our planet</p>
                     </div>
 
                     @if($errors->any() && session('showSignup'))
@@ -183,22 +189,28 @@
 
                     <form action="{{ route('register') }}" method="POST">
                         @csrf
-                        <div class="cs_form_group cs_mb_20">
-                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">First Name</label>
-                            <input type="text" name="first_name" class="cs_form_input @error('first_name') is-invalid @enderror"
-                                   placeholder="John" value="{{ old('first_name') }}" required>
-                        </div>
 
                         <div class="cs_form_group cs_mb_20">
-                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Last Name</label>
-                            <input type="text" name="last_name" class="cs_form_input @error('last_name') is-invalid @enderror"
-                                   placeholder="Doe" value="{{ old('last_name') }}" required>
+                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Full Name</label>
+                            <input type="text" name="full_name" class="cs_form_input @error('full_name') is-invalid @enderror"
+                                   placeholder="John Doe" value="{{ old('full_name') }}" required>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Email Address</label>
                             <input type="email" name="email" class="cs_form_input @error('email') is-invalid @enderror"
                                    placeholder="your@email.com" value="{{ old('email') }}" required>
+                        </div>
+
+                        <div class="cs_form_group cs_mb_20">
+                            <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">I am a...</label>
+                            <select name="role" class="cs_form_input @error('role') is-invalid @enderror" required>
+                                <option value="" disabled {{ old('role') ? '' : 'selected' }}>Select your role</option>
+                                <option value="volunteer" {{ old('role') === 'volunteer' ? 'selected' : '' }}>Volunteer</option>
+                                <option value="association" {{ old('role') === 'association' ? 'selected' : '' }}>Association/NGO</option>
+                                <option value="partner" {{ old('role') === 'partner' ? 'selected' : '' }}>Partner Organization</option>
+                                <option value="supplier" {{ old('role') === 'supplier' ? 'selected' : '' }}>Supplier/Vendor</option>
+                            </select>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
