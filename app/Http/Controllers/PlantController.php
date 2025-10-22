@@ -23,7 +23,7 @@ class PlantController extends Controller
         }
         
         // Si c'est une requête API (front office), retourner du JSON
-        if ($request->expectsJson() || $request->is('plants')) {
+        if ($request->expectsJson() || $request->is('plants') || $request->is('plants/*')) {
             $plants = $query->get();
             return response()->json($plants);
         }
@@ -62,7 +62,7 @@ class PlantController extends Controller
         $plant = Plant::create($validated);
 
         // Si c'est une requête API (front office), retourner du JSON
-        if ($request->expectsJson() || $request->is('plants')) {
+        if ($request->expectsJson() || $request->is('plants') || $request->is('plants/*')) {
             return response()->json($plant, 201);
         }
 
@@ -78,7 +78,7 @@ class PlantController extends Controller
         $plant->load('greenSpace');
         
         // Si c'est une requête API (front office), retourner du JSON
-        if ($request->expectsJson() || $request->is('plants/*')) {
+        if ($request->expectsJson() || $request->is('plants') || $request->is('plants/*')) {
             return response()->json($plant);
         }
         
@@ -111,7 +111,7 @@ class PlantController extends Controller
         $plant->update($validated);
 
         // Si c'est une requête API (front office), retourner du JSON
-        if ($request->expectsJson() || $request->is('plants/*')) {
+        if ($request->expectsJson() || $request->is('plants') || $request->is('plants/*')) {
             return response()->json($plant);
         }
 
@@ -127,7 +127,7 @@ class PlantController extends Controller
         $plant->delete();
 
         // Si c'est une requête API (front office), retourner du JSON
-        if ($request->expectsJson() || $request->is('plants/*')) {
+        if ($request->expectsJson() || $request->is('plants') || $request->is('plants/*')) {
             return response()->json(['message' => 'Plante supprimée avec succès.']);
         }
 
