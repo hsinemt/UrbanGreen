@@ -32,7 +32,8 @@
                                     <li><a href="{{ route('events.index') }}">Events</a></li>
                                     <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
-                                    <li><a href="{{ route('greenspaces.page') }}">Green Space</a></li>
+                                    <li><a href="{{ route('greenspaces.page') }}">Green Spaces</a></li>
+                                    <li><a href="{{ route('plants.page') }}">Plants</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
@@ -49,6 +50,7 @@
                             </li>
                             <li><a href="{{ route('blog.index') }}">Blog</a></li>
                             <li><a href="{{ route('donations.index') }}">Donations</a></li>
+                            <li><a href="{{ route('chatbot.front.index') }}">AI Assistant</a></li>
                             <li><a href="{{ route('contact') }}">Contact</a></li>
                         </ul>
                     </div>

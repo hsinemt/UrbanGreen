@@ -7,6 +7,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ChatBotController;
 
 // Home
 Route::get('/', function () {
@@ -180,12 +181,28 @@ Route::put('/green-spaces/{id}', [GreenSpaceController::class, 'update']);
 Route::delete('/green-spaces/{id}', [GreenSpaceController::class, 'destroy']);
 Route::post('/green-spaces/{id}/book', [GreenSpaceController::class, 'book']);
 
+// Plants CRUD page (UI)
+Route::get('/plants-page', function () {
+    return view('frontOffice.pages.plants');
+})->name('plants.page');
+
+Route::get('/plants', [App\Http\Controllers\PlantController::class, 'index']);
+Route::post('/plants', [App\Http\Controllers\PlantController::class, 'store']);
+Route::get('/plants/{plant}', [App\Http\Controllers\PlantController::class, 'show']);
+Route::put('/plants/{plant}', [App\Http\Controllers\PlantController::class, 'update']);
+Route::delete('/plants/{plant}', [App\Http\Controllers\PlantController::class, 'destroy']);
+
 // Authentication Routes
 Route::post('/register', [UsersController::class, 'register'])->name('register');
 Route::post('/login', [UsersController::class, 'login'])->name('login');
 Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
 
 // Authenticated User Routes
+// ChatBot IA pour les clients
+Route::get('/assistant-ia', [ChatBotController::class, 'frontIndex'])->name('chatbot.front.index');
+Route::post('/assistant-ia/send', [ChatBotController::class, 'sendMessage'])->name('chatbot.front.send');
+Route::get('/assistant-ia/history', [ChatBotController::class, 'getHistory'])->name('chatbot.front.history');
+
 Route::middleware(['auth'])->group(function () {
     // User Profile
     Route::get('/profile', [UsersController::class, 'userProfile'])->name('user.profile');
