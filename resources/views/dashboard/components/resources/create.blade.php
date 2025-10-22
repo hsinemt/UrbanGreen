@@ -14,7 +14,7 @@
             </li>
             <li>-</li>
             <li class="fw-medium">
-                <a href="{{ route('resources.index') }}" class="d-flex align-items-center gap-1 hover-text-primary">
+                <a href="{{ route('resource.index') }}" class="d-flex align-items-center gap-1 hover-text-primary">
                     Resources
                 </a>
             </li>
@@ -49,7 +49,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('resources.store') }}" method="POST">
+                    <form action="{{ route('resource.store') }}" method="POST">
                         @csrf
 
                         <div class="row gy-3">
@@ -118,7 +118,7 @@
                             {{-- Action Buttons --}}
                             <div class="col-12">
                                 <div class="d-flex align-items-center justify-content-between gap-3 mt-24">
-                                    <a href="{{ route('resources.index') }}" class="btn btn-outline-neutral radius-8 px-20 py-11">
+                                    <a href="{{ route('resource.index') }}" class="btn btn-outline-neutral radius-8 px-20 py-11">
                                         <iconify-icon icon="ep:back" class="icon"></iconify-icon>
                                         Back to List
                                     </a>

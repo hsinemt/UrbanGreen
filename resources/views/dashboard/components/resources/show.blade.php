@@ -14,7 +14,7 @@
             </li>
             <li>-</li>
             <li class="fw-medium">
-                <a href="{{ route('resources.index') }}" class="d-flex align-items-center gap-1 hover-text-primary">
+                <a href="{{ route('resource.index') }}" class="d-flex align-items-center gap-1 hover-text-primary">
                     Resources
                 </a>
             </li>
@@ -116,16 +116,16 @@
 
                     {{-- Action Buttons --}}
                     <div class="d-flex align-items-center justify-content-between gap-3 mt-24">
-                        <a href="{{ route('resources.index') }}" class="btn btn-outline-neutral radius-8 px-20 py-11">
+                        <a href="{{ route('resource.index') }}" class="btn btn-outline-neutral radius-8 px-20 py-11">
                             <iconify-icon icon="ep:back" class="icon"></iconify-icon>
                             Back to List
                         </a>
                         <div class="d-flex gap-2">
-                            <a href="{{ route('resources.edit', $resource) }}" class="btn btn-warning radius-8 px-20 py-11">
+                            <a href="{{ route('resource.edit', $resource) }}" class="btn btn-warning radius-8 px-20 py-11">
                                 <iconify-icon icon="lucide:edit" class="icon"></iconify-icon>
                                 Edit
                             </a>
-                            <form action="{{ route('resources.destroy', $resource) }}"
+                            <form action="{{ route('resource.destroy', $resource) }}"
                                   method="POST"
                                   class="d-inline"
                                   onsubmit="return confirm('Are you sure you want to delete this resource?')">

@@ -10,10 +10,10 @@ Route::get('/admin/users', [UsersController::class, 'index'])->name('back.users.
 
 
 Route::prefix('admin')->group(function () {
-    Route::resource('resources', ResourceController::class);
+    Route::resource('resource', ResourceController::class);
 });
 
 Route::prefix('admin')->group(function () {
-    Route::get('resources/{resource}/details', [ResourceController::class, 'details'])->name('resources.details');
-    Route::resource('resources', ResourceController::class);
+    Route::get('resource/{resource}/details', [ResourceController::class, 'details'])->name('resource.details');
+    Route::resource('resource', ResourceController::class);
 });
