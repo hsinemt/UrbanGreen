@@ -7,6 +7,7 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\Admin\GreenSpaceController;
 use App\Http\Controllers\ChatBotController;
+use App\Http\Controllers\Admin\WalletController;
 
 Route::get('/admin', [DashboardController::class, 'home'])->name('back.home');
 Route::get('/admin/users', [UsersController::class, 'index'])->name('back.users.index');
@@ -43,4 +44,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('chatbot', [ChatBotController::class, 'index'])->name('chatbot.index');
     Route::post('chatbot/send', [ChatBotController::class, 'sendMessage'])->name('chatbot.send');
     Route::get('chatbot/history', [ChatBotController::class, 'getHistory'])->name('chatbot.history');
+});
+
+// Routes pour les Wallets (CRUD Admin)
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('wallets', WalletController::class);
 });

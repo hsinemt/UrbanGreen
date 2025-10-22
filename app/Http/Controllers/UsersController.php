@@ -40,6 +40,12 @@ class UsersController extends Controller
                 ->with('showSignup', true);
         }
 
+        // Split full name into first and last names
+        $fullName = trim($request->name);
+        $nameParts = preg_split('/\s+/', $fullName, -1, PREG_SPLIT_NO_EMPTY);
+        $firstName = $nameParts[0] ?? '';
+        $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+
         DB::beginTransaction();
 
         try {

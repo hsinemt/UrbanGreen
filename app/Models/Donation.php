@@ -13,7 +13,8 @@ class Donation extends Model
         'amount',
         'currency',
         'date',
-        'payment_method'
+        'payment_method',
+        'wallet_id'
     ];
 
     protected $casts = [
@@ -27,4 +28,10 @@ class Donation extends Model
     // {
     //     return $this->belongsTo(User::class);
     // }
+
+    // Relation avec Wallet
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class);
+    }
 }

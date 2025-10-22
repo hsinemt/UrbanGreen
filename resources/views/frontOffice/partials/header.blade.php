@@ -29,6 +29,13 @@
                                             <li><a href="{{ route('projects.all') }}">All Projects</a></li>
                                         </ul>
                                     </li>
+                                    <li class="menu-item-has-children">
+                                        <a href="{{ route('projects.index') }}">Projects</a>
+                                        <ul>
+                                            <li><a href="{{ route('projects.index') }}">My Projects</a></li>
+                                            <li><a href="{{ route('projects.all') }}">All Projects</a></li>
+                                        </ul>
+                                    </li>
                                     <li><a href="{{ route('events.index') }}">Events</a></li>
                                     <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
@@ -37,6 +44,7 @@
                                 </ul>
                             </li>
                             <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
+                            <li><a href="{{ route('currency.index') }}">Taux de Change</a></li>
                             <li class="menu-item-has-children">
                                 <a href="{{ route('products.index') }}">Shop</a>
                                 <ul>

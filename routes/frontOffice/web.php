@@ -8,6 +8,8 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ChatBotController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\DonationController;
 
 // Home
 Route::get('/', function () {
@@ -30,6 +32,12 @@ Route::get('/gallery', function () {
 Route::get('/team', function () {
     return view('frontOffice.pages.team');
 })->name('team');
+
+// Currency Exchange Routes
+Route::get('/currency', [CurrencyController::class, 'index'])->name('currency.index');
+Route::post('/currency/convert', [CurrencyController::class, 'convert'])->name('currency.convert');
+Route::get('/currency/rates', [CurrencyController::class, 'getRates'])->name('currency.rates');
+Route::get('/currency/rate', [CurrencyController::class, 'getRate'])->name('currency.rate');
 
 Route::get('/cart', function () {
     return view('frontOffice.pages.cart');
@@ -138,7 +146,10 @@ Route::get('/causes/recycling', function () {
 
 // Donations CRUD
 Route::resource('donations', App\Http\Controllers\DonationController::class);
-
+// Stripe Checkout routes
+Route::post('/donations/checkout', [DonationController::class, 'checkout'])->name('donations.stripe.checkout');
+Route::get('/donations/stripe/success', [DonationController::class, 'success'])->name('donations.stripe.success');
+Route::get('/donations/stripe/cancel', [DonationController::class, 'cancel'])->name('donations.stripe.cancel');
 // Events Resource Routes
 Route::resource('events', EventController::class);
 Route::post('events/bulk-delete', [EventController::class, 'bulkDelete'])->name('events.bulk-delete');

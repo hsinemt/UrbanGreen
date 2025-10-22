@@ -33,6 +33,12 @@ class Event extends Model
         'updated_at' => 'datetime',
     ];
 
+    // Relation avec Wallets
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class);
+    }
+
     /**
      * Get all resources for this event.
      */
