@@ -17,7 +17,11 @@ class ActivityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->sentence(3),
+            'description' => $this->faker->paragraph(),
+            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed']),
+            'time_to_finish' => $this->faker->numberBetween(1, 8),
+            'num_persons' => $this->faker->numberBetween(1, 20),
         ];
     }
 }

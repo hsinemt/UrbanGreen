@@ -35,6 +35,9 @@
                         </a>
                         <small class="text-muted">
                             {{ $event->date ? ($event->date instanceof \Illuminate\Support\Carbon ? $event->date->format('M d, Y') : $event->date) : 'No date set' }}
+                            @if($event->project)
+                                • <span class="text-primary">{{ $event->project->name }}</span>
+                            @endif
                         </small>
                     </div>
                 </div>

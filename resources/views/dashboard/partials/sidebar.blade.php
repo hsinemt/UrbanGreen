@@ -40,6 +40,20 @@
                     <span>Resources</span>
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('back.activities.index') }}" class="{{ request()->routeIs('back.activities.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:activity-outline" class="menu-icon"></iconify-icon>
+                    <span>Activities</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('back.events.index') }}" class="{{ request()->routeIs('back.events.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:calendar-outline" class="menu-icon"></iconify-icon>
+                    <span>Events</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>

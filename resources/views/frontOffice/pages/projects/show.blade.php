@@ -56,21 +56,17 @@
 
     <div class="d-flex justify-content-between align-items-center cs_mb_30">
       <h2 class="cs_fs_38 cs_semibold mb-0">Project List</h2>
-      @auth
-        @if(Auth::user()->isAssociation() || Auth::user()->isPartner())
-          <a href="{{ route('projects.create') }}" class="cs_btn cs_style_1">
-            Add Project
-            <i>
-              <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </i>
-          </a>
-        @endif
-      @endauth
+      <a href="{{ route('projects.create') }}" class="cs_btn cs_style_1">
+        Add Project
+        <i>
+          <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </i>
+      </a>
     </div>
 
     <form method="GET" class="cs_mb_30" id="projectsFilterForm">
@@ -122,9 +118,6 @@
                 <p class="cs_fs_21 cs_semibold mb-0">Start : {{ optional($projet->start_date)->format('Y-m-d') }}</p>
                 <p class="cs_fs_21 cs_semibold mb-0">End : {{ optional($projet->end_date)->format('Y-m-d') ?? '-' }}</p>
               </div>
-              <div class="cs_mb_10">
-                <p class="mb-0">Created by: <strong>{{ optional($projet->user)->name ?? '—' }}</strong></p>
-              </div>
               <div class="cs_progress_wrap">
                 <div class="cs_progress" data-progress="{{ (int) $projet->progress_percentage }}">
                   <div class="cs_progress_in cs_accent_bg"><span>{{ (int) $projet->progress_percentage }}%</span></div>
@@ -145,18 +138,14 @@
                     </svg>
                   </i>
                 </a>
-                @auth
-                  @if(Auth::user()->isAssociation() || Auth::user()->isPartner())
-                    <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
-                      Edit
-                    </a>
-                    <form action="{{ route('projects.destroy', $projet) }}" method="POST" onsubmit="return confirm('Are you sure to delete this project?')">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="cs_btn cs_style_2">Delete</button>
-                    </form>
-                  @endif
-                @endauth
+                <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
+                  Edit
+                </a>
+                <form action="{{ route('projects.destroy', $projet) }}" method="POST" onsubmit="return confirm('Are you sure to delete this project?')">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="cs_btn cs_style_2">Delete</button>
+                </form>
               </div>
             </div>
           </div>

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\BackOffice;
 
+use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Activity;
 use App\Services\ImageGenerationService;
 use App\Services\WeatherService;
 use Illuminate\Http\Request;
@@ -27,8 +29,8 @@ class EventController extends Controller
             });
         }
         
-        $events = $query->with('project')->latest()->get();
-        return view('frontOffice.pages.events.index', compact('events'));
+        $events = $query->with('project')->latest()->paginate(10);
+        return view('dashboard.components.events.index', compact('events'));
     }
 
     /**
@@ -36,9 +38,9 @@ class EventController extends Controller
      */
     public function create()
     {
-        $activities = \App\Models\Activity::all();
+        $activities = Activity::all();
         $projects = \App\Models\Projet::all();
-        return view('frontOffice.pages.events.create', compact('activities', 'projects'));
+        return view('dashboard.components.events.create', compact('activities', 'projects'));
     }
 
     /**
@@ -84,7 +86,7 @@ class EventController extends Controller
                 $event->activities()->attach($request->activities);
             }
 
-            return redirect()->route('events.index')->with('success', 'Event created successfully!');
+            return redirect()->route('back.events.index')->with('success', 'Event created successfully!');
             
         } catch (\Exception $e) {
             \Log::error('Event creation failed: ' . $e->getMessage());
@@ -99,7 +101,7 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        $event = Event::findOrFail($id);
+        $event = Event::with('activities')->findOrFail($id);
         
         // Get weather data for the event
         $weatherData = null;
@@ -108,7 +110,7 @@ class EventController extends Controller
             $weatherData = $weatherService->getWeatherForEvent($event->location, $event->date);
         }
         
-        return view('frontOffice.pages.events.show', compact('event', 'weatherData'));
+        return view('dashboard.components.events.show', compact('event', 'weatherData'));
     }
 
     /**
@@ -116,10 +118,10 @@ class EventController extends Controller
      */
     public function edit(string $id)
     {
-        $event = Event::findOrFail($id);
-        $activities = \App\Models\Activity::all();
+        $event = Event::with('activities')->findOrFail($id);
+        $activities = Activity::all();
         $projects = \App\Models\Projet::all();
-        return view('frontOffice.pages.events.edit', compact('event', 'activities', 'projects'));
+        return view('dashboard.components.events.edit', compact('event', 'activities', 'projects'));
     }
 
     /**
@@ -136,6 +138,8 @@ class EventController extends Controller
             'description' => 'nullable|string',
             'budget' => 'nullable|numeric|min:0',
             'project_id' => 'nullable|exists:projets,id',
+            'activities' => 'nullable|array',
+            'activities.*' => 'exists:activities,id',
             'regenerate_image' => 'nullable|boolean',
         ]);
 
@@ -161,7 +165,14 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+        // Update activities relationship
+        if ($request->has('activities')) {
+            $event->activities()->sync($request->activities);
+        } else {
+            $event->activities()->detach();
+        }
+
+        return redirect()->route('back.events.index')->with('success', 'Event updated successfully!');
     }
 
     /**
@@ -178,35 +189,7 @@ class EventController extends Controller
         
         $event->delete();
         
-        return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
-    }
-
-    /**
-     * Search events via AJAX
-     */
-    public function search(Request $request)
-    {
-        $query = Event::query();
-        
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('location', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
-            });
-        }
-        
-        $events = $query->latest()->get();
-        
-        if ($request->ajax()) {
-            return response()->json([
-                'html' => view('frontOffice.pages.events.partials.event-list', compact('events'))->render(),
-                'count' => $events->count()
-            ]);
-        }
-        
-        return view('frontOffice.pages.events.index', compact('events'));
+        return redirect()->route('back.events.index')->with('success', 'Event deleted successfully!');
     }
 
     /**
@@ -229,7 +212,7 @@ class EventController extends Controller
             $event->delete();
         }
 
-        return redirect()->route('events.index')->with('success', count($events) . ' events deleted successfully!');
+        return redirect()->route('back.events.index')->with('success', count($events) . ' events deleted successfully!');
     }
 
     /**
@@ -242,6 +225,6 @@ class EventController extends Controller
         
         $event->activities()->detach($activityId);
         
-        return redirect()->route('events.show', $event->id)->with('success', 'Activity removed from event successfully!');
+        return redirect()->route('back.events.show', $event->id)->with('success', 'Activity removed from event successfully!');
     }
 }

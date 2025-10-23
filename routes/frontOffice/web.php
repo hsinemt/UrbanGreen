@@ -83,29 +83,14 @@ Route::get('/services/{slug}', function ($slug) {
 
 // Projects (CRUD)
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
-// Public route to see all projects regardless of role or login
-Route::get('/projects/all', function () {
-    $projects = \App\Models\Projet::latest()->with('user')->get();
-    $stats = [
-        'total' => \App\Models\Projet::count(),
-        'by_status' => \App\Models\Projet::selectRaw('status, COUNT(*) as count')->groupBy('status')->pluck('count', 'status')->toArray(),
-        'total_budget' => \App\Models\Projet::sum('budget'),
-        'avg_progress' => \App\Models\Projet::avg('progress_percentage'),
-        'completed_count' => \App\Models\Projet::where('status', 'completed')->count(),
-        'in_progress_count' => \App\Models\Projet::where('status', 'in_progress')->count(),
-    ];
-    return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
-})->name('projects.all');
-Route::middleware('auth')->group(function () {
-    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
-    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
-    Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-    Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
-    Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
-});
+Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
 // Backward-compatible link from old static page
 Route::get('/projects/project-details', function () { return redirect()->route('projects.index'); });
 Route::get('/projects/{projet}', [ProjectController::class, 'show'])->name('projects.show');
+Route::get('/projects/{projet}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+Route::put('/projects/{projet}', [ProjectController::class, 'update'])->name('projects.update');
+Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
 // Causes
 Route::get('/causes/agriculture', function () {
@@ -139,6 +124,14 @@ use App\Http\Controllers\EventController;
 Route::resource('events', App\Http\Controllers\EventController::class);
 Route::post('events/bulk-delete', [App\Http\Controllers\EventController::class, 'bulkDelete'])->name('events.bulk-delete');
 Route::get('events/search/live', [App\Http\Controllers\EventController::class, 'search'])->name('events.search');
+Route::post('events/{id}/assign-activity', [App\Http\Controllers\EventController::class, 'assignActivity'])->name('events.assign-activity');
+Route::delete('events/{id}/remove-activity', [App\Http\Controllers\EventController::class, 'removeActivity'])->name('events.remove-activity');
+
+// Activities Resource Routes
+use App\Http\Controllers\ActivityController;
+Route::resource('activities', App\Http\Controllers\ActivityController::class);
+Route::post('activities/bulk-delete', [App\Http\Controllers\ActivityController::class, 'bulkDelete'])->name('activities.bulk-delete');
+Route::get('activities/search/live', [App\Http\Controllers\ActivityController::class, 'search'])->name('activities.search');
 // GreenSpaces CRUD page (UI)
 Route::get('/greenspaces', function () {
     return view('frontOffice.pages.greenspaces');

@@ -15,9 +15,28 @@ class Event extends Model
         'location',
         'description',
         'image',
+        'budget',
+        'project_id',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'budget' => 'decimal:2',
     ];
+
+    /**
+     * The activities that belong to the event.
+     */
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class, 'event_activity');
+    }
+
+    /**
+     * The project that owns the event.
+     */
+    public function project()
+    {
+        return $this->belongsTo(Projet::class);
+    }
 }
