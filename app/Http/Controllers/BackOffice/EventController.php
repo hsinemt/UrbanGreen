@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\BackOffice;
 
+use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Activity;
 use App\Services\ImageGenerationService;
 use App\Services\WeatherService;
 use Illuminate\Http\Request;
@@ -16,7 +18,7 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $query = Event::query();
-
+        
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -26,9 +28,9 @@ class EventController extends Controller
                   ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
-
-        $events = $query->with('project')->latest()->get();
-        return view('frontOffice.pages.events.index', compact('events'));
+        
+        $events = $query->with('project')->latest()->paginate(10);
+        return view('dashboard.components.events.index', compact('events'));
     }
 
     /**
@@ -36,9 +38,9 @@ class EventController extends Controller
      */
     public function create()
     {
-        $activities = \App\Models\Activity::all();
+        $activities = Activity::all();
         $projects = \App\Models\Projet::all();
-        return view('frontOffice.pages.events.create', compact('activities', 'projects'));
+        return view('dashboard.components.events.create', compact('activities', 'projects'));
     }
 
     /**
@@ -84,7 +86,7 @@ class EventController extends Controller
                 $event->activities()->attach($request->activities);
             }
 
-            return redirect()->route('events.index')->with('success', 'Event created successfully!');
+            return redirect()->route('back.events.index')->with('success', 'Event created successfully!');
             
         } catch (\Exception $e) {
             \Log::error('Event creation failed: ' . $e->getMessage());
@@ -97,18 +99,9 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-//    public function show(string $id)
-//    {
-//        $event = Event::findOrFail($id);
-//        return view('frontOffice.pages.events.show', compact('event'));
-//    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $event = Event::findOrFail($id);
+        $event = Event::with('activities')->findOrFail($id);
         
         // Get weather data for the event
         $weatherData = null;
@@ -117,45 +110,18 @@ class EventController extends Controller
             $weatherData = $weatherService->getWeatherForEvent($event->location, $event->date);
         }
         
-        $eventResources = $event->resources()
-            ->with('supplier')
-            ->latest()
-            ->get();
-
-        // Load feedback statistics and data
-        $averageRating = \App\Models\Feedback::getAverageRatingForEvent($event->id) ?? 0;
-        $totalFeedbackCount = $event->feedback()->active()->count();
-
-        // Load paginated feedback with replies
-        $topLevelFeedback = $event->feedback()
-            ->topLevel()
-            ->active()
-            ->latest()
-            ->with(['user', 'replies' => function ($query) {
-                $query->with('user')->latest();
-            }])
-            ->paginate(10);
-
-        return view('frontOffice.pages.events.show', compact(
-            'event', 'weatherData',
-            'eventResources',
-            'averageRating',
-            'totalFeedbackCount',
-            'topLevelFeedback'
-        ));
+        return view('dashboard.components.events.show', compact('event', 'weatherData'));
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $event = Event::findOrFail($id);
-        $activities = \App\Models\Activity::all();
+        $event = Event::with('activities')->findOrFail($id);
+        $activities = Activity::all();
         $projects = \App\Models\Projet::all();
-        return view('frontOffice.pages.events.edit', compact('event', 'activities', 'projects'));
+        return view('dashboard.components.events.edit', compact('event', 'activities', 'projects'));
     }
 
     /**
@@ -164,7 +130,7 @@ class EventController extends Controller
     public function update(Request $request, string $id)
     {
         $event = Event::findOrFail($id);
-
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
@@ -172,6 +138,8 @@ class EventController extends Controller
             'description' => 'nullable|string',
             'budget' => 'nullable|numeric|min:0',
             'project_id' => 'nullable|exists:projets,id',
+            'activities' => 'nullable|array',
+            'activities.*' => 'exists:activities,id',
             'regenerate_image' => 'nullable|boolean',
         ]);
 
@@ -181,7 +149,7 @@ class EventController extends Controller
             if ($event->image && Storage::disk('public')->exists($event->image)) {
                 Storage::disk('public')->delete($event->image);
             }
-
+            
             // Generate new AI image
             $imageService = new ImageGenerationService();
             $generatedImage = $imageService->generateEventImage(
@@ -197,7 +165,14 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+        // Update activities relationship
+        if ($request->has('activities')) {
+            $event->activities()->sync($request->activities);
+        } else {
+            $event->activities()->detach();
+        }
+
+        return redirect()->route('back.events.index')->with('success', 'Event updated successfully!');
     }
 
     /**
@@ -206,7 +181,7 @@ class EventController extends Controller
     public function destroy(string $id)
     {
         $event = Event::findOrFail($id);
-
+        
         // Delete associated image if exists
         if ($event->image && Storage::disk('public')->exists($event->image)) {
             Storage::disk('public')->delete($event->image);
@@ -214,64 +189,9 @@ class EventController extends Controller
         
         $event->delete();
         
-        return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
+        return redirect()->route('back.events.index')->with('success', 'Event deleted successfully!');
     }
 
-    /**
-     * Delete multiple events at once.
-     */
-    public function bulkDelete(Request $request)
-    {
-        $request->validate([
-            'event_ids' => 'required|array|min:1',
-            'event_ids.*' => 'exists:events,id',
-        ]);
-
-        $events = Event::whereIn('id', $request->event_ids)->get();
-
-        // Delete associated images
-        foreach ($events as $event) {
-            if ($event->image && Storage::disk('public')->exists($event->image)) {
-                Storage::disk('public')->delete($event->image);
-            }
-        }
-
-        // Delete the events
-        Event::whereIn('id', $request->event_ids)->delete();
-
-        $count = count($request->event_ids);
-        return redirect()->route('events.index')->with('success', "{$count} event(s) deleted successfully!");
-    }
-
-    /**
-     * Search events via AJAX for live search
-     * Search events via AJAX
-     */
-    public function search(Request $request)
-    {
-        $query = Event::query();
-
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('location', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
-            });
-        }
-
-        $events = $query->latest()->get();
-
-        if ($request->ajax()) {
-            return response()->json([
-                'html' => view('frontOffice.pages.events.partials.event-list', compact('events'))->render(),
-                'count' => $events->count()
-            ]);
-        }
-
-        return view('frontOffice.pages.events.index', compact('events'));
-    }
-    
     /**
      * Bulk delete events
      */
@@ -292,7 +212,7 @@ class EventController extends Controller
             $event->delete();
         }
 
-        return redirect()->route('events.index')->with('success', count($events) . ' events deleted successfully!');
+        return redirect()->route('back.events.index')->with('success', count($events) . ' events deleted successfully!');
     }
 
     /**
@@ -305,6 +225,6 @@ class EventController extends Controller
         
         $event->activities()->detach($activityId);
         
-        return redirect()->route('events.show', $event->id)->with('success', 'Activity removed from event successfully!');
+        return redirect()->route('back.events.show', $event->id)->with('success', 'Activity removed from event successfully!');
     }
 }

@@ -8,6 +8,8 @@ use App\Http\Controllers\PlantController;
 use App\Http\Controllers\Admin\GreenSpaceController;
 use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\Admin\WalletController;
+use App\Http\Controllers\BackOffice\ActivityController;
+use App\Http\Controllers\BackOffice\EventController;
 
 Route::get('/admin', [DashboardController::class, 'home'])->name('back.home');
 Route::get('/admin/users', [UsersController::class, 'index'])->name('back.users.index');
@@ -49,4 +51,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // Routes pour les Wallets (CRUD Admin)
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('wallets', WalletController::class);
+});
+
+// Activities CRUD routes
+Route::prefix('admin')->group(function () {
+    Route::resource('activities', ActivityController::class)->names([
+        'index' => 'back.activities.index',
+        'create' => 'back.activities.create',
+        'store' => 'back.activities.store',
+        'show' => 'back.activities.show',
+        'edit' => 'back.activities.edit',
+        'update' => 'back.activities.update',
+        'destroy' => 'back.activities.destroy',
+    ]);
+    Route::post('activities/bulk-delete', [ActivityController::class, 'bulkDelete'])->name('back.activities.bulk-delete');
+});
+
+// Events CRUD routes
+Route::prefix('admin')->group(function () {
+    Route::resource('events', EventController::class)->names([
+        'index' => 'back.events.index',
+        'create' => 'back.events.create',
+        'store' => 'back.events.store',
+        'show' => 'back.events.show',
+        'edit' => 'back.events.edit',
+        'update' => 'back.events.update',
+        'destroy' => 'back.events.destroy',
+    ]);
+    Route::post('events/bulk-delete', [EventController::class, 'bulkDelete'])->name('back.events.bulk-delete');
+    Route::post('events/{event}/remove-activity', [EventController::class, 'removeActivity'])->name('back.events.remove-activity');
 });

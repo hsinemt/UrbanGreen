@@ -37,6 +37,7 @@
                                         </ul>
                                     </li>
                                     <li><a href="{{ route('events.index') }}">Events</a></li>
+                                    <li><a href="{{ route('activities.index') }}">Activities</a></li>
                                     <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
                                     <li><a href="{{ route('greenspaces.page') }}">Green Spaces</a></li>

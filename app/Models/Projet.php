@@ -20,7 +20,6 @@ class Projet extends Model
         'end_date',
         'progress_percentage',
         'budget',
-        'user_id',
     ];
 
     /**
@@ -70,8 +69,11 @@ class Projet extends Model
         return $this->hasMany(\App\Models\ProjectStatusChange::class, 'projet_id');
     }
 
-    public function user()
+    /**
+     * The events that belong to the project.
+     */
+    public function events()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Event::class);
     }
 }

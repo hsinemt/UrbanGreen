@@ -3,10 +3,10 @@
 @section('content')
 <section class="cs_page_heading cs_bg_filed cs_center text-center cs_heading_bg" data-src="{{ asset('frontOffice/img/page_heading_bg.jpg') }}">
     <div class="container">
-        <h1 class="cs_fs_51 cs_white_color cs_mb_11">Events</h1>
+        <h1 class="cs_fs_51 cs_white_color cs_mb_11">Activities</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item active">Events</li>
+            <li class="breadcrumb-item active">Activities</li>
         </ol>
     </div>
 </section>
@@ -33,21 +33,15 @@
         border-radius: 10px;
         overflow: hidden;
     }
-    .event-image {
+    .activity-icon {
         width: 60px;
         height: 60px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-    .event-placeholder {
-        width: 60px;
-        height: 60px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #6c757d;
+        color: white;
         font-size: 1.5rem;
     }
     .search-form {
@@ -67,15 +61,32 @@
     .bulk-actions.show {
         display: block;
     }
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+    }
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .status-in_progress {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    .status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
 </style>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="d-flex justify-content-between align-items-center mb-4 smooth-transition">
-                <h2 class="cs_fs_38 cs_semibold mb-0">Event List</h2>
-                <a href="{{ route('events.create') }}" class="btn btn-success btn-lg smooth-transition">
-                    <i class="fas fa-plus"></i> Create New Event
+                <h2 class="cs_fs_38 cs_semibold mb-0">Activity List</h2>
+                <a href="{{ route('activities.create') }}" class="btn btn-success btn-lg smooth-transition">
+                    <i class="fas fa-plus"></i> Create New Activity
                 </a>
             </div>
 
@@ -90,13 +101,12 @@
                             <input type="text" 
                                    id="liveSearch"
                                    class="form-control" 
-                                   placeholder="Start typing to search events by name, location, or description..." 
+                                   placeholder="Start typing to search activities by title, description, or status..." 
                                    value="{{ request('search') }}">
                             <button type="button" class="btn btn-outline-secondary" id="clearSearch" style="display: none;">
                                 <i class="fas fa-times"></i> Clear
                             </button>
                         </div>
-                 
                     </div>
                 </div>
             </div>
@@ -105,7 +115,7 @@
             <div id="bulkActions" class="bulk-actions">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <strong id="selectedCount">0</strong> event(s) selected
+                        <strong id="selectedCount">0</strong> activity(ies) selected
                     </div>
                     <div>
                         <button type="button" class="btn btn-danger btn-sm" onclick="confirmBulkDelete()">
@@ -132,14 +142,14 @@
             </div>
 
             <div class="card smooth-transition">
-                <div class="card-body" id="eventsContainer">
-                    @include('frontOffice.pages.events.partials.event-list', ['events' => $events])
+                <div class="card-body" id="activitiesContainer">
+                    @include('frontOffice.pages.activities.partials.activity-list', ['activities' => $activities])
                 </div>
             </div>
 
-            @if(method_exists($events, 'hasPages') && $events->hasPages())
+            @if(method_exists($activities, 'hasPages') && $activities->hasPages())
                 <div class="d-flex justify-content-center mt-4">
-                    {{ $events->links() }}
+                    {{ $activities->links() }}
                 </div>
             @endif
         </div>
@@ -148,16 +158,16 @@
 <div class="cs_height_140 cs_height_lg_70"></div>
 
 <!-- Bulk Delete Form (Hidden) -->
-<form id="bulkDeleteForm" action="{{ route('events.bulk-delete') }}" method="POST" style="display: none;">
+<form id="bulkDeleteForm" action="{{ route('activities.bulk-delete') }}" method="POST" style="display: none;">
     @csrf
-    <div id="selectedEventIds"></div>
+    <div id="selectedActivityIds"></div>
 </form>
 
 <script>
 let searchTimeout;
 
 function updateBulkActions() {
-    const checkboxes = document.querySelectorAll('.event-checkbox:checked');
+    const checkboxes = document.querySelectorAll('.activity-checkbox:checked');
     const count = checkboxes.length;
     const bulkActions = document.getElementById('bulkActions');
     const selectedCount = document.getElementById('selectedCount');
@@ -172,7 +182,7 @@ function updateBulkActions() {
     }
     
     // Update select all checkbox
-    const totalCheckboxes = document.querySelectorAll('.event-checkbox').length;
+    const totalCheckboxes = document.querySelectorAll('.activity-checkbox').length;
     if (selectAll) {
         selectAll.checked = count === totalCheckboxes && totalCheckboxes > 0;
         selectAll.indeterminate = count > 0 && count < totalCheckboxes;
@@ -181,7 +191,7 @@ function updateBulkActions() {
 
 function toggleSelectAll() {
     const selectAll = document.getElementById('selectAll');
-    const checkboxes = document.querySelectorAll('.event-checkbox');
+    const checkboxes = document.querySelectorAll('.activity-checkbox');
     
     checkboxes.forEach(checkbox => {
         checkbox.checked = selectAll.checked;
@@ -191,7 +201,7 @@ function toggleSelectAll() {
 }
 
 function clearSelection() {
-    const checkboxes = document.querySelectorAll('.event-checkbox');
+    const checkboxes = document.querySelectorAll('.activity-checkbox');
     const selectAll = document.getElementById('selectAll');
     
     checkboxes.forEach(checkbox => {
@@ -206,29 +216,29 @@ function clearSelection() {
 }
 
 function confirmBulkDelete() {
-    const checkboxes = document.querySelectorAll('.event-checkbox:checked');
+    const checkboxes = document.querySelectorAll('.activity-checkbox:checked');
     
     if (checkboxes.length === 0) {
-        alert('Please select at least one event to delete.');
+        alert('Please select at least one activity to delete.');
         return;
     }
     
     const count = checkboxes.length;
     const message = count === 1 
-        ? 'Are you sure you want to delete this event?' 
-        : `Are you sure you want to delete these ${count} events?`;
+        ? 'Are you sure you want to delete this activity?' 
+        : `Are you sure you want to delete these ${count} activities?`;
     
     if (confirm(message + ' This action cannot be undone.')) {
         // Add selected IDs to the form
-        const selectedEventIds = document.getElementById('selectedEventIds');
-        selectedEventIds.innerHTML = '';
+        const selectedActivityIds = document.getElementById('selectedActivityIds');
+        selectedActivityIds.innerHTML = '';
         
         checkboxes.forEach(checkbox => {
             const input = document.createElement('input');
             input.type = 'hidden';
-            input.name = 'event_ids[]';
+            input.name = 'activity_ids[]';
             input.value = checkbox.value;
-            selectedEventIds.appendChild(input);
+            selectedActivityIds.appendChild(input);
         });
         
         // Submit the form
@@ -237,16 +247,16 @@ function confirmBulkDelete() {
 }
 
 function performLiveSearch(searchTerm) {
-    const eventsContainer = document.getElementById('eventsContainer');
+    const activitiesContainer = document.getElementById('activitiesContainer');
     const searchResults = document.getElementById('searchResults');
     const searchResultsText = document.getElementById('searchResultsText');
     const clearButton = document.getElementById('clearSearch');
     
     // Show loading state
-    eventsContainer.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-2">Searching...</p></div>';
+    activitiesContainer.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-2">Searching...</p></div>';
     
     // Make AJAX request
-    fetch(`{{ route('events.search') }}?search=${encodeURIComponent(searchTerm)}`, {
+    fetch(`{{ route('activities.search') }}?search=${encodeURIComponent(searchTerm)}`, {
         method: 'GET',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -255,12 +265,12 @@ function performLiveSearch(searchTerm) {
     })
     .then(response => response.json())
     .then(data => {
-        // Update events container
-        eventsContainer.innerHTML = data.html;
+        // Update activities container
+        activitiesContainer.innerHTML = data.html;
         
         // Update search results indicator
         if (searchTerm.trim() !== '') {
-            searchResultsText.textContent = `Showing search results for: "${searchTerm}" (${data.count} event(s) found)`;
+            searchResultsText.textContent = `Showing search results for: "${searchTerm}" (${data.count} activity(ies) found)`;
             searchResults.style.display = 'block';
             clearButton.style.display = 'block';
         } else {
@@ -273,7 +283,7 @@ function performLiveSearch(searchTerm) {
     })
     .catch(error => {
         console.error('Search error:', error);
-        eventsContainer.innerHTML = '<div class="text-center py-5 text-danger"><i class="fas fa-exclamation-triangle fa-2x"></i><p class="mt-2">Error loading search results. Please try again.</p></div>';
+        activitiesContainer.innerHTML = '<div class="text-center py-5 text-danger"><i class="fas fa-exclamation-triangle fa-2x"></i><p class="mt-2">Error loading search results. Please try again.</p></div>';
     });
 }
 
@@ -286,7 +296,7 @@ function clearSearch() {
     searchResults.style.display = 'none';
     clearButton.style.display = 'none';
     
-    // Perform search with empty term to show all events
+    // Perform search with empty term to show all activities
     performLiveSearch('');
 }
 
@@ -321,3 +331,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+

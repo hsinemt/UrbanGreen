@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Projet;
 use App\Models\ProjectStatusChange;
-use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -15,11 +14,6 @@ class ProjectController extends Controller
     public function index()
     {
         $query = Projet::query()->latest();
-
-        // If the logged-in user is an association or partner, only show their projects
-        if (\Illuminate\Support\Facades\Auth::check() && (\Illuminate\Support\Facades\Auth::user()->isAssociation() || \Illuminate\Support\Facades\Auth::user()->isPartner())) {
-            $query->where('user_id', \Illuminate\Support\Facades\Auth::id());
-        }
 
         // Filters: search (name/description), status, start/end dates
         if ($search = request('q')) {
@@ -41,20 +35,19 @@ class ProjectController extends Controller
             });
         }
 
-        $projects = $query->with('user')->get();
+        $projects = $query->get();
 
         // Statistics
-        $statsQuery = clone $query;
         $stats = [
-            'total' => (clone $statsQuery)->count(),
-            'by_status' => (clone $statsQuery)->selectRaw('status, COUNT(*) as count')
+            'total' => Projet::count(),
+            'by_status' => Projet::selectRaw('status, COUNT(*) as count')
                 ->groupBy('status')
                 ->pluck('count', 'status')
                 ->toArray(),
-            'total_budget' => (clone $statsQuery)->sum('budget'),
-            'avg_progress' => (clone $statsQuery)->avg('progress_percentage'),
-            'completed_count' => (clone $statsQuery)->where('status', 'completed')->count(),
-            'in_progress_count' => (clone $statsQuery)->where('status', 'in_progress')->count(),
+            'total_budget' => Projet::sum('budget'),
+            'avg_progress' => Projet::avg('progress_percentage'),
+            'completed_count' => Projet::where('status', 'completed')->count(),
+            'in_progress_count' => Projet::where('status', 'in_progress')->count(),
         ];
 
         return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
@@ -65,9 +58,6 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
-            abort(403, 'Only associations can create projects.');
-        }
         $projet = new Projet();
         $statuses = Projet::allowedStatuses();
         return view('frontOffice.pages.projects.form', compact('projet', 'statuses'));
@@ -78,11 +68,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
-            abort(403, 'Only associations can create projects.');
-        }
         $validated = $this->validateRequest($request);
-        $validated['user_id'] = Auth::id();
         $projet = Projet::create($validated);
         return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
@@ -109,9 +95,6 @@ class ProjectController extends Controller
      */
     public function edit(Projet $projet)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
-            abort(403, 'Only associations can edit projects.');
-        }
         $statuses = Projet::allowedStatuses();
         return view('frontOffice.pages.projects.form', compact('projet', 'statuses'));
     }
@@ -121,9 +104,6 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Projet $projet)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
-            abort(403, 'Only associations can update projects.');
-        }
         $validated = $this->validateRequest($request);
 
         // Workflow guard: log status transitions
@@ -152,9 +132,6 @@ class ProjectController extends Controller
      */
     public function destroy(Projet $projet)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
-            abort(403, 'Only associations can delete projects.');
-        }
         $projet->delete();
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }

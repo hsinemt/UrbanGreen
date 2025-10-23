@@ -20,6 +20,8 @@ class Event extends Model
         'date',
         'location',
         'image',
+        'budget',
+        'project_id',
     ];
 
     /**
@@ -31,7 +33,24 @@ class Event extends Model
         'date' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'budget' => 'decimal:2',
     ];
+
+    /**
+     * The activities that belong to the event.
+     */
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class, 'event_activity');
+    }
+
+    /**
+     * The project that owns the event.
+     */
+    public function project()
+    {
+        return $this->belongsTo(Projet::class);
+    }
 
     // Relation avec Wallets
     public function wallets()
