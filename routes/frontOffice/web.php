@@ -221,6 +221,7 @@ Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
 Route::get('/assistant-ia', [ChatBotController::class, 'frontIndex'])->name('chatbot.front.index');
 Route::post('/assistant-ia/send', [ChatBotController::class, 'sendMessage'])->name('chatbot.front.send');
 Route::get('/assistant-ia/history', [ChatBotController::class, 'getHistory'])->name('chatbot.front.history');
+Route::get('/assistant-ia/api-info', [ChatBotController::class, 'getApiInfo'])->name('chatbot.front.api-info');
 
 Route::middleware(['auth'])->group(function () {
     // User Profile

@@ -53,4 +53,8 @@ return [
         'from' => env('TWILIO_FROM'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
 ];
