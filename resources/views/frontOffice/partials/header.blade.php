@@ -22,13 +22,7 @@
                                     <li><a href="{{ route('team') }}">Team</a></li>
                                     <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>
                                     <li><a href="{{ route('campaigns.show', ['slug' => 'campaign-details']) }}">Campaign Details</a></li>
-                                    <li class="menu-item-has-children">
-                                        <a href="{{ route('projects.index') }}">Projects</a>
-                                        <ul>
-                                            <li><a href="{{ route('projects.index') }}">My Projects</a></li>
-                                            <li><a href="{{ route('projects.all') }}">All Projects</a></li>
-                                        </ul>
-                                    </li>
+                                   
                                     <li class="menu-item-has-children">
                                         <a href="{{ route('projects.index') }}">Projects</a>
                                         <ul>

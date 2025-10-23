@@ -80,7 +80,6 @@ class CompetitionController extends Controller
         $project = Projet::where('id', $validated['projet_id'])->where('user_id', Auth::id())->firstOrFail();
 
         $competition = Competition::create([
-            'name' => $validated['reward'], // Use reward as name for front office
             'partner_id' => Auth::id(),
             'projet_id' => $project->id,
             'reward' => $validated['reward'],
@@ -98,7 +97,8 @@ class CompetitionController extends Controller
         );
         // Send email invites via Brevo HTTP API (batch)
         try {
-            $recipients = $associations->map(fn($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
+$associations = User::whereIn('id', $validated['association_ids'])->get();
+$recipients = $associations->map(fn($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
             if (!empty($recipients)) {
                 $subject = 'Competition Invitation';
                 $projectName = optional($competition->project)->name;
@@ -154,7 +154,6 @@ class CompetitionController extends Controller
         $project = Projet::where('id', $validated['projet_id'])->where('user_id', Auth::id())->firstOrFail();
 
         $competition->update([
-            'name' => $validated['reward'], // Use reward as name for front office
             'projet_id' => $project->id,
             'reward' => $validated['reward'],
             'description' => $validated['description'] ?? null,
@@ -244,7 +243,6 @@ class CompetitionController extends Controller
     public function dashboardStore(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
             'partner_id' => ['required', 'exists:users,id'],
             'projet_id' => ['required', 'exists:projets,id'],
             'reward' => ['required', 'string', 'max:255'],
@@ -254,7 +252,6 @@ class CompetitionController extends Controller
         ]);
 
         $competition = Competition::create([
-            'name' => $validated['name'],
             'partner_id' => $validated['partner_id'],
             'projet_id' => $validated['projet_id'],
             'reward' => $validated['reward'],
@@ -265,7 +262,8 @@ class CompetitionController extends Controller
 
         // Send email invites via Brevo HTTP API (batch)
         try {
-            $recipients = $associations->map(fn($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
+$associations = User::whereIn('id', $validated['association_ids'])->get();
+$recipients = $associations->map(fn($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
             if (!empty($recipients)) {
                 $subject = 'Competition Invitation';
                 $projectName = optional($competition->project)->name;
@@ -306,7 +304,6 @@ class CompetitionController extends Controller
     public function dashboardUpdate(Request $request, Competition $competition)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
             'partner_id' => ['required', 'exists:users,id'],
             'projet_id' => ['required', 'exists:projets,id'],
             'reward' => ['required', 'string', 'max:255'],
@@ -316,7 +313,6 @@ class CompetitionController extends Controller
         ]);
 
         $competition->update([
-            'name' => $validated['name'],
             'partner_id' => $validated['partner_id'],
             'projet_id' => $validated['projet_id'],
             'reward' => $validated['reward'],

@@ -36,17 +36,7 @@
                     @method('PUT')
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                Competition Name <span class="text-danger-600">*</span>
-                            </label>
-                            <input type="text" class="form-control radius-8 @error('name') is-invalid @enderror" 
-                                   name="name" value="{{ old('name', $competition->name) }}" 
-                                   placeholder="Enter competition name" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        
                         
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold text-primary-light text-sm mb-8">

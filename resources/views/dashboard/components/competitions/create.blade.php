@@ -25,33 +25,23 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-8 mx-auto">
-        <div class="card h-100 p-0 radius-12">
-            <div class="card-header border-bottom bg-base py-16 px-24">
-                <h4 class="fw-semibold mb-0">Create New Competition</h4>
+    <div class="col-lg-9 mx-auto">
+        <div class="card h-100 shadow-sm radius-12 border-0">
+            <div class="card-header border-0 bg-primary text-white py-3 px-4 d-flex align-items-center justify-content-between">
+                <h4 class="fw-semibold mb-0">🎯 Create New Competition</h4>
             </div>
-            <div class="card-body p-24">
-                <form action="{{ route('back.competitions.store') }}" method="POST">
+
+            <div class="card-body p-4">
+                <form action="{{ route('back.competitions.store') }}" method="POST" class="needs-validation" novalidate>
                     @csrf
-                    
+
+                   
+
+                    {{-- Partner + Project + Reward --}}
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                Competition Name <span class="text-danger-600">*</span>
-                            </label>
-                            <input type="text" class="form-control radius-8 @error('name') is-invalid @enderror" 
-                                   name="name" value="{{ old('name') }}" 
-                                   placeholder="Enter competition name" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                Partner <span class="text-danger-600">*</span>
-                            </label>
-                            <select class="form-control radius-8 @error('partner_id') is-invalid @enderror" name="partner_id" required>
+                        <div class="col-md-4 mb-4">
+                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">Partner <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-lg radius-8 @error('partner_id') is-invalid @enderror" name="partner_id" required>
                                 <option value="">Select Partner</option>
                                 @foreach($partners as $partner)
                                     <option value="{{ $partner->id }}" {{ old('partner_id') == $partner->id ? 'selected' : '' }}>
@@ -63,14 +53,10 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                Project <span class="text-danger-600">*</span>
-                            </label>
-                            <select class="form-control radius-8 @error('projet_id') is-invalid @enderror" name="projet_id" required>
+
+                        <div class="col-md-4 mb-4">
+                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">Project <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-lg radius-8 @error('projet_id') is-invalid @enderror" name="projet_id" required>
                                 <option value="">Select Project</option>
                                 @foreach($projects as $project)
                                     <option value="{{ $project->id }}" {{ old('projet_id') == $project->id ? 'selected' : '' }}>
@@ -82,60 +68,73 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                Reward <span class="text-danger-600">*</span>
-                            </label>
-                            <input type="text" class="form-control radius-8 @error('reward') is-invalid @enderror" 
-                                   name="reward" value="{{ old('reward') }}" 
-                                   placeholder="e.g., $10,000 cash prize" required>
+
+                        <div class="col-md-4 mb-4">
+                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">Reward <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg radius-8 @error('reward') is-invalid @enderror"
+                                   name="reward" value="{{ old('reward') }}" placeholder="e.g., $10,000 cash prize" required>
                             @error('reward')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                            Description
-                        </label>
-                        <textarea class="form-control radius-8 @error('description') is-invalid @enderror" 
-                                  name="description" rows="4" 
+
+                    {{-- Description --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-primary-light text-sm mb-8">Description</label>
+                        <textarea class="form-control form-control-lg radius-8 @error('description') is-invalid @enderror"
+                                  name="description" rows="4"
                                   placeholder="Describe the competition details, rules, and criteria...">{{ old('description') }}</textarea>
                         @error('description')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
-                    <div class="mb-3">
+
+                    {{-- Associations --}}
+                    <div class="mb-4">
                         <label class="form-label fw-semibold text-primary-light text-sm mb-8">
-                            Associations <span class="text-danger-600">*</span>
+                            Associations <span class="text-danger">*</span>
                         </label>
-                        <div class="border radius-8 p-3 @error('association_ids') border-danger @enderror" style="min-height: 120px; max-height: 200px; overflow-y: auto; background: #f8f9fa;">
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <input type="text" id="assocSearch" class="form-control form-control-sm w-50"
+                                   placeholder="🔍 Search associations by name">
+                            <div>
+                                <button type="button" id="assocSelectAll" class="btn btn-sm btn-outline-success me-1">Select All</button>
+                                <button type="button" id="assocClearAll" class="btn btn-sm btn-outline-secondary">Clear</button>
+                            </div>
+                        </div>
+
+                        <div id="selectedChips" class="mb-3 d-flex flex-wrap gap-2"></div>
+
+                        <div id="assocList"
+                             class="border radius-8 p-3 bg-light"
+                             style="min-height: 140px; max-height: 250px; overflow-y: auto;">
                             @if($associations->count() > 0)
-                                @foreach($associations as $association)
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" 
-                                               name="association_ids[]" 
-                                               value="{{ $association->id }}" 
-                                               id="association_{{ $association->id }}"
-                                               {{ in_array($association->id, old('association_ids', [])) ? 'checked' : '' }}>
-                                        <label class="form-check-label d-flex align-items-center" for="association_{{ $association->id }}">
-                                            <div class="me-2">
-                                                <div class="w-8 h-8 bg-primary-100 rounded-circle d-flex align-items-center justify-content-center">
-                                                    <span class="text-primary fw-semibold text-sm">
-                                                        {{ Str::of($association->first_name.' '.$association->last_name)->trim()->explode(' ')->map(fn($p)=>Str::substr($p,0,1))->take(2)->implode('') }}
-                                                    </span>
-                                                </div>
+                                <div class="row row-cols-1 row-cols-md-2 g-2">
+                                    @foreach($associations as $association)
+                                        <div class="col">
+                                            <div class="form-check border rounded-3 p-2 bg-white shadow-sm d-flex align-items-center">
+                                                <input class="form-check-input me-2" type="checkbox"
+                                                       name="association_ids[]"
+                                                       value="{{ $association->id }}"
+                                                       id="association_{{ $association->id }}"
+                                                       {{ in_array($association->id, old('association_ids', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label flex-grow-1" for="association_{{ $association->id }}">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="avatar-sm rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width:30px; height:30px;">
+                                                            {{ Str::substr($association->name, 0, 2) }}
+                                                        </div>
+                                                        <div>
+                                                            <div class="fw-semibold">{{ $association->name }}</div>
+                                                            <small class="text-muted">{{ $association->email }}</small>
+                                                        </div>
+                                                    </div>
+                                                </label>
                                             </div>
-                                            <div>
-                                                <div class="fw-semibold">{{ $association->name }}</div>
-                                                <small class="text-muted">{{ $association->email }}</small>
-                                            </div>
-                                        </label>
-                                    </div>
-                                @endforeach
+                                        </div>
+                                    @endforeach
+                                </div>
                             @else
                                 <div class="text-center py-4 text-muted">
                                     <iconify-icon icon="solar:users-group-rounded-outline" class="text-xl mb-2"></iconify-icon>
@@ -143,18 +142,20 @@
                                 </div>
                             @endif
                         </div>
+
                         <small class="form-text text-muted">Select at least one association to participate in this competition</small>
                         @error('association_ids')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
-                    
-                    <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('back.competitions.index') }}" class="btn btn-secondary">
+
+                    {{-- Buttons --}}
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{{ route('back.competitions.index') }}" class="btn btn-light border">
                             <iconify-icon icon="solar:arrow-left-outline"></iconify-icon>
                             Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary shadow-sm">
                             <iconify-icon icon="solar:check-circle-outline"></iconify-icon>
                             Create Competition
                         </button>
@@ -169,46 +170,55 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const associationCheckboxes = document.querySelectorAll('input[name="association_ids[]"]');
-    
-    form.addEventListener('submit', function(e) {
-        const checkedAssociations = Array.from(associationCheckboxes).filter(cb => cb.checked);
-        
-        if (checkedAssociations.length === 0) {
-            e.preventDefault();
-            
-            // Show error message
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'alert alert-danger mt-3';
-            errorDiv.innerHTML = '<strong>Error:</strong> Please select at least one association to participate in this competition.';
-            
-            // Remove any existing error messages
-            const existingError = form.querySelector('.alert-danger');
-            if (existingError) {
-                existingError.remove();
-            }
-            
-            // Add error message before submit buttons
-            const buttonContainer = form.querySelector('.d-flex.justify-content-end');
-            buttonContainer.parentNode.insertBefore(errorDiv, buttonContainer);
-            
-            // Scroll to error message
-            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            return false;
-        }
-    });
-    
-    // Remove error message when user selects an association
-    associationCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const errorDiv = form.querySelector('.alert-danger');
-            if (errorDiv && Array.from(associationCheckboxes).some(cb => cb.checked)) {
-                errorDiv.remove();
+    const search = document.getElementById('assocSearch');
+    const list = document.getElementById('assocList');
+    const chips = document.getElementById('selectedChips');
+    const btnAll = document.getElementById('assocSelectAll');
+    const btnClear = document.getElementById('assocClearAll');
+
+    function updateChips() {
+        chips.innerHTML = '';
+        list.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            if (cb.checked) {
+                const label = cb.closest('label');
+                const name = label.querySelector('.fw-semibold')?.textContent.trim() || 'Association';
+                const chip = document.createElement('span');
+                chip.className = 'badge bg-secondary d-flex align-items-center gap-1 px-2 py-1';
+                chip.innerHTML = `${name} <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Remove"></button>`;
+                chip.querySelector('button').addEventListener('click', () => {
+                    cb.checked = false;
+                    updateChips();
+                });
+                chips.appendChild(chip);
             }
         });
+    }
+
+    if (search) {
+        search.addEventListener('input', function() {
+            const q = this.value.trim().toLowerCase();
+            list.querySelectorAll('.form-check').forEach(item => {
+                const name = item.textContent.toLowerCase();
+                item.style.display = name.includes(q) ? '' : 'none';
+            });
+        });
+    }
+
+    btnAll?.addEventListener('click', () => {
+        list.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        updateChips();
     });
+
+    btnClear?.addEventListener('click', () => {
+        list.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        updateChips();
+    });
+
+    list.addEventListener('change', e => {
+        if (e.target.type === 'checkbox') updateChips();
+    });
+
+    updateChips();
 });
 </script>
 @endpush
