@@ -40,6 +40,12 @@ class UsersController extends Controller
                 ->with('showSignup', true);
         }
 
+        // Split full name into first and last names
+        $fullName = trim($request->name);
+        $nameParts = preg_split('/\s+/', $fullName, -1, PREG_SPLIT_NO_EMPTY);
+        $firstName = $nameParts[0] ?? '';
+        $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+
         DB::beginTransaction();
 
         try {
@@ -96,8 +102,14 @@ class UsersController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->route('home')
-                ->with('success', 'Welcome back, ' . Auth::user()->display_name . '!');
+            // Redirect admin users to dashboard
+            if (Auth::user()->isAdmin()) {
+                return redirect()->route('back.home')
+                    ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
+            }
+
+            return redirect()->route('user.profile')
+                ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
         }
 
         return back()

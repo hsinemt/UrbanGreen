@@ -13,11 +13,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create admin user
+        $this->call(AdminUserSeeder::class);
+
+        // Seed demo users for each role
+        User::factory()->create([
+            'first_name' => 'Alice',
+            'last_name' => 'Association',
+            'email' => 'association@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => \App\Models\User::ROLE_ASSOCIATION,
+        ]);
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'first_name' => 'Paul',
+            'last_name' => 'Partner',
+            'email' => 'partner@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => \App\Models\User::ROLE_PARTNER,
+        ]);
+
+        User::factory()->create([
+            'first_name' => 'Victor',
+            'last_name' => 'Volunteer',
+            'email' => 'volunteer@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => \App\Models\User::ROLE_VOLUNTEER,
         ]);
     }
 }

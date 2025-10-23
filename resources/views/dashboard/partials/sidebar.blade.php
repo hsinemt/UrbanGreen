@@ -82,6 +82,20 @@
                     <span>Events</span>
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('back.projects.index') }}" class="{{ request()->routeIs('back.projects.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:folder-outline" class="menu-icon"></iconify-icon>
+                    <span>Projects</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('back.competitions.index') }}" class="{{ request()->routeIs('back.competitions.*') ? 'active-page' : '' }}">
+                    <iconify-icon icon="solar:trophy-outline" class="menu-icon"></iconify-icon>
+                    <span>Competitions</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>

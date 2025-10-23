@@ -38,6 +38,11 @@
                                     </li>
                                     <li><a href="{{ route('events.index') }}">Events</a></li>
                                     <li><a href="{{ route('activities.index') }}">Activities</a></li>
+                                    @auth
+                                        @if(Auth::user()->isPartner())
+                                            <li><a href="{{ route('competitions.index') }}">Competitions</a></li>
+                                        @endif
+                                    @endauth
                                     <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>
                                     <li><a href="{{ route('gallery') }}">Gallery</a></li>
                                     <li><a href="{{ route('greenspaces.page') }}">Green Spaces</a></li>
@@ -66,6 +71,34 @@
                 </div>
                 <div class="cs_main_header_right">
                     @auth
+                    @if(Auth::user()->isAssociation())
+                        <!-- Notifications Bell -->
+                        <div class="cs_notification_menu" style="margin-right: 15px;">
+                            <button class="cs_btn cs_style_1 cs_btn_sm" id="notificationBtn" style="position: relative;">
+                                <i class="fa-solid fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                            </button>
+                            <div class="cs_notification_dropdown" id="notificationDropdown" style="display: none;">
+                                <div class="cs_notification_header">
+                                    <h6>Notifications</h6>
+                                    <span class="notification-count" id="notificationCount">0</span>
+                                </div>
+                                <div class="cs_notification_list" id="notificationList">
+                                    <div class="text-center py-3">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cs_notification_footer">
+                                    <button type="button" class="btn btn-sm btn-primary" id="markAllRead" style="display: none;">Mark All as Read</button>
+                                </div>
+                                <div class="cs_debug_info" style="padding: 10px; background: #f8f9fa; border-top: 1px solid #dee2e6;">
+                                    <small class="text-muted">Debug: <span id="debugInfo">Loading...</span></small>
+                                </div>
+                            </div>
+                        </div>
+                          @endif
                         <div class="cs_user_menu">
                             <button class="cs_btn cs_style_1 cs_btn_sm cs_user_btn" id="userMenuBtn">
                                 <i class="fa-solid fa-user"></i>
@@ -331,6 +364,47 @@
             });
         }
 
+        // Notification system
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        
+        if (notificationBtn) {
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (notificationDropdown.style.display === 'none' || notificationDropdown.style.display === '') {
+                    notificationDropdown.style.display = 'block';
+                    loadNotifications();
+                    loadNotificationCount();
+                } else {
+                    notificationDropdown.style.display = 'none';
+                }
+            });
+        }
+        
+        // Close notification dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (notificationDropdown && !notificationBtn.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                notificationDropdown.style.display = 'none';
+            }
+        });
+        
+        // Load notifications every 30 seconds
+        setInterval(function() {
+            if (notificationDropdown.style.display === 'block') {
+                loadNotifications();
+                loadNotificationCount();
+            }
+        }, 30000);
+        
+        // Load notification count every 10 seconds
+        setInterval(loadNotificationCount, 10000);
+        
+        // Mark all as read button
+        const markAllRead = document.getElementById('markAllRead');
+        if (markAllRead) {
+            markAllRead.addEventListener('click', markAllAsRead);
+        }
+        
         // User menu dropdown
         if (userMenuBtn) {
             userMenuBtn.addEventListener('click', function(e) {
@@ -351,5 +425,215 @@
                 closeAuthModal();
             }
         });
+        
+        // Notification functions
+        function loadNotifications() {
+            console.log('Loading notifications...');
+            document.getElementById('debugInfo').textContent = 'Loading notifications...';
+            
+            fetch('{{ route("back.notifications.unread") }}')
+                .then(response => response.json())
+                .then(notifications => {
+                    console.log('Notifications received:', notifications);
+                    document.getElementById('debugInfo').textContent = 'Loaded ' + notifications.length + ' notifications';
+                    displayNotifications(notifications);
+                })
+                .catch(error => {
+                    console.error('Error loading notifications:', error);
+                    document.getElementById('debugInfo').textContent = 'Notifications error: ' + error;
+                    document.getElementById('notificationList').innerHTML = '<div class="text-center py-4 text-muted">Error loading notifications: ' + error + '</div>';
+                });
+        }
+        
+        function loadNotificationCount() {
+            console.log('Loading notification count...');
+            document.getElementById('debugInfo').textContent = 'Loading count...';
+            
+            fetch('{{ route("back.notifications.count") }}')
+                .then(response => response.json())
+                .then(response => {
+                    console.log('Notification count received:', response);
+                    const count = response.count;
+                    document.getElementById('notificationCount').textContent = count;
+                    document.getElementById('debugInfo').textContent = 'Count: ' + count;
+                    
+                    if (count > 0) {
+                        document.getElementById('notificationBadge').textContent = count;
+                        document.getElementById('notificationBadge').style.display = 'inline';
+                        document.getElementById('markAllRead').style.display = 'block';
+                    } else {
+                        document.getElementById('notificationBadge').style.display = 'none';
+                        document.getElementById('markAllRead').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading notification count:', error);
+                    document.getElementById('debugInfo').textContent = 'Count error: ' + error;
+                });
+        }
+        
+        function displayNotifications(notifications) {
+            if (notifications.length === 0) {
+                document.getElementById('notificationList').innerHTML = '<div class="text-center py-4 text-muted">No new notifications</div>';
+                return;
+            }
+            
+            let html = '';
+            notifications.forEach(function(notification) {
+                const data = notification.data;
+                const timeAgo = getTimeAgo(notification.created_at);
+                
+                html += `
+                    <div class="notification-item p-3 border-bottom" data-id="${notification.id}">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-primary-100 rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="fa-solid fa-trophy text-primary"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1 fw-semibold">Competition Invitation</h6>
+                                <p class="mb-1 text-muted small">${data.message}</p>
+                                <small class="text-muted">${timeAgo}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary mark-read" data-id="${notification.id}">
+                                Mark as read
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('notificationList').innerHTML = html;
+            
+            // Add click handler for mark as read buttons
+            document.querySelectorAll('.mark-read').forEach(button => {
+                button.addEventListener('click', function() {
+                    const notificationId = this.getAttribute('data-id');
+                    markAsRead(notificationId);
+                });
+            });
+        }
+        
+        function markAsRead(notificationId) {
+            fetch(`{{ url('admin/notifications') }}/${notificationId}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(() => {
+                document.querySelector(`.notification-item[data-id="${notificationId}"]`).style.display = 'none';
+                loadNotificationCount();
+            });
+        }
+        
+        function markAllAsRead() {
+            fetch('{{ route("back.notifications.read-all") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(() => {
+                document.getElementById('notificationList').innerHTML = '<div class="text-center py-4 text-muted">All notifications marked as read</div>';
+                loadNotificationCount();
+            });
+        }
+        
+        function getTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + ' minutes ago';
+            if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + ' hours ago';
+            return Math.floor(diffInSeconds / 86400) + ' days ago';
+        }
     });
 </script>
+
+<style>
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cs_notification_dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 350px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.cs_notification_header {
+    padding: 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cs_notification_header h6 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.notification-count {
+    background: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.cs_notification_list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.cs_notification_footer {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid #dee2e6;
+}
+
+.cs_debug_info {
+    font-size: 12px;
+    color: #6c757d;
+}
+</style>

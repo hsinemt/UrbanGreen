@@ -56,17 +56,21 @@
 
     <div class="d-flex justify-content-between align-items-center cs_mb_30">
       <h2 class="cs_fs_38 cs_semibold mb-0">Project List</h2>
-      <a href="{{ route('projects.create') }}" class="cs_btn cs_style_1">
-        Add Project
-        <i>
-          <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </i>
-      </a>
+      @auth
+        @if(Auth::user()->isAssociation() || Auth::user()->isPartner())
+          <a href="{{ route('projects.create') }}" class="cs_btn cs_style_1">
+            Add Project
+            <i>
+              <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </i>
+          </a>
+        @endif
+      @endauth
     </div>
 
     <form method="GET" class="cs_mb_30" id="projectsFilterForm">
@@ -118,6 +122,9 @@
                 <p class="cs_fs_21 cs_semibold mb-0">Start : {{ optional($projet->start_date)->format('Y-m-d') }}</p>
                 <p class="cs_fs_21 cs_semibold mb-0">End : {{ optional($projet->end_date)->format('Y-m-d') ?? '-' }}</p>
               </div>
+              <div class="cs_mb_10">
+                <p class="mb-0">Created by: <strong>{{ optional($projet->user)->name ?? '—' }}</strong></p>
+              </div>
               <div class="cs_progress_wrap">
                 <div class="cs_progress" data-progress="{{ (int) $projet->progress_percentage }}">
                   <div class="cs_progress_in cs_accent_bg"><span>{{ (int) $projet->progress_percentage }}%</span></div>
@@ -138,14 +145,18 @@
                     </svg>
                   </i>
                 </a>
-                <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
-                  Edit
-                </a>
-                <form action="{{ route('projects.destroy', $projet) }}" method="POST" onsubmit="return confirm('Are you sure to delete this project?')">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="cs_btn cs_style_2">Delete</button>
-                </form>
+                @auth
+                  @if((Auth::user()->isAssociation() || Auth::user()->isPartner()) && $projet->user_id == Auth::id())
+                    <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
+                      Edit
+                    </a>
+                    <form action="{{ route('projects.destroy', $projet) }}" method="POST" onsubmit="return confirm('Are you sure to delete this project?')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="cs_btn cs_style_2">Delete</button>
+                    </form>
+                  @endif
+                @endauth
               </div>
             </div>
           </div>
@@ -157,5 +168,62 @@
       @endforelse
     </div>
   </div>
+
+  @auth
+    @if(Auth::user()->isAssociation())
+      <!-- Competitions Section for Associations -->
+      <div class="cs_height_50 cs_height_lg_40"></div>
+      
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center cs_mb_30">
+          <h2 class="cs_fs_38 cs_semibold mb-0">My Competitions</h2>
+        </div>
+
+        <div class="row cs_gap_y_50">
+          @php
+$userCompetitions = Auth::user()->joinedCompetitions()->with(['partner', 'project'])->get();
+          @endphp
+
+          @forelse($userCompetitions as $competition)
+            <div class="col-lg-6">
+              <div class="cs_card cs_style_2 cs_type_2 cs_shadow_1 cs_white_bg">
+                <div class="cs_card_info">
+                  <div class="d-flex justify-content-between align-items-start cs_mb_10">
+                    <h2 class="cs_fs_38 cs_mb_10 cs_semibold" style="line-height:1.2;">{{ $competition->reward }}</h2>
+                    <span class="cs_badge" style="background-color: #28a745; color: #fff;">
+                      Competition
+                    </span>
+                  </div>
+
+                  <h5 class="cs_mb_14">{{ \Illuminate\Support\Str::limit($competition->description, 180) }}</h5>
+
+                  <div class="d-flex justify-content-between cs_mb_10">
+                    <p class="cs_fs_21 cs_semibold mb-0">Project: <strong>{{ $competition->project->name }}</strong></p>
+                    <p class="cs_fs_21 cs_semibold mb-0">Partner: <strong>{{ $competition->partner->name }}</strong></p>
+                  </div>
+
+                  <div class="d-flex gap-2">
+                    <a href="{{ route('competitions.show', $competition) }}" class="cs_btn cs_style_1">
+                      View Competition
+                      <i>
+                        <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                      </i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          @empty
+            <div class="col-12">
+              <div class="cs_notice cs_style_1">No competitions found.</div>
+            </div>
+          @endforelse
+        </div>
+      </div>
+    @endif
+  @endauth
+
   <div class="cs_height_140 cs_height_lg_70"></div>
 @endsection

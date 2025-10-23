@@ -65,6 +65,84 @@ class User extends Authenticatable implements MustVerifyEmailContract
         ];
     }
 
+    public static function allowedRoles(): array
+    {
+        return [
+            self::ROLE_ASSOCIATION,
+            self::ROLE_PARTNER,
+            self::ROLE_VOLUNTEER,
+        ];
+    }
+
+    public function isAssociation(): bool
+    {
+        return $this->role === self::ROLE_ASSOCIATION;
+    }
+
+    public function isPartner(): bool
+    {
+        return $this->role === self::ROLE_PARTNER;
+    }
+
+    public function isVolunteer(): bool
+    {
+        return $this->role === self::ROLE_VOLUNTEER;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function projets()
+    {
+        return $this->hasMany(Projet::class);
+    }
+
+    public static function allowedRoles(): array
+    {
+        return [
+            self::ROLE_ASSOCIATION,
+            self::ROLE_PARTNER,
+            self::ROLE_VOLUNTEER,
+        ];
+    }
+
+    public function isAssociation(): bool
+    {
+        return $this->role === self::ROLE_ASSOCIATION;
+    }
+
+    public function isPartner(): bool
+    {
+        return $this->role === self::ROLE_PARTNER;
+    }
+
+    public function isVolunteer(): bool
+    {
+        return $this->role === self::ROLE_VOLUNTEER;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function projets()
+    {
+        return $this->hasMany(Projet::class);
+    }
+
     /**
      * Get all allowed roles
      */
@@ -203,6 +281,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
     {
         return (string) ($this->full_name ?? '');
     }
+    public function joinedCompetitions()
+{
+    return $this->belongsToMany(Competition::class, 'competition_association', 'association_id', 'competition_id');
+}
 
     /**
      * Get display name based on role
