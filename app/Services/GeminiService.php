@@ -23,7 +23,7 @@ class GeminiService
         try {
             // Construire le prompt avec le contexte
             $systemPrompt = $this->buildSystemPrompt($context);
-            
+
             $payload = [
                 'contents' => [
                     [
@@ -60,16 +60,18 @@ class GeminiService
                 ]
             ];
 
-            $response = Http::withHeaders([
+            $response = Http::withOptions([
+                'verify' => false
+            ])->withHeaders([
                 'Content-Type' => 'application/json',
             ])->post($this->baseUrl . '?key=' . $this->apiKey, $payload);
 
             if ($response->successful()) {
                 $data = $response->json();
-                
+
                 if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
                     $generatedText = $data['candidates'][0]['content']['parts'][0]['text'];
-                    
+
                     return [
                         'success' => true,
                         'response' => $generatedText,

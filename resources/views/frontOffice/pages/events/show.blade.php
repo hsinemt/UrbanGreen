@@ -233,15 +233,15 @@
                                                 </div>
                                             @endif
                                         @endauth
-    
+
                                     @if($weatherData)
                                         <div class="mb-3">
                                             <strong><i class="fas fa-thermometer-half text-primary"></i> Weather:</strong>
                                             <div class="weather-info mt-2">
                                                 <div class="d-flex align-items-center mb-2">
-                                                    <img src="{{ (new \App\Services\WeatherService())->getWeatherIconUrl($weatherData['icon']) }}" 
-                                                         alt="{{ $weatherData['description'] }}" 
-                                                         class="weather-icon me-2" 
+                                                    <img src="{{ (new \App\Services\WeatherService())->getWeatherIconUrl($weatherData['icon']) }}"
+                                                         alt="{{ $weatherData['description'] }}"
+                                                         class="weather-icon me-2"
                                                          style="width: 40px; height: 40px;">
                                                     <div>
                                                         <span class="weather-temp">{{ $weatherData['temperature'] }}°C</span>
@@ -471,7 +471,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </form>
-                                                            </div>
+                                                             </div>
                                                         @endauth
 
                                                         <!-- Display Replies -->
@@ -624,7 +624,7 @@
                                         </div>
                                     @endauth
                                 </div>
-            
+
                     @if($event->activities->count() > 0)
                         <div class="mt-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
