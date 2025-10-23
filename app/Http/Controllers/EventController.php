@@ -20,10 +20,10 @@ class EventController extends Controller
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('location', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('location', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
 
@@ -46,9 +46,8 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        // Increase execution time limit for AI image generation
-        set_time_limit(120); // 2 minutes
-        
+        set_time_limit(120); // Extend time for AI image generation
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date|after:today',
@@ -58,50 +57,37 @@ class EventController extends Controller
             'project_id' => 'nullable|exists:projets,id',
             'activities' => 'nullable|array',
             'activities.*' => 'exists:activities,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
 
         try {
-            // Generate AI image using multiple fallback methods
-            $imageService = new ImageGenerationService();
-            $generatedImage = $imageService->generateEventImage(
-                $validated['name'],
-                $validated['description'] ?? null,
-                $validated['location']
-            );
-
-            if ($generatedImage) {
-                $validated['image'] = $generatedImage;
-                \Log::info('Image generated successfully', ['image' => $generatedImage]);
+            // Handle manual upload
+            if ($request->hasFile('image')) {
+                $validated['image'] = $request->file('image')->store('events', 'public');
             } else {
-                \Log::warning('Image generation failed, creating event without image');
-                $validated['image'] = null;
+                // Generate AI image if no manual upload
+                $imageService = new ImageGenerationService();
+                $generatedImage = $imageService->generateEventImage(
+                    $validated['name'],
+                    $validated['description'] ?? null,
+                    $validated['location']
+                );
+                $validated['image'] = $generatedImage ?? null;
             }
 
             $event = Event::create($validated);
 
-            // Attach activities if provided
+            // Attach activities
             if ($request->has('activities')) {
                 $event->activities()->attach($request->activities);
             }
 
             return redirect()->route('events.index')->with('success', 'Event created successfully!');
-            
         } catch (\Exception $e) {
             \Log::error('Event creation failed: ' . $e->getMessage());
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Failed to create event. Please try again.');
+            return back()->withInput()->with('error', 'Failed to create event. Please try again.');
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-//    public function show(string $id)
-//    {
-//        $event = Event::findOrFail($id);
-//        return view('frontOffice.pages.events.show', compact('event'));
-//    }
 
     /**
      * Display the specified resource.
@@ -109,24 +95,22 @@ class EventController extends Controller
     public function show(string $id)
     {
         $event = Event::findOrFail($id);
-        
-        // Get weather data for the event
+
+        // Fetch related resources
+        $eventResources = $event->resources()->with('supplier')->latest()->get();
+
+        // Weather data
         $weatherData = null;
         if ($event->location && $event->date) {
             $weatherService = new WeatherService();
             $weatherData = $weatherService->getWeatherForEvent($event->location, $event->date);
         }
-        
-        $eventResources = $event->resources()
-            ->with('supplier')
-            ->latest()
-            ->get();
 
-        // Load feedback statistics and data
+        // Feedback statistics
         $averageRating = \App\Models\Feedback::getAverageRatingForEvent($event->id) ?? 0;
         $totalFeedbackCount = $event->feedback()->active()->count();
 
-        // Load paginated feedback with replies
+        // Load feedback and replies
         $topLevelFeedback = $event->feedback()
             ->topLevel()
             ->active()
@@ -137,15 +121,14 @@ class EventController extends Controller
             ->paginate(10);
 
         return view('frontOffice.pages.events.show', compact(
-            'event', 'weatherData',
+            'event',
             'eventResources',
+            'weatherData',
             'averageRating',
             'totalFeedbackCount',
             'topLevelFeedback'
         ));
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
@@ -172,27 +155,25 @@ class EventController extends Controller
             'description' => 'nullable|string',
             'budget' => 'nullable|numeric|min:0',
             'project_id' => 'nullable|exists:projets,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'regenerate_image' => 'nullable|boolean',
         ]);
 
-        // Handle image regeneration
-        if ($request->has('regenerate_image')) {
-            // Delete old image if exists
+        // Handle manual image upload
+        if ($request->hasFile('image')) {
             if ($event->image && Storage::disk('public')->exists($event->image)) {
                 Storage::disk('public')->delete($event->image);
             }
-
-            // Generate new AI image
+            $validated['image'] = $request->file('image')->store('events', 'public');
+        } elseif ($request->has('regenerate_image')) {
+            // Regenerate AI image
             $imageService = new ImageGenerationService();
             $generatedImage = $imageService->generateEventImage(
                 $validated['name'],
                 $validated['description'] ?? null,
                 $validated['location']
             );
-
-            if ($generatedImage) {
-                $validated['image'] = $generatedImage;
-            }
+            $validated['image'] = $generatedImage ?? null;
         }
 
         $event->update($validated);
@@ -207,13 +188,12 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        // Delete associated image if exists
         if ($event->image && Storage::disk('public')->exists($event->image)) {
             Storage::disk('public')->delete($event->image);
         }
-        
+
         $event->delete();
-        
+
         return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
     }
 
@@ -229,23 +209,18 @@ class EventController extends Controller
 
         $events = Event::whereIn('id', $request->event_ids)->get();
 
-        // Delete associated images
         foreach ($events as $event) {
             if ($event->image && Storage::disk('public')->exists($event->image)) {
                 Storage::disk('public')->delete($event->image);
             }
+            $event->delete();
         }
 
-        // Delete the events
-        Event::whereIn('id', $request->event_ids)->delete();
-
-        $count = count($request->event_ids);
-        return redirect()->route('events.index')->with('success', "{$count} event(s) deleted successfully!");
+        return redirect()->route('events.index')->with('success', count($events) . ' event(s) deleted successfully!');
     }
 
     /**
-     * Search events via AJAX for live search
-     * Search events via AJAX
+     * Search events via AJAX for live search.
      */
     public function search(Request $request)
     {
@@ -253,10 +228,10 @@ class EventController extends Controller
 
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('location', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('location', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
 
@@ -271,40 +246,16 @@ class EventController extends Controller
 
         return view('frontOffice.pages.events.index', compact('events'));
     }
-    
-    /**
-     * Bulk delete events
-     */
-    public function bulkDelete(Request $request)
-    {
-        $request->validate([
-            'event_ids' => 'required|array',
-            'event_ids.*' => 'exists:events,id',
-        ]);
-
-        $events = Event::whereIn('id', $request->event_ids)->get();
-        
-        foreach ($events as $event) {
-            // Delete associated image if exists
-            if ($event->image && Storage::disk('public')->exists($event->image)) {
-                Storage::disk('public')->delete($event->image);
-            }
-            $event->delete();
-        }
-
-        return redirect()->route('events.index')->with('success', count($events) . ' events deleted successfully!');
-    }
 
     /**
-     * Remove activity from event
+     * Remove activity from event.
      */
     public function removeActivity(Request $request, string $id)
     {
         $event = Event::findOrFail($id);
         $activityId = $request->input('activity_id');
-        
         $event->activities()->detach($activityId);
-        
-        return redirect()->route('events.show', $event->id)->with('success', 'Activity removed from event successfully!');
+
+        return redirect()->route('events.show', $event->id)->with('success', 'Activity removed successfully!');
     }
 }
