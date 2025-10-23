@@ -71,6 +71,12 @@ class UsersController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
+            // Redirect admin users to dashboard
+            if (Auth::user()->isAdmin()) {
+                return redirect()->route('back.home')
+                    ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
+            }
+
             return redirect()->route('user.profile')
                 ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
         }

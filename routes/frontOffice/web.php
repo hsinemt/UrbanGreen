@@ -5,6 +5,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\NotificationController;
+
 
 
 
@@ -174,4 +176,10 @@ Route::middleware(['auth'])->group(function () {
 
 //    // Back Office Dashboard (Optional - for admin area)
 //    Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
+});
+Route::middleware(['auth'])->prefix('admin')->name('back.notifications.')->group(function () {
+    Route::get('/notifications/unread', [NotificationController::class, 'unread'])->name('unread');
+    Route::get('/notifications/count', [NotificationController::class, 'count'])->name('count');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('read-all');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
 });

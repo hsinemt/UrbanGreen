@@ -9,7 +9,10 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use Notifiable;
 
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_USER = 'user';
     public const ROLE_ASSOCIATION = 'association';
     public const ROLE_PARTNER = 'partner';
     public const ROLE_VOLUNTEER = 'volunteer';
@@ -84,6 +87,16 @@ class User extends Authenticatable
         return $this->role === self::ROLE_VOLUNTEER;
     }
 
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
     public function projets()
     {
         return $this->hasMany(Projet::class);
@@ -98,6 +111,10 @@ class User extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
+public function joinedCompetitions()
+{
+    return $this->belongsToMany(Competition::class, 'competition_association', 'association_id', 'competition_id');
+}
 
     /**
      * Get the user's avatar URL.

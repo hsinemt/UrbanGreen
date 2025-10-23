@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create admin user
+        $this->call(AdminUserSeeder::class);
+
         // Seed demo users for each role
         User::factory()->create([
             'first_name' => 'Alice',

@@ -199,14 +199,7 @@
                 <span class="cs_fs_16 cs_semibold">Budget</span>
                 <span class="cs_fs_16 cs_accent_color cs_semibold">{{ number_format($projet->budget, 0) }} DT</span>
               </div>
-              <div class="d-flex justify-content-between align-items-center cs_mb_10">
-                <span class="cs_fs_16 cs_semibold">Risks</span>
-                <span class="cs_fs_16">{{ $projet->risks ? $projet->risks->count() : 0 }}</span>
-              </div>
-              <div class="d-flex justify-content-between align-items-center cs_mb_10">
-                <span class="cs_fs_16 cs_semibold">Issues</span>
-                <span class="cs_fs_16">{{ $projet->issues ? $projet->issues->count() : 0 }}</span>
-              </div>
+             
             </div>
           </div>
         </div>
@@ -219,20 +212,24 @@
               <i class="fa-solid fa-cog cs_mr_10 cs_accent_color"></i>
               Project Actions
             </h3>
-            <div class="d-grid gap-2">
-              <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
-                <i class="fa-solid fa-edit cs_mr_10"></i>
-                Edit Project
-              </a>
-              <form action="{{ route('projects.destroy', $projet) }}" method="POST" onsubmit="return confirm('Are you sure to delete this project?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="cs_btn cs_style_3 w-100">
-                  <i class="fa-solid fa-trash cs_mr_10"></i>
-                  Delete Project
-                </button>
-              </form>
-            </div>
+            @auth
+              @if(Auth::user()->isAssociation() || Auth::user()->isPartner())
+                <div class="d-grid gap-2">
+                  <a href="{{ route('projects.edit', $projet) }}" class="cs_btn cs_style_1">
+                    <i class="fa-solid fa-edit cs_mr_10"></i>
+                    Edit Project
+                  </a>
+                  <form action="{{ route('projects.destroy', $projet) }}" method="POST" onsubmit="return confirm('Are you sure to delete this project?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="cs_btn cs_style_3 w-100">
+                      <i class="fa-solid fa-trash cs_mr_10"></i>
+                      Delete Project
+                    </button>
+                  </form>
+                </div>
+              @endif
+            @endauth
           </div>
         </div>
       </div>
