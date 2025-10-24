@@ -1,15 +1,14 @@
-@extends('frontOffice.layouts.app')
-@section('title', 'Add Resource to Event')
+<?php $__env->startSection('title', 'Add Resource to Event'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <!-- Start Hero Section -->
-    <section class="cs_page_heading cs_bg_filed cs_center text_center cs_heading_bg" data-src="{{ asset('frontOffice/img/page_heading_bg.jpg') }}">
+    <section class="cs_page_heading cs_bg_filed cs_center text_center cs_heading_bg" data-src="<?php echo e(asset('frontOffice/img/page_heading_bg.jpg')); ?>">
         <div class="container">
             <h1 class="cs_fs_51 cs_white_color cs_mb_11">Add Resources to Event</h1>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('events.index') }}">Events</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('events.show', $event->id) }}">{{ Str::limit($event->name, 30) }}</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo e(route('home')); ?>">Home</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo e(route('events.index')); ?>">Events</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo e(route('events.show', $event->id)); ?>"><?php echo e(Str::limit($event->name, 30)); ?></a></li>
                 <li class="breadcrumb-item active">Add Resource</li>
             </ol>
         </div>
@@ -19,7 +18,7 @@
     <!-- Start Add Resource Section -->
     <section class="cs_shape_wrap">
         <div class="cs_height_140 cs_height_lg_70"></div>
-        <div class="cs_shape cs_shape_position_1"><img src="{{ asset('frontOffice/img/nature/about_shape_1.svg') }}" alt=""></div>
+        <div class="cs_shape cs_shape_position_1"><img src="<?php echo e(asset('frontOffice/img/nature/about_shape_1.svg')); ?>" alt=""></div>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -45,7 +44,7 @@
                                     <span class="info-label-improved">
                                         <i class="fas fa-tag"></i> Event Name
                                     </span>
-                                    <p class="info-value-improved">{{ $event->name }}</p>
+                                    <p class="info-value-improved"><?php echo e($event->name); ?></p>
                                 </div>
 
                                 <!-- Date -->
@@ -53,7 +52,7 @@
                                     <span class="info-label-improved">
                                         <i class="fas fa-clock"></i> Date
                                     </span>
-                                    <p class="info-value-improved">{{ $event->date ? ($event->date instanceof \Illuminate\Support\Carbon ? $event->date->format('F d, Y') : $event->date) : 'N/A' }}</p>
+                                    <p class="info-value-improved"><?php echo e($event->date ? ($event->date instanceof \Illuminate\Support\Carbon ? $event->date->format('F d, Y') : $event->date) : 'N/A'); ?></p>
                                 </div>
 
                                 <!-- Location -->
@@ -61,7 +60,7 @@
                                     <span class="info-label-improved">
                                         <i class="fas fa-map-marker-alt"></i> Location
                                     </span>
-                                    <p class="info-value-improved">{{ $event->location ?? 'N/A' }}</p>
+                                    <p class="info-value-improved"><?php echo e($event->location ?? 'N/A'); ?></p>
                                 </div>
 
                                 <!-- Supplier -->
@@ -69,7 +68,7 @@
                                     <span class="info-label-improved">
                                         <i class="fas fa-user-tie"></i> Supplier
                                     </span>
-                                    <p class="info-value-improved supplier-link-improved">{{ Auth::user()->display_name ?? Auth::user()->name }}</p>
+                                    <p class="info-value-improved supplier-link-improved"><?php echo e(Auth::user()->display_name ?? Auth::user()->name); ?></p>
                                 </div>
                             </div>
                         </div>
@@ -198,19 +197,21 @@
                         }
                     </style>
 
-                    @if(session('success'))
+                    <?php if(session('success')): ?>
                         <div class="alert alert-success alert-dismissible fade show cs_mb_30" role="alert">
-                            <i class="fas fa-check-circle"></i> {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
+                            <i class="fas fa-check-circle"></i> <?php echo e(session('success')); ?>
 
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show cs_mb_30" role="alert">
-                            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
-                    @endif
+                    <?php endif; ?>
+
+                    <?php if(session('error')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show cs_mb_30" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> <?php echo e(session('error')); ?>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Resource Form - IMPROVED VERSION -->
                     <div class="resource-form-card">
@@ -221,8 +222,8 @@
                             <h5 class="form-header-title">Resource Details</h5>
                         </div>
 
-                        <form action="{{ route('resources.store-to-event', $event->id) }}" method="POST" id="resourceForm" class="form-content">
-                            @csrf
+                        <form action="<?php echo e(route('resources.store-to-event', $event->id)); ?>" method="POST" id="resourceForm" class="form-content">
+                            <?php echo csrf_field(); ?>
 
                             <div class="row cs_gap_y_30">
                                 <!-- Resource Name -->
@@ -232,15 +233,29 @@
                                             <i class="fas fa-tag"></i> Resource Name <span class="text-danger">*</span>
                                         </label>
                                         <input type="text"
-                                               class="form-input-improved @error('name') is-invalid @enderror"
+                                               class="form-input-improved <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                id="name"
                                                name="name"
-                                               value="{{ old('name', request('suggested_name')) }}"
+                                               value="<?php echo e(old('name', request('suggested_name'))); ?>"
                                                placeholder="e.g., Folding Chairs, Sound System, Catering Supplies"
                                                required>
-                                        @error('name')
-                                        <div class="cs_invalid_feedback">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="cs_invalid_feedback"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         <small class="form-hint">
                                             <i class="fas fa-info-circle"></i> Enter a descriptive name for the resource
                                         </small>
@@ -253,23 +268,37 @@
                                         <label for="type" class="form-label-improved">
                                             <i class="fas fa-layer-group"></i> Resource Type <span class="text-danger">*</span>
                                         </label>
-                                        <select class="form-select-improved @error('type') is-invalid @enderror"
+                                        <select class="form-select-improved <?php $__errorArgs = ['type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                 id="type"
                                                 name="type"
                                                 required>
-                                            <option value="" disabled {{ old('type') ? '' : 'selected' }}>Choose resource type...</option>
-                                            <option value="Equipment" {{ old('type') == 'Equipment' ? 'selected' : '' }}>🔧 Equipment</option>
-                                            <option value="Furniture" {{ old('type') == 'Furniture' ? 'selected' : '' }}>🪑 Furniture</option>
-                                            <option value="Food & Beverage" {{ old('type') == 'Food & Beverage' ? 'selected' : '' }}>🍽️ Food & Beverage</option>
-                                            <option value="Decoration" {{ old('type') == 'Decoration' ? 'selected' : '' }}>🎨 Decoration</option>
-                                            <option value="Technology" {{ old('type') == 'Technology' ? 'selected' : '' }}>💻 Technology</option>
-                                            <option value="Materials" {{ old('type') == 'Materials' ? 'selected' : '' }}>📦 Materials</option>
-                                            <option value="Transportation" {{ old('type') == 'Transportation' ? 'selected' : '' }}>🚗 Transportation</option>
-                                            <option value="Other" {{ old('type') == 'Other' ? 'selected' : '' }}>📋 Other</option>
+                                            <option value="" disabled <?php echo e(old('type') ? '' : 'selected'); ?>>Choose resource type...</option>
+                                            <option value="Equipment" <?php echo e(old('type') == 'Equipment' ? 'selected' : ''); ?>>🔧 Equipment</option>
+                                            <option value="Furniture" <?php echo e(old('type') == 'Furniture' ? 'selected' : ''); ?>>🪑 Furniture</option>
+                                            <option value="Food & Beverage" <?php echo e(old('type') == 'Food & Beverage' ? 'selected' : ''); ?>>🍽️ Food & Beverage</option>
+                                            <option value="Decoration" <?php echo e(old('type') == 'Decoration' ? 'selected' : ''); ?>>🎨 Decoration</option>
+                                            <option value="Technology" <?php echo e(old('type') == 'Technology' ? 'selected' : ''); ?>>💻 Technology</option>
+                                            <option value="Materials" <?php echo e(old('type') == 'Materials' ? 'selected' : ''); ?>>📦 Materials</option>
+                                            <option value="Transportation" <?php echo e(old('type') == 'Transportation' ? 'selected' : ''); ?>>🚗 Transportation</option>
+                                            <option value="Other" <?php echo e(old('type') == 'Other' ? 'selected' : ''); ?>>📋 Other</option>
                                         </select>
-                                        @error('type')
-                                        <div class="cs_invalid_feedback">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="cs_invalid_feedback"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         <small class="form-hint">
                                             <i class="fas fa-info-circle"></i> Select the category
                                         </small>
@@ -282,16 +311,30 @@
                                             <i class="fas fa-hashtag"></i> Quantity <span class="text-danger">*</span>
                                         </label>
                                         <input type="number"
-                                               class="form-input-improved @error('quantity') is-invalid @enderror"
+                                               class="form-input-improved <?php $__errorArgs = ['quantity'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                id="quantity"
                                                name="quantity"
-                                               value="{{ old('quantity', 1) }}"
+                                               value="<?php echo e(old('quantity', 1)); ?>"
                                                min="1"
                                                placeholder="Enter quantity"
                                                required>
-                                        @error('quantity')
-                                        <div class="cs_invalid_feedback">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['quantity'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="cs_invalid_feedback"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         <small class="form-hint">
                                             <i class="fas fa-info-circle"></i> How many units?
                                         </small>
@@ -306,14 +349,28 @@
                                         <label for="description" class="form-label-improved">
                                             <i class="fas fa-sticky-note"></i> Additional Notes <small class="text-muted">(Optional)</small>
                                         </label>
-                                        <textarea class="form-textarea-improved @error('description') is-invalid @enderror"
+                                        <textarea class="form-textarea-improved <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                   id="description"
                                                   name="description"
                                                   rows="6"
-                                                  placeholder="Add any additional details about this resource, delivery conditions, or special requirements...">{{ old('description') }}</textarea>
-                                        @error('description')
-                                        <div class="cs_invalid_feedback">{{ $message }}</div>
-                                        @enderror
+                                                  placeholder="Add any additional details about this resource, delivery conditions, or special requirements..."><?php echo e(old('description')); ?></textarea>
+                                        <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="cs_invalid_feedback"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         <small class="form-hint">
                                             <i class="fas fa-info-circle"></i> Maximum 500 characters
                                         </small>
@@ -323,7 +380,7 @@
 
                             <!-- Form Actions -->
                             <div class="form-actions-section">
-                                <a href="{{ route('events.show', $event->id) }}" class="btn-cancel-beautiful">
+                                <a href="<?php echo e(route('events.show', $event->id)); ?>" class="btn-cancel-beautiful">
                                     <i class="fas fa-times-circle"></i> Cancel
                                 </a>
                                 <button type="submit" class="btn-submit-beautiful">
@@ -625,18 +682,18 @@
                     </style>
 
                     <!-- Helper Tips -->
-{{--                    <div class="cs_height_30"></div>--}}
-{{--                    <div class="alert alert-info" style="background: #e3f2fd; border: 1px solid #2196F3; border-radius: 10px;">--}}
-{{--                        <h6 class="cs_fs_18 cs_semibold cs_mb_15">--}}
-{{--                            <i class="fas fa-lightbulb"></i> Tips for Adding Resources--}}
-{{--                        </h6>--}}
-{{--                        <ul class="mb-0" style="padding-left: 20px;">--}}
-{{--                            <li>Be specific with resource names to avoid confusion</li>--}}
-{{--                            <li>Double-check the quantity before submitting</li>--}}
-{{--                            <li>Use the notes field to specify delivery times or special conditions</li>--}}
-{{--                            <li>You can add multiple resources by submitting this form multiple times</li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
             </div>
         </div>
@@ -655,4 +712,6 @@
             });
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontOffice.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\Education\Laravel\project\UrbanGreen\resources\views/frontOffice/pages/resource/add-resource.blade.php ENDPATH**/ ?>

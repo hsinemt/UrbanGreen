@@ -12,6 +12,7 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ResourceSuggestionController;
 
 
 // Home
@@ -280,3 +281,7 @@ Route::middleware(['auth'])->prefix('admin')->name('back.notifications.')->group
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('read-all');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
 });
+
+// Resource Suggestion System
+Route::get('events/{event}/suggest-resources', [ResourceSuggestionController::class, 'suggest'])
+    ->name('events.suggest-resources');
