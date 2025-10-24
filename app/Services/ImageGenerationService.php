@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ImageGenerationService
 {
@@ -14,7 +14,7 @@ class ImageGenerationService
     public function generateEventImage($eventName, $eventDescription = null, $location = null)
     {
         // Try Freepik API first
-        $freepikService = new FreepikImageService();
+        $freepikService = new FreepikImageService;
         $image = $freepikService->generateEventImage($eventName, $eventDescription, $location);
 
         if ($image) {
@@ -43,12 +43,12 @@ class ImageGenerationService
 
             $response = Http::timeout(10)
                 ->withOptions([
-                    'verify' => config('app.ssl_verify', true)
+                    'verify' => config('app.ssl_verify', true),
                 ])
                 ->get('https://api.unsplash.com/search/photos', [
                     'query' => $query,
                     'per_page' => 1,
-                    'orientation' => 'landscape'
+                    'orientation' => 'landscape',
                 ]);
 
             if ($response->successful()) {
@@ -60,18 +60,19 @@ class ImageGenerationService
                     // Download and store the image
                     $imageResponse = Http::timeout(10)
                         ->withOptions([
-                            'verify' => config('app.ssl_verify', true)
+                            'verify' => config('app.ssl_verify', true),
                         ])
                         ->get($imageUrl);
 
                     if ($imageResponse->successful()) {
                         $imageContent = $imageResponse->body();
-                        $filename = 'events/' . uniqid() . '_' . time() . '.jpg';
+                        $filename = 'events/'.uniqid().'_'.time().'.jpg';
 
                         $stored = Storage::disk('public')->put($filename, $imageContent);
 
                         if ($stored) {
                             Log::info('Unsplash image stored successfully', ['filename' => $filename]);
+
                             return $filename;
                         }
                     }
@@ -80,7 +81,8 @@ class ImageGenerationService
 
             return null;
         } catch (\Exception $e) {
-            Log::error('Unsplash API Error: ' . $e->getMessage());
+            Log::error('Unsplash API Error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -94,17 +96,19 @@ class ImageGenerationService
             // Create a simple SVG placeholder
             $svg = $this->createSVGPlaceholder($eventName);
 
-            $filename = 'events/' . uniqid() . '_' . time() . '.svg';
+            $filename = 'events/'.uniqid().'_'.time().'.svg';
             $stored = Storage::disk('public')->put($filename, $svg);
 
             if ($stored) {
                 Log::info('Placeholder image created', ['filename' => $filename]);
+
                 return $filename;
             }
 
             return null;
         } catch (\Exception $e) {
-            Log::error('Placeholder creation error: ' . $e->getMessage());
+            Log::error('Placeholder creation error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -119,12 +123,12 @@ class ImageGenerationService
 
         return '<?xml version="1.0" encoding="UTF-8"?>
 <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
-  <rect width="400" height="300" fill="' . $color . '" opacity="0.1"/>
-  <rect x="20" y="20" width="360" height="260" fill="none" stroke="' . $color . '" stroke-width="2"/>
-  <text x="200" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="' . $color . '">
-    ' . htmlspecialchars($eventName) . '
+  <rect width="400" height="300" fill="'.$color.'" opacity="0.1"/>
+  <rect x="20" y="20" width="360" height="260" fill="none" stroke="'.$color.'" stroke-width="2"/>
+  <text x="200" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="'.$color.'">
+    '.htmlspecialchars($eventName).'
   </text>
-  <text x="200" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="' . $color . '" opacity="0.7">
+  <text x="200" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="'.$color.'" opacity="0.7">
     Event Image
   </text>
 </svg>';
@@ -139,13 +143,13 @@ class ImageGenerationService
 
         if ($eventDescription) {
             $themes = $this->extractThemes($eventDescription);
-            if (!empty($themes)) {
-                $query .= ' ' . implode(' ', $themes);
+            if (! empty($themes)) {
+                $query .= ' '.implode(' ', $themes);
             }
         }
 
         if ($location) {
-            $query .= ' ' . $location;
+            $query .= ' '.$location;
         }
 
         return $query;
@@ -167,7 +171,7 @@ class ImageGenerationService
             'health' => ['health', 'wellness', 'fitness', 'medical'],
             'technology' => ['tech', 'digital', 'innovation', 'ai', 'software'],
             'art' => ['art', 'creative', 'design', 'culture', 'music'],
-            'business' => ['business', 'networking', 'conference', 'meeting']
+            'business' => ['business', 'networking', 'conference', 'meeting'],
         ];
 
         foreach ($themeKeywords as $theme => $keywords) {
@@ -182,5 +186,3 @@ class ImageGenerationService
         return array_unique($themes);
     }
 }
-
-

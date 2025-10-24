@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Projet extends Model
 {
@@ -37,8 +37,11 @@ class Projet extends Model
      * Supported project status values.
      */
     public const STATUS_PLANNED = 'planned';
+
     public const STATUS_IN_PROGRESS = 'in_progress';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_CANCELLED = 'cancelled';
 
     /**
@@ -55,15 +58,15 @@ class Projet extends Model
     }
 
     // Relations
-//    public function risks()
-//    {
-//        return $this->hasMany(\App\Models\ProjectRisk::class, 'projet_id');
-//    }
+    //    public function risks()
+    //    {
+    //        return $this->hasMany(\App\Models\ProjectRisk::class, 'projet_id');
+    //    }
 
-//    public function issues()
-//    {
-//        return $this->hasMany(\App\Models\ProjectIssue::class, 'projet_id');
-//    }
+    //    public function issues()
+    //    {
+    //        return $this->hasMany(\App\Models\ProjectIssue::class, 'projet_id');
+    //    }
 
     public function statusChanges()
     {

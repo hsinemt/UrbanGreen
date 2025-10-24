@@ -24,4 +24,3 @@ class GreenSpace extends Model
         return $this->hasMany(Plant::class);
     }
 }
-

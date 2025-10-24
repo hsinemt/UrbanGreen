@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plant;
 use App\Models\GreenSpace;
+use App\Models\Plant;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class PlantController extends Controller
@@ -16,22 +15,23 @@ class PlantController extends Controller
     public function index(Request $request)
     {
         $query = Plant::with('greenSpace');
-        
+
         // Filtrer par Green Space si spécifié
         if ($request->has('green_space_id') && $request->green_space_id) {
             $query->where('green_space_id', $request->green_space_id);
         }
-        
+
         // Si c'est une requête API (front office), retourner du JSON
         if ($request->expectsJson() || $request->is('plants') || $request->is('plants/*')) {
             $plants = $query->get();
+
             return response()->json($plants);
         }
-        
+
         // Sinon, retourner la vue admin
         $plants = $query->paginate(10);
         $greenSpaces = GreenSpace::all();
-        
+
         return view('dashboard.components.plants.index', compact('plants', 'greenSpaces'));
     }
 
@@ -42,6 +42,7 @@ class PlantController extends Controller
     {
         $greenSpaces = GreenSpace::all();
         $selectedGreenSpaceId = $request->get('green_space_id');
+
         return view('dashboard.components.plants.create', compact('greenSpaces', 'selectedGreenSpaceId'));
     }
 
@@ -76,12 +77,12 @@ class PlantController extends Controller
     public function show(Request $request, Plant $plant)
     {
         $plant->load('greenSpace');
-        
+
         // Si c'est une requête API (front office), retourner du JSON
         if ($request->expectsJson() || $request->is('plants') || $request->is('plants/*')) {
             return response()->json($plant);
         }
-        
+
         return view('dashboard.components.plants.show', compact('plant'));
     }
 
@@ -91,6 +92,7 @@ class PlantController extends Controller
     public function edit(Plant $plant): View
     {
         $greenSpaces = GreenSpace::all();
+
         return view('dashboard.components.plants.edit', compact('plant', 'greenSpaces'));
     }
 

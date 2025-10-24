@@ -20,7 +20,7 @@ echo "=== Testing Resource Suggestion Service ===\n\n";
 try {
     // Test 1: Check if service can be instantiated
     echo "Test 1: Instantiating ResourceSuggestionService...\n";
-    $service = new ResourceSuggestionService();
+    $service = new ResourceSuggestionService;
     echo "✓ Service instantiated successfully\n\n";
 
     // Test 2: Test with a mock event (tree planting)
@@ -41,7 +41,7 @@ try {
 
     echo "✓ Suggestions generated successfully\n";
     echo "Confidence Score: {$result['confidence_score']}\n";
-    echo "Number of suggestions: " . count($result['suggestions']) . "\n";
+    echo 'Number of suggestions: '.count($result['suggestions'])."\n";
     echo "\nTop 5 Suggestions:\n";
 
     foreach (array_slice($result['suggestions'], 0, 5) as $index => $suggestion) {
@@ -74,7 +74,7 @@ try {
 
     echo "✓ Suggestions generated successfully\n";
     echo "Confidence Score: {$result2['confidence_score']}\n";
-    echo "Number of suggestions: " . count($result2['suggestions']) . "\n";
+    echo 'Number of suggestions: '.count($result2['suggestions'])."\n";
     echo "\nTop 5 Suggestions:\n";
 
     foreach (array_slice($result2['suggestions'], 0, 5) as $index => $suggestion) {
@@ -95,7 +95,7 @@ try {
     $cachedResult = $service->suggest($treePlantingEvent);
     $duration = microtime(true) - $start;
 
-    echo "✓ Cached result retrieved in " . round($duration * 1000, 2) . "ms\n";
+    echo '✓ Cached result retrieved in '.round($duration * 1000, 2)."ms\n";
     echo "Cache is working properly (should be much faster than first call)\n\n";
 
     echo "=== All Tests Passed! ===\n";
@@ -105,8 +105,8 @@ try {
 
 } catch (\Exception $e) {
     echo "✗ Test failed with error:\n";
-    echo "Error: " . $e->getMessage() . "\n";
-    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n";
-    echo "\nStack trace:\n" . $e->getTraceAsString() . "\n";
+    echo 'Error: '.$e->getMessage()."\n";
+    echo 'File: '.$e->getFile().':'.$e->getLine()."\n";
+    echo "\nStack trace:\n".$e->getTraceAsString()."\n";
     exit(1);
 }

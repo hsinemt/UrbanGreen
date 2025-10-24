@@ -14,12 +14,12 @@ class Donation extends Model
         'currency',
         'date',
         'payment_method',
-        'wallet_id'
+        'wallet_id',
     ];
 
     protected $casts = [
         'date' => 'date',
-        'amount' => 'decimal:2'
+        'amount' => 'decimal:2',
     ];
 
     // Relations possibles avec d'autres modèles

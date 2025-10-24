@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Association;
-use App\Models\Supplier;
-use App\Models\Partner;
-use App\Models\Volunteer;
 use App\Models\Admin;
+use App\Models\Association;
+use App\Models\Partner;
+use App\Models\Supplier;
+use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
@@ -72,6 +72,7 @@ class UsersController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()
                 ->withErrors(['error' => 'Registration failed. Please try again.'])
                 ->withInput()
@@ -105,11 +106,11 @@ class UsersController extends Controller
             // Redirect admin users to dashboard
             if (Auth::user()->isAdmin()) {
                 return redirect()->route('back.home')
-                    ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
+                    ->with('success', 'Welcome back, '.Auth::user()->name.'!');
             }
 
             return redirect()->route('user.profile')
-                ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
+                ->with('success', 'Welcome back, '.Auth::user()->name.'!');
         }
 
         return back()
@@ -143,7 +144,7 @@ class UsersController extends Controller
         $user->load($this->getRoleRelationship($user->role));
 
         return view('frontOffice.pages.profile', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -160,7 +161,7 @@ class UsersController extends Controller
         if ($section === 'basic') {
             $rules = [
                 'full_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email,' . $user->id,
+                'email' => 'required|email|unique:users,email,'.$user->id,
                 'phone' => 'nullable|string|max:20',
                 'address' => 'nullable|string|max:500',
                 'bio' => 'nullable|string|max:1000',
@@ -196,7 +197,7 @@ class UsersController extends Controller
 
                 // Handle optional password change from basic section
                 if ($request->filled('current_password')) {
-                    if (!Hash::check($request->current_password, $user->password)) {
+                    if (! Hash::check($request->current_password, $user->password)) {
                         return back()->withErrors(['current_password' => 'Current password is incorrect'])->withInput();
                     }
                     $user->password = Hash::make($request->password);
@@ -210,7 +211,7 @@ class UsersController extends Controller
 
             } elseif ($section === 'password') {
                 // Password-only update
-                if (!Hash::check($request->current_password, $user->password)) {
+                if (! Hash::check($request->current_password, $user->password)) {
                     return back()->withErrors(['current_password' => 'Current password is incorrect'])->withInput();
                 }
                 $user->password = Hash::make($request->password);
@@ -218,9 +219,11 @@ class UsersController extends Controller
             }
 
             DB::commit();
+
             return back()->with('success', 'Profile updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors(['error' => 'Update failed. Please try again.'])->withInput();
         }
     }
@@ -264,7 +267,7 @@ class UsersController extends Controller
             'supplier',
             'partner',
             'volunteer',
-            'admin'
+            'admin',
         ])->findOrFail($id);
 
         return response()->json([
@@ -295,7 +298,7 @@ class UsersController extends Controller
 
         $rules = [
             'full_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id,
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
             'bio' => 'nullable|string|max:1000',
@@ -344,6 +347,7 @@ class UsersController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors(['error' => 'Update failed. Please try again.'])->withInput();
         }
     }
@@ -383,7 +387,7 @@ class UsersController extends Controller
             'supplier',
             'partner',
             'volunteer',
-            'admin'
+            'admin',
         ]);
 
         // Filter by role if specified
@@ -394,16 +398,16 @@ class UsersController extends Controller
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhereHas('association', function($q) use ($search) {
+                    ->orWhereHas('association', function ($q) use ($search) {
                         $q->where('organization_name', 'like', "%{$search}%");
                     })
-                    ->orWhereHas('supplier', function($q) use ($search) {
+                    ->orWhereHas('supplier', function ($q) use ($search) {
                         $q->where('company_name', 'like', "%{$search}%");
                     })
-                    ->orWhereHas('partner', function($q) use ($search) {
+                    ->orWhereHas('partner', function ($q) use ($search) {
                         $q->where('organization_name', 'like', "%{$search}%");
                     });
             });
@@ -421,7 +425,7 @@ class UsersController extends Controller
      */
     private function getRoleValidationRules(string $role): array
     {
-        return match($role) {
+        return match ($role) {
             User::ROLE_ASSOCIATION => Association::validationRules(),
             User::ROLE_SUPPLIER => Supplier::validationRules(),
             User::ROLE_PARTNER => Partner::validationRules(),
@@ -436,7 +440,7 @@ class UsersController extends Controller
      */
     private function getRoleRelationship(string $role): string
     {
-        return match($role) {
+        return match ($role) {
             User::ROLE_ASSOCIATION => 'association',
             User::ROLE_SUPPLIER => 'supplier',
             User::ROLE_PARTNER => 'partner',
@@ -454,14 +458,14 @@ class UsersController extends Controller
         $roleData = $this->extractRoleData($request, $user->role);
         $roleData['user_id'] = $user->id;
 
-        match($user->role) {
+        match ($user->role) {
             User::ROLE_ASSOCIATION => Association::create($roleData),
             User::ROLE_SUPPLIER => Supplier::create($roleData),
             User::ROLE_PARTNER => Partner::create(array_merge($roleData, [
-                'partnership_start_date' => $request->partnership_start_date ?? now()
+                'partnership_start_date' => $request->partnership_start_date ?? now(),
             ])),
             User::ROLE_VOLUNTEER => Volunteer::create(array_merge($roleData, [
-                'joined_date' => $request->joined_date ?? now()
+                'joined_date' => $request->joined_date ?? now(),
             ])),
             User::ROLE_ADMIN => Admin::create($roleData),
             default => null,
@@ -475,9 +479,10 @@ class UsersController extends Controller
     {
         $profile = $user->roleProfile();
 
-        if (!$profile) {
+        if (! $profile) {
             // Create profile if it doesn't exist
             $this->createRoleProfile($user, $request);
+
             return;
         }
 
@@ -502,7 +507,7 @@ class UsersController extends Controller
      */
     private function extractRoleData(Request $request, string $role): array
     {
-        $data = match($role) {
+        $data = match ($role) {
             User::ROLE_ASSOCIATION => [
                 'organization_name' => $request->organization_name,
                 'registration_number' => $request->registration_number,
@@ -544,6 +549,6 @@ class UsersController extends Controller
         };
 
         // Remove null values
-        return array_filter($data, fn($value) => $value !== null);
+        return array_filter($data, fn ($value) => $value !== null);
     }
 }

@@ -4,24 +4,24 @@ namespace App\Services;
 
 use App\Models\Event;
 use App\Models\EventSummary;
-use App\Models\Feedback;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class CommentSummaryService
 {
     private const MINIMUM_COMMENTS = 5;
+
     private const CACHE_DURATION = 1 * 60; // 24 hours in seconds
+
     private const OPENAI_MODEL = 'gpt-4o-mini'; // Cheapest model
+
     private const MAX_COMMENTS_TO_ANALYZE = 50; // Limit comments for faster processing
+
     private const API_TIMEOUT = 30; // 30 seconds timeout for OpenAI API
 
     /**
      * Generate or retrieve cached summary for an event.
      *
-     * @param Event $event
-     * @return array
      * @throws \Exception
      */
     public function getSummary(Event $event): array
@@ -30,7 +30,7 @@ class CommentSummaryService
         $commentCount = $this->getActiveCommentCount($event);
 
         if ($commentCount < self::MINIMUM_COMMENTS) {
-            throw new \Exception("Need at least " . self::MINIMUM_COMMENTS . " comments to generate summary");
+            throw new \Exception('Need at least '.self::MINIMUM_COMMENTS.' comments to generate summary');
         }
 
         // Check if we have a recent summary (less than 24 hours old)
@@ -38,20 +38,18 @@ class CommentSummaryService
 
         if ($existingSummary && $this->isSummaryFresh($existingSummary)) {
             Log::info('Returning cached summary', ['event_id' => $event->id]);
+
             return $this->formatSummaryResponse($existingSummary);
         }
 
         // Generate new summary
         Log::info('Generating new summary', ['event_id' => $event->id, 'comment_count' => $commentCount]);
+
         return $this->generateNewSummary($event);
     }
 
-
     /**
      * Get count of active top-level comments for an event.
-     *
-     * @param Event $event
-     * @return int
      */
     private function getActiveCommentCount(Event $event): int
     {
@@ -60,16 +58,13 @@ class CommentSummaryService
             ->where('status', 'active')
             ->count();
 
-        \Log::info('Counting comments for event ' . $event->id . ': ' . $count);
+        \Log::info('Counting comments for event '.$event->id.': '.$count);
 
         return $count;
     }
 
     /**
      * Check if summary is fresh (less than 24 hours old).
-     *
-     * @param EventSummary $summary
-     * @return bool
      */
     private function isSummaryFresh(EventSummary $summary): bool
     {
@@ -80,8 +75,6 @@ class CommentSummaryService
     /**
      * Generate a new summary by calling OpenAI API.
      *
-     * @param Event $event
-     * @return array
      * @throws \Exception
      */
     private function generateNewSummary(Event $event): array
@@ -97,7 +90,7 @@ class CommentSummaryService
 
         \Log::info('Fetched comments for AI summary', [
             'event_id' => $event->id,
-            'comments_count' => $comments->count()
+            'comments_count' => $comments->count(),
         ]);
 
         // Prepare comments text for OpenAI with UTF-8 cleaning
@@ -105,6 +98,7 @@ class CommentSummaryService
             $userName = $feedback->user ? $feedback->user->name : 'Anonymous';
             $rating = $feedback->rating ? " (Rating: {$feedback->rating}/5)" : '';
             $cleanComment = $this->cleanText($feedback->comment);
+
             return "- {$userName}{$rating}: {$cleanComment}";
         })->join("\n");
 
@@ -120,9 +114,6 @@ class CommentSummaryService
     /**
      * Clean and sanitize text to ensure proper UTF-8 encoding.
      * Multi-layered aggressive approach to handle deeply malformed UTF-8.
-     *
-     * @param string $text
-     * @return string
      */
     private function cleanText(string $text): string
     {
@@ -146,7 +137,7 @@ class CommentSummaryService
         $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/u', '', $text);
 
         // Layer 4: Remove any remaining invalid UTF-8 sequences
-        if (!mb_check_encoding($text, 'UTF-8')) {
+        if (! mb_check_encoding($text, 'UTF-8')) {
             // Force UTF-8 by detecting encoding and converting
             $encoding = mb_detect_encoding($text, ['UTF-8', 'ISO-8859-1', 'Windows-1252', 'ASCII'], true);
             if ($encoding && $encoding !== 'UTF-8') {
@@ -171,21 +162,17 @@ class CommentSummaryService
         return $text;
     }
 
-
-
     /**
      * Call OpenAI API to analyze comments.
      *
-     * @param string $commentsText
-     * @return array
      * @throws \Exception
      */
     private function callOpenAI(string $commentsText): array
     {
         $apiKey = config('services.openai.api_key') ?: env('OPENAI_API_KEY');
 
-        if (!$apiKey) {
-            throw new \Exception("OpenAI API key not configured");
+        if (! $apiKey) {
+            throw new \Exception('OpenAI API key not configured');
         }
 
         // Build the prompt (concise for faster processing)
@@ -203,12 +190,12 @@ class CommentSummaryService
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => $systemMessage
+                    'content' => $systemMessage,
                 ],
                 [
                     'role' => 'user',
-                    'content' => $cleanPrompt
-                ]
+                    'content' => $cleanPrompt,
+                ],
             ],
             'temperature' => 0.7,
             'max_tokens' => 800,
@@ -235,25 +222,25 @@ class CommentSummaryService
 
         try {
             $response = Http::withOptions([
-                'verify' => false
+                'verify' => false,
             ])->withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
+                'Authorization' => 'Bearer '.$apiKey,
                 'Content-Type' => 'application/json; charset=utf-8',
             ])->timeout(self::API_TIMEOUT)->post('https://api.openai.com/v1/chat/completions', $payload);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 Log::error('OpenAI API error', [
                     'status' => $response->status(),
-                    'body' => $response->body()
+                    'body' => $response->body(),
                 ]);
-                throw new \Exception("Failed to generate summary: " . $response->body());
+                throw new \Exception('Failed to generate summary: '.$response->body());
             }
 
             $data = $response->json();
             $content = $data['choices'][0]['message']['content'] ?? null;
 
-            if (!$content) {
-                throw new \Exception("Invalid response from OpenAI API");
+            if (! $content) {
+                throw new \Exception('Invalid response from OpenAI API');
             }
 
             // Clean the content in case it has markdown code blocks
@@ -263,16 +250,16 @@ class CommentSummaryService
 
             $analysisData = json_decode($content, true);
 
-            if (!$analysisData) {
+            if (! $analysisData) {
                 Log::error('Failed to parse OpenAI response', ['content' => $content]);
-                throw new \Exception("Failed to parse OpenAI response");
+                throw new \Exception('Failed to parse OpenAI response');
             }
 
             return $analysisData;
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error('OpenAI API connection timeout', ['error' => $e->getMessage()]);
-            throw new \Exception("Request timed out. The AI service is taking longer than expected. Please try again.");
+            throw new \Exception('Request timed out. The AI service is taking longer than expected. Please try again.');
         } catch (\Exception $e) {
             Log::error('OpenAI API call failed', ['error' => $e->getMessage()]);
             throw $e;
@@ -281,11 +268,6 @@ class CommentSummaryService
 
     /**
      * Save summary to database.
-     *
-     * @param Event $event
-     * @param array $analysisData
-     * @param int $commentCount
-     * @return EventSummary
      */
     private function saveSummary(Event $event, array $analysisData, int $commentCount): EventSummary
     {
@@ -293,7 +275,7 @@ class CommentSummaryService
         $summaryText = $this->cleanText($analysisData['summary'] ?? 'No summary available');
 
         $praised = $analysisData['praised'] ?? [];
-        if (!empty($praised)) {
+        if (! empty($praised)) {
             $summaryText .= "\n\nWhat Worked Well:\n";
             foreach ($praised as $item) {
                 $cleanItem = $this->cleanText($item);
@@ -302,7 +284,7 @@ class CommentSummaryService
         }
 
         $suggestions = $analysisData['suggestions'] ?? [];
-        if (!empty($suggestions)) {
+        if (! empty($suggestions)) {
             $summaryText .= "\nSuggestions for Improvement:\n";
             foreach ($suggestions as $item) {
                 $cleanItem = $this->cleanText($item);
@@ -314,7 +296,7 @@ class CommentSummaryService
         if (json_encode($summaryText) === false) {
             Log::error('Summary text has UTF-8 issues', [
                 'error' => json_last_error_msg(),
-                'summary_length' => strlen($summaryText)
+                'summary_length' => strlen($summaryText),
             ]);
             // Force clean everything
             $summaryText = mb_convert_encoding($summaryText, 'UTF-8', 'UTF-8');
@@ -341,13 +323,8 @@ class CommentSummaryService
         );
     }
 
-
-
     /**
      * Format summary for API response.
-     *
-     * @param EventSummary $summary
-     * @return array
      */
     private function formatSummaryResponse(EventSummary $summary): array
     {
@@ -390,5 +367,4 @@ class CommentSummaryService
             'hours_ago' => $summary->generated_at->diffInHours(now()),
         ];
     }
-
 }

@@ -51,7 +51,7 @@ class Volunteer extends Model
      */
     public function getAgeAttribute(): ?int
     {
-        if (!$this->date_of_birth) {
+        if (! $this->date_of_birth) {
             return null;
         }
 
@@ -63,7 +63,7 @@ class Volunteer extends Model
      */
     public function getSkillsArrayAttribute(): array
     {
-        if (!$this->skills) {
+        if (! $this->skills) {
             return [];
         }
 

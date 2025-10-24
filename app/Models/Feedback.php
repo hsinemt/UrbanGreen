@@ -116,7 +116,7 @@ class Feedback extends Model
      */
     public function isReply(): bool
     {
-        return !is_null($this->parent_feedback_id);
+        return ! is_null($this->parent_feedback_id);
     }
 
     /**
@@ -133,6 +133,7 @@ class Feedback extends Model
     public function incrementLikes()
     {
         $this->increment('likes_count');
+
         return $this;
     }
 
@@ -144,6 +145,7 @@ class Feedback extends Model
         if ($this->likes_count > 0) {
             $this->decrement('likes_count');
         }
+
         return $this;
     }
 
@@ -181,6 +183,7 @@ class Feedback extends Model
                 ->where('rating', $i)
                 ->count();
         }
+
         return $distribution;
     }
 

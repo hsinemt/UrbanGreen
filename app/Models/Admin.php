@@ -45,7 +45,7 @@ class Admin extends Model
      */
     public function hasPermission(string $permission): bool
     {
-        if (!$this->permissions) {
+        if (! $this->permissions) {
             return false;
         }
 

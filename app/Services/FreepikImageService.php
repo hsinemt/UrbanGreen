@@ -3,13 +3,14 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FreepikImageService
 {
     private $apiKey;
+
     private $baseUrl;
 
     public function __construct()
@@ -30,7 +31,7 @@ class FreepikImageService
             Log::info('Freepik API Request', [
                 'url' => $this->baseUrl,
                 'prompt' => $prompt,
-                'api_key' => substr($this->apiKey, 0, 10) . '...'
+                'api_key' => substr($this->apiKey, 0, 10).'...',
             ]);
 
             // Step 1: Create the image generation task
@@ -38,21 +39,21 @@ class FreepikImageService
                 ->withHeaders([
                     'x-freepik-api-key' => $this->apiKey,
                     'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ])
                 ->withOptions([
-                    'verify' => config('app.ssl_verify', true)
+                    'verify' => config('app.ssl_verify', true),
                 ])
                 ->post($this->baseUrl, [
                     'prompt' => $prompt,
                     'style' => 'realistic',
                     'quality' => 'high',
-                    'size' => '1024x1024'
+                    'size' => '1024x1024',
                 ]);
 
             Log::info('Freepik API Response', [
                 'status' => $response->status(),
-                'body' => $response->body()
+                'body' => $response->body(),
             ]);
 
             if ($response->successful()) {
@@ -88,14 +89,15 @@ class FreepikImageService
 
             Log::error('Freepik API request failed', [
                 'status' => $response->status(),
-                'body' => $response->body()
+                'body' => $response->body(),
             ]);
 
             return null;
         } catch (\Exception $e) {
-            Log::error('Freepik API Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+            Log::error('Freepik API Error: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return null;
         }
     }
@@ -117,12 +119,12 @@ class FreepikImageService
                 $response = Http::timeout(10)
                     ->withHeaders([
                         'x-freepik-api-key' => $this->apiKey,
-                        'Accept' => 'application/json'
+                        'Accept' => 'application/json',
                     ])
                     ->withOptions([
-                        'verify' => config('app.ssl_verify', true)
+                        'verify' => config('app.ssl_verify', true),
                     ])
-                    ->get($this->baseUrl . '/' . $taskId);
+                    ->get($this->baseUrl.'/'.$taskId);
 
                 if ($response->successful()) {
                     $data = $response->json();
@@ -132,7 +134,7 @@ class FreepikImageService
                     if (isset($data['data']['status'])) {
                         $status = $data['data']['status'];
 
-                        if ($status === 'COMPLETED' && isset($data['data']['generated']) && !empty($data['data']['generated'])) {
+                        if ($status === 'COMPLETED' && isset($data['data']['generated']) && ! empty($data['data']['generated'])) {
                             // Image is ready
                             $generatedImages = $data['data']['generated'];
 
@@ -146,14 +148,17 @@ class FreepikImageService
 
                             if ($imageUrl) {
                                 Log::info('Image generation completed', ['url' => $imageUrl]);
+
                                 return $this->downloadAndStoreImage($imageUrl);
                             }
                         } elseif ($status === 'FAILED') {
                             Log::error('Image generation failed', $data);
+
                             return null;
                         } elseif ($status === 'PROCESSING' || $status === 'CREATED') {
                             // Still processing, wait and try again
                             sleep(5);
+
                             continue;
                         }
                     }
@@ -163,12 +168,13 @@ class FreepikImageService
                 sleep(5);
 
             } catch (\Exception $e) {
-                Log::error('Polling error: ' . $e->getMessage());
+                Log::error('Polling error: '.$e->getMessage());
                 sleep(5);
             }
         }
 
         Log::error('Image generation timeout after maximum attempts');
+
         return null;
     }
 
@@ -182,7 +188,7 @@ class FreepikImageService
 
             $imageResponse = Http::timeout(30)
                 ->withOptions([
-                    'verify' => config('app.ssl_verify', true)
+                    'verify' => config('app.ssl_verify', true),
                 ])
                 ->get($imageUrl);
 
@@ -201,10 +207,11 @@ class FreepikImageService
                         $binary = base64_decode($base64);
                         $ext = explode('/', $mime)[1] ?? 'png';
                         $ext = $ext === 'svg+xml' ? 'svg' : $ext;
-                        $filename = 'events/' . uniqid() . '_' . time() . '.' . $ext;
+                        $filename = 'events/'.uniqid().'_'.time().'.'.$ext;
                         $stored = Storage::disk('public')->put($filename, $binary);
                         if ($stored) {
                             Log::info('Image stored from data URI', ['filename' => $filename, 'mime' => $mime]);
+
                             return $filename;
                         }
                     }
@@ -223,10 +230,11 @@ class FreepikImageService
                             $binary = base64_decode($base64);
                             $ext = explode('/', $mime)[1] ?? 'png';
                             $ext = $ext === 'svg+xml' ? 'svg' : $ext;
-                            $filename = 'events/' . uniqid() . '_' . time() . '.' . $ext;
+                            $filename = 'events/'.uniqid().'_'.time().'.'.$ext;
                             $stored = Storage::disk('public')->put($filename, $binary);
                             if ($stored) {
                                 Log::info('Image stored from JSON data URI', ['filename' => $filename, 'mime' => $mime]);
+
                                 return $filename;
                             }
                         }
@@ -234,15 +242,16 @@ class FreepikImageService
                         // Common key used by some services for base64 image payload
                         if (isset($json['b64_json'])) {
                             $binary = base64_decode($json['b64_json']);
-                            $filename = 'events/' . uniqid() . '_' . time() . '.png';
+                            $filename = 'events/'.uniqid().'_'.time().'.png';
                             $stored = Storage::disk('public')->put($filename, $binary);
                             if ($stored) {
                                 Log::info('Image stored from b64_json', ['filename' => $filename]);
+
                                 return $filename;
                             }
                         }
                     } catch (\Exception $e) {
-                        Log::warning('Failed to parse JSON image response: ' . $e->getMessage());
+                        Log::warning('Failed to parse JSON image response: '.$e->getMessage());
                     }
                 }
 
@@ -250,20 +259,22 @@ class FreepikImageService
                 if (Str::startsWith($contentType, 'image/')) {
                     $ext = substr($contentType, strlen('image/'));
                     $ext = $ext === 'svg+xml' ? 'svg' : $ext;
-                    $filename = 'events/' . uniqid() . '_' . time() . '.' . $ext;
+                    $filename = 'events/'.uniqid().'_'.time().'.'.$ext;
                     $stored = Storage::disk('public')->put($filename, $body);
                     if ($stored) {
                         Log::info('Image stored successfully', ['filename' => $filename, 'mime' => $contentType]);
+
                         return $filename;
                     }
                 }
 
                 // If Content-Type missing but body contains SVG markup, save as SVG
                 if (strpos($body, '<svg') !== false) {
-                    $filename = 'events/' . uniqid() . '_' . time() . '.svg';
+                    $filename = 'events/'.uniqid().'_'.time().'.svg';
                     $stored = Storage::disk('public')->put($filename, $body);
                     if ($stored) {
                         Log::info('SVG stored successfully', ['filename' => $filename]);
+
                         return $filename;
                     }
                 }
@@ -273,10 +284,11 @@ class FreepikImageService
                 if (strlen($trimmed) > 100 && preg_match('/^[A-Za-z0-9+\/=]+$/', $trimmed)) {
                     $binary = base64_decode($trimmed);
                     if ($binary !== false) {
-                        $filename = 'events/' . uniqid() . '_' . time() . '.jpg';
+                        $filename = 'events/'.uniqid().'_'.time().'.jpg';
                         $stored = Storage::disk('public')->put($filename, $binary);
                         if ($stored) {
                             Log::info('Base64 image stored successfully', ['filename' => $filename]);
+
                             return $filename;
                         }
                     }
@@ -286,13 +298,14 @@ class FreepikImageService
             } else {
                 Log::error('Failed to download image', [
                     'status' => $imageResponse->status(),
-                    'url' => $imageUrl
+                    'url' => $imageUrl,
                 ]);
             }
 
             return null;
         } catch (\Exception $e) {
-            Log::error('Image download error: ' . $e->getMessage());
+            Log::error('Image download error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -302,21 +315,21 @@ class FreepikImageService
      */
     private function createPrompt($eventName, $eventDescription = null, $location = null)
     {
-        $prompt = "Professional event poster for: " . $eventName;
+        $prompt = 'Professional event poster for: '.$eventName;
 
         if ($location) {
-            $prompt .= " at " . $location;
+            $prompt .= ' at '.$location;
         }
 
         if ($eventDescription) {
             // Extract key themes from description
             $themes = $this->extractThemes($eventDescription);
-            if (!empty($themes)) {
-                $prompt .= ". Theme: " . implode(', ', $themes);
+            if (! empty($themes)) {
+                $prompt .= '. Theme: '.implode(', ', $themes);
             }
         }
 
-        $prompt .= ". Modern, clean design with vibrant colors, professional typography, event poster style, high quality, detailed";
+        $prompt .= '. Modern, clean design with vibrant colors, professional typography, event poster style, high quality, detailed';
 
         return $prompt;
     }
@@ -338,7 +351,7 @@ class FreepikImageService
             'health' => ['health', 'wellness', 'fitness', 'medical'],
             'technology' => ['tech', 'digital', 'innovation', 'ai', 'software'],
             'art' => ['art', 'creative', 'design', 'culture', 'music'],
-            'business' => ['business', 'networking', 'conference', 'meeting']
+            'business' => ['business', 'networking', 'conference', 'meeting'],
         ];
 
         foreach ($themeKeywords as $theme => $keywords) {

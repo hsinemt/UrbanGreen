@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\CurrencyService;
-use App\Helpers\CurrencyHelper;
+use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
 {
@@ -23,10 +22,10 @@ class CurrencyController extends Controller
         try {
             $liveRates = $this->currencyService->getLiveRates();
             $supportedCurrencies = $this->currencyService->getSupportedCurrencies();
-            
+
             return view('frontOffice.currency.index', compact('liveRates', 'supportedCurrencies'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erreur lors du chargement des taux de change: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erreur lors du chargement des taux de change: '.$e->getMessage());
         }
     }
 
@@ -38,7 +37,7 @@ class CurrencyController extends Controller
         $request->validate([
             'amount' => 'required|numeric|min:0',
             'from' => 'required|string|size:3',
-            'to' => 'required|string|size:3'
+            'to' => 'required|string|size:3',
         ]);
 
         try {
@@ -53,18 +52,18 @@ class CurrencyController extends Controller
                     'success' => true,
                     'amount' => $convertedAmount,
                     'formatted' => $this->currencyService->formatAmount($convertedAmount, $request->to),
-                    'rate' => $this->currencyService->getRate($request->from, $request->to)
+                    'rate' => $this->currencyService->getRate($request->from, $request->to),
                 ]);
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Conversion impossible'
+                    'message' => 'Conversion impossible',
                 ], 400);
             }
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la conversion: ' . $e->getMessage()
+                'message' => 'Erreur lors de la conversion: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -77,15 +76,15 @@ class CurrencyController extends Controller
         try {
             $baseCurrency = $request->get('base', 'EUR');
             $rates = $this->currencyService->getLiveRates();
-            
+
             return response()->json([
                 'success' => true,
-                'rates' => $rates
+                'rates' => $rates,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors du chargement des taux: ' . $e->getMessage()
+                'message' => 'Erreur lors du chargement des taux: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -97,29 +96,29 @@ class CurrencyController extends Controller
     {
         $request->validate([
             'from' => 'required|string|size:3',
-            'to' => 'required|string|size:3'
+            'to' => 'required|string|size:3',
         ]);
 
         try {
             $rate = $this->currencyService->getRate($request->from, $request->to);
-            
+
             if ($rate !== null) {
                 return response()->json([
                     'success' => true,
                     'rate' => $rate,
                     'from' => $request->from,
-                    'to' => $request->to
+                    'to' => $request->to,
                 ]);
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Taux de change non disponible'
+                    'message' => 'Taux de change non disponible',
                 ], 404);
             }
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors du chargement du taux: ' . $e->getMessage()
+                'message' => 'Erreur lors du chargement du taux: '.$e->getMessage(),
             ], 500);
         }
     }

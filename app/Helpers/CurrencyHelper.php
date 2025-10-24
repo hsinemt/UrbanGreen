@@ -30,7 +30,7 @@ class CurrencyHelper
         try {
             $currencyService = app(CurrencyService::class);
             $convertedAmount = $currencyService->convertToTND($amount, $fromCurrency);
-            
+
             if ($convertedAmount !== null) {
                 return round($convertedAmount, 3);
             }
@@ -39,7 +39,7 @@ class CurrencyHelper
         }
 
         // Utiliser les taux de secours
-        if (!isset(self::$fallbackRates[$fromCurrency])) {
+        if (! isset(self::$fallbackRates[$fromCurrency])) {
             return $amount; // Si aucun taux de conversion trouvé, retourner le montant original
         }
 
@@ -51,7 +51,7 @@ class CurrencyHelper
      */
     public static function formatTND($amount)
     {
-        return number_format($amount, 3) . ' د.ت';
+        return number_format($amount, 3).' د.ت';
     }
 
     /**
@@ -63,6 +63,7 @@ class CurrencyHelper
         foreach ($donations as $donation) {
             $total += self::convertToTND($donation->amount, $donation->currency);
         }
+
         return round($total, 3);
     }
 
@@ -78,7 +79,7 @@ class CurrencyHelper
         try {
             $currencyService = app(CurrencyService::class);
             $rate = $currencyService->getRate($currency, 'TND');
-            
+
             if ($rate !== null) {
                 return $rate;
             }
@@ -97,7 +98,7 @@ class CurrencyHelper
         try {
             $currencyService = app(CurrencyService::class);
             $rates = $currencyService->getExchangeRates('TND');
-            
+
             if (isset($rates['rates'])) {
                 return array_merge(['TND' => 1.0], $rates['rates']);
             }
@@ -114,21 +115,21 @@ class CurrencyHelper
     public static function getStatisticsByCurrency($donations)
     {
         $statistics = [];
-        
+
         foreach ($donations->groupBy('currency') as $currency => $currencyDonations) {
             $totalInOriginalCurrency = $currencyDonations->sum('amount');
             $totalInTND = self::convertToTND($totalInOriginalCurrency, $currency);
             $count = $currencyDonations->count();
-            
+
             $statistics[$currency] = [
                 'currency' => $currency,
                 'count' => $count,
                 'amount_original' => $totalInOriginalCurrency,
                 'amount_tnd' => $totalInTND,
-                'exchange_rate' => self::getExchangeRate($currency)
+                'exchange_rate' => self::getExchangeRate($currency),
             ];
         }
-        
+
         return $statistics;
     }
 
@@ -144,7 +145,7 @@ class CurrencyHelper
         try {
             $currencyService = app(CurrencyService::class);
             $convertedAmount = $currencyService->convert($amount, $fromCurrency, $toCurrency);
-            
+
             if ($convertedAmount !== null) {
                 return round($convertedAmount, 3);
             }
@@ -155,9 +156,10 @@ class CurrencyHelper
         // Utiliser les taux de secours pour la conversion
         $fromRate = self::$fallbackRates[$fromCurrency] ?? 1.0;
         $toRate = self::$fallbackRates[$toCurrency] ?? 1.0;
-        
+
         // Convertir via TND
         $amountInTND = $amount * $fromRate;
+
         return round($amountInTND / $toRate, 3);
     }
 
@@ -168,6 +170,7 @@ class CurrencyHelper
     {
         try {
             $currencyService = app(CurrencyService::class);
+
             return $currencyService->formatAmount($amount, $currency);
         } catch (\Exception $e) {
             // Formatage de secours
@@ -178,9 +181,10 @@ class CurrencyHelper
                 'GBP' => '£',
                 'CHF' => 'CHF',
             ];
-            
+
             $symbol = $symbols[$currency] ?? $currency;
-            return $symbol . ' ' . number_format($amount, 2);
+
+            return $symbol.' '.number_format($amount, 2);
         }
     }
 
@@ -191,6 +195,7 @@ class CurrencyHelper
     {
         try {
             $currencyService = app(CurrencyService::class);
+
             return $currencyService->refreshRates();
         } catch (\Exception $e) {
             return false;

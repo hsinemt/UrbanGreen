@@ -14,22 +14,23 @@ class ActivityController extends Controller
     public function index(Request $request)
     {
         $query = Activity::query();
-        
+
         // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
-        
+
         // Filter by status
-        if ($request->has('status') && !empty($request->status)) {
+        if ($request->has('status') && ! empty($request->status)) {
             $query->where('status', $request->status);
         }
-        
+
         $activities = $query->latest()->paginate(10);
+
         return view('dashboard.components.activities.index', compact('activities'));
     }
 
@@ -65,6 +66,7 @@ class ActivityController extends Controller
     public function show(string $id)
     {
         $activity = Activity::with('events')->findOrFail($id);
+
         return view('dashboard.components.activities.show', compact('activity'));
     }
 
@@ -74,6 +76,7 @@ class ActivityController extends Controller
     public function edit(string $id)
     {
         $activity = Activity::findOrFail($id);
+
         return view('dashboard.components.activities.edit', compact('activity'));
     }
 
@@ -83,7 +86,7 @@ class ActivityController extends Controller
     public function update(Request $request, string $id)
     {
         $activity = Activity::findOrFail($id);
-        
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -121,6 +124,7 @@ class ActivityController extends Controller
         Activity::whereIn('id', $request->activity_ids)->delete();
 
         $count = count($request->activity_ids);
+
         return redirect()->route('back.activities.index')->with('success', "{$count} activity(ies) deleted successfully!");
     }
 }

@@ -91,7 +91,7 @@ class Resource extends Model
      */
     public function getSupplierNameAttribute()
     {
-        if (!$this->supplier) {
+        if (! $this->supplier) {
             return 'Unknown Supplier';
         }
 

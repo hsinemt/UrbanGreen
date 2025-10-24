@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\CurrencyService;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class UpdateCurrencyRates extends Command
@@ -28,23 +28,23 @@ class UpdateCurrencyRates extends Command
     public function handle()
     {
         $this->info('Updating currency exchange rates...');
-        
+
         try {
             $currencyService = app(CurrencyService::class);
-            
+
             if ($this->option('force')) {
                 $this->info('Forcing cache refresh...');
                 $rates = $currencyService->refreshRates();
             } else {
                 $rates = $currencyService->getExchangeRates();
             }
-            
+
             if ($rates && isset($rates['rates'])) {
                 $this->info('Currency rates updated successfully!');
-                $this->info('Base currency: ' . $rates['base']);
-                $this->info('Date: ' . $rates['date']);
-                $this->info('Number of currencies: ' . count($rates['rates']));
-                
+                $this->info('Base currency: '.$rates['base']);
+                $this->info('Date: '.$rates['date']);
+                $this->info('Number of currencies: '.count($rates['rates']));
+
                 // Afficher quelques taux importants
                 $importantCurrencies = ['USD', 'EUR', 'GBP', 'CHF'];
                 $this->info("\nImportant exchange rates:");
@@ -53,19 +53,21 @@ class UpdateCurrencyRates extends Command
                         $this->line("1 {$rates['base']} = {$rates['rates'][$currency]} {$currency}");
                     }
                 }
-                
+
                 return Command::SUCCESS;
             } else {
                 $this->error('Failed to update currency rates');
+
                 return Command::FAILURE;
             }
-            
+
         } catch (\Exception $e) {
-            $this->error('Error updating currency rates: ' . $e->getMessage());
+            $this->error('Error updating currency rates: '.$e->getMessage());
             Log::error('Currency rates update failed', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return Command::FAILURE;
         }
     }

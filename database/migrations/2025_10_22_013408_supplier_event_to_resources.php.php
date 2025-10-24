@@ -29,7 +29,7 @@ return new class extends Migration
                 ->comment('The event this resource belongs to');
 
             // Add description column if it doesn't exist
-            if (!Schema::hasColumn('resources', 'description')) {
+            if (! Schema::hasColumn('resources', 'description')) {
                 $table->text('description')
                     ->nullable()
                     ->after('quantity')

@@ -2,21 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
-use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasFactory, Notifiable, MustVerifyEmailTrait;
+    use HasFactory, MustVerifyEmailTrait, Notifiable;
 
     // ==================== ROLE CONSTANTS ====================
     public const ROLE_ASSOCIATION = 'association';
+
     public const ROLE_PARTNER = 'partner';
+
     public const ROLE_VOLUNTEER = 'volunteer';
+
     public const ROLE_ADMIN = 'admin';
+
     public const ROLE_SUPPLIER = 'supplier';
 
     // ==================== ATTRIBUTES ====================
@@ -168,7 +172,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function getAvatarUrlAttribute(): string
     {
         if ($this->avatar && \Storage::disk('public')->exists($this->avatar)) {
-            return asset('storage/' . $this->avatar) . '?v=' . $this->updated_at->timestamp;
+            return asset('storage/'.$this->avatar).'?v='.$this->updated_at->timestamp;
         }
 
         $name = $this->display_name;
@@ -181,14 +185,15 @@ class User extends Authenticatable implements MustVerifyEmailContract
             default => '4CAF50',
         };
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($name)
-            . '&size=200&background=' . $background . '&color=fff';
+        return 'https://ui-avatars.com/api/?name='.urlencode($name)
+            .'&size=200&background='.$background.'&color=fff';
     }
 
     // ==================== UTILITIES ====================
     public function getRoleSpecificData(): array
     {
         $profile = $this->roleProfile();
+
         return $profile ? $profile->toArray() : [];
     }
 

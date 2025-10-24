@@ -1,17 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\ResourceController;
-use App\Http\Controllers\PlantController;
 use App\Http\Controllers\Admin\GreenSpaceController;
-use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\Admin\WalletController;
 use App\Http\Controllers\BackOffice\ActivityController;
 use App\Http\Controllers\BackOffice\EventController;
-use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PlantController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/admin', [DashboardController::class, 'home'])->name('back.home');
 Route::get('/admin/users', [UsersController::class, 'index'])->name('back.users.index');

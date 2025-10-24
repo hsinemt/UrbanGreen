@@ -55,7 +55,7 @@ class Association extends Model
             'organization_name' => 'required|string|max:255',
             'registration_number' => 'nullable|string|max:100',
             'mission_statement' => 'nullable|string|max:1000',
-            'founded_year' => 'nullable|integer|min:1800|max:' . date('Y'),
+            'founded_year' => 'nullable|integer|min:1800|max:'.date('Y'),
             'website' => 'nullable|url|max:255',
             'number_of_members' => 'nullable|integer|min:0',
             'organization_type' => 'nullable|string|max:100',

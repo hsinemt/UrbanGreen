@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Services\CommentSummaryService;
 use App\Services\ImageGenerationService;
 use App\Services\WeatherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Services\CommentSummaryService;
 
 class EventController extends Controller
 {
@@ -21,15 +21,16 @@ class EventController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $summary
+                'data' => $summary,
             ], 200, ['Content-Type' => 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 400, ['Content-Type' => 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
         }
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -38,7 +39,7 @@ class EventController extends Controller
         $query = Event::query();
 
         // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
@@ -48,6 +49,7 @@ class EventController extends Controller
         }
 
         $events = $query->with('project')->latest()->get();
+
         return view('frontOffice.pages.events.index', compact('events'));
     }
 
@@ -58,6 +60,7 @@ class EventController extends Controller
     {
         $activities = \App\Models\Activity::all();
         $projects = \App\Models\Projet::all();
+
         return view('frontOffice.pages.events.create', compact('activities', 'projects'));
     }
 
@@ -86,7 +89,7 @@ class EventController extends Controller
                 $validated['image'] = $request->file('image')->store('events', 'public');
             } else {
                 // Generate AI image if no manual upload
-                $imageService = new ImageGenerationService();
+                $imageService = new ImageGenerationService;
                 $generatedImage = $imageService->generateEventImage(
                     $validated['name'],
                     $validated['description'] ?? null,
@@ -104,7 +107,8 @@ class EventController extends Controller
 
             return redirect()->route('events.index')->with('success', 'Event created successfully!');
         } catch (\Exception $e) {
-            \Log::error('Event creation failed: ' . $e->getMessage());
+            \Log::error('Event creation failed: '.$e->getMessage());
+
             return back()->withInput()->with('error', 'Failed to create event. Please try again.');
         }
     }
@@ -122,7 +126,7 @@ class EventController extends Controller
         // Weather data
         $weatherData = null;
         if ($event->location && $event->date) {
-            $weatherService = new WeatherService();
+            $weatherService = new WeatherService;
             $weatherData = $weatherService->getWeatherForEvent($event->location, $event->date);
         }
 
@@ -158,6 +162,7 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
         $activities = \App\Models\Activity::all();
         $projects = \App\Models\Projet::all();
+
         return view('frontOffice.pages.events.edit', compact('event', 'activities', 'projects'));
     }
 
@@ -187,7 +192,7 @@ class EventController extends Controller
             $validated['image'] = $request->file('image')->store('events', 'public');
         } elseif ($request->has('regenerate_image')) {
             // Regenerate AI image
-            $imageService = new ImageGenerationService();
+            $imageService = new ImageGenerationService;
             $generatedImage = $imageService->generateEventImage(
                 $validated['name'],
                 $validated['description'] ?? null,
@@ -236,7 +241,7 @@ class EventController extends Controller
             $event->delete();
         }
 
-        return redirect()->route('events.index')->with('success', count($events) . ' event(s) deleted successfully!');
+        return redirect()->route('events.index')->with('success', count($events).' event(s) deleted successfully!');
     }
 
     /**
@@ -246,7 +251,7 @@ class EventController extends Controller
     {
         $query = Event::query();
 
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
@@ -260,7 +265,7 @@ class EventController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'html' => view('frontOffice.pages.events.partials.event-list', compact('events'))->render(),
-                'count' => $events->count()
+                'count' => $events->count(),
             ]);
         }
 
@@ -282,29 +287,29 @@ class EventController extends Controller
     /**
      * Get AI-generated summary for event comments.
      */
-//    public function getSummary(string $id)
-//    {
-//        try {
-//            $event = Event::findOrFail($id);
-//
-//            $summaryService = new \App\Services\CommentSummaryService();
-//            $summary = $summaryService->getSummary($event);
-//
-//            // Return with proper UTF-8 encoding flags to handle any special characters
-//            return response()->json([
-//                'success' => true,
-//                'data' => $summary
-//            ], 200, ['Content-Type' => 'application/json; charset=utf-8'],
-//                JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
-//            );
-//
-//        } catch (\Exception $e) {
-//            return response()->json([
-//                'success' => false,
-//                'error' => $e->getMessage()
-//            ], 400, ['Content-Type' => 'application/json; charset=utf-8'],
-//                JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
-//            );
-//        }
-//    }
+    //    public function getSummary(string $id)
+    //    {
+    //        try {
+    //            $event = Event::findOrFail($id);
+    //
+    //            $summaryService = new \App\Services\CommentSummaryService();
+    //            $summary = $summaryService->getSummary($event);
+    //
+    //            // Return with proper UTF-8 encoding flags to handle any special characters
+    //            return response()->json([
+    //                'success' => true,
+    //                'data' => $summary
+    //            ], 200, ['Content-Type' => 'application/json; charset=utf-8'],
+    //                JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
+    //            );
+    //
+    //        } catch (\Exception $e) {
+    //            return response()->json([
+    //                'success' => false,
+    //                'error' => $e->getMessage()
+    //            ], 400, ['Content-Type' => 'application/json; charset=utf-8'],
+    //                JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
+    //            );
+    //        }
+    //    }
 }

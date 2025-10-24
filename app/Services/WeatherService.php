@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 class WeatherService
 {
     private $apiKey;
+
     private $baseUrl;
 
     public function __construct()
@@ -26,7 +27,7 @@ class WeatherService
             // First, get coordinates for the location
             $coordinates = $this->getCoordinates($location);
 
-            if (!$coordinates) {
+            if (! $coordinates) {
                 return null;
             }
 
@@ -43,7 +44,8 @@ class WeatherService
             }
 
         } catch (\Exception $e) {
-            Log::error('Weather API Error: ' . $e->getMessage());
+            Log::error('Weather API Error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -54,25 +56,27 @@ class WeatherService
     private function getCoordinates($location)
     {
         try {
-            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl . '/weather', [
+            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl.'/weather', [
                 'q' => $location,
                 'appid' => $this->apiKey,
-                'units' => 'metric'
+                'units' => 'metric',
             ]);
 
             if ($response->successful()) {
                 $data = $response->json();
+
                 return [
                     'lat' => $data['coord']['lat'],
                     'lon' => $data['coord']['lon'],
                     'city' => $data['name'],
-                    'country' => $data['sys']['country']
+                    'country' => $data['sys']['country'],
                 ];
             }
 
             return null;
         } catch (\Exception $e) {
-            Log::error('Geocoding API Error: ' . $e->getMessage());
+            Log::error('Geocoding API Error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -83,21 +87,23 @@ class WeatherService
     private function getCurrentWeather($lat, $lon)
     {
         try {
-            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl . '/weather', [
+            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl.'/weather', [
                 'lat' => $lat,
                 'lon' => $lon,
                 'appid' => $this->apiKey,
-                'units' => 'metric'
+                'units' => 'metric',
             ]);
 
             if ($response->successful()) {
                 $data = $response->json();
+
                 return $this->formatWeatherData($data);
             }
 
             return null;
         } catch (\Exception $e) {
-            Log::error('Current Weather API Error: ' . $e->getMessage());
+            Log::error('Current Weather API Error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -108,11 +114,11 @@ class WeatherService
     private function getForecastWeather($lat, $lon, $targetDate)
     {
         try {
-            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl . '/forecast', [
+            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl.'/forecast', [
                 'lat' => $lat,
                 'lon' => $lon,
                 'appid' => $this->apiKey,
-                'units' => 'metric'
+                'units' => 'metric',
             ]);
 
             if ($response->successful()) {
@@ -128,7 +134,8 @@ class WeatherService
 
             return null;
         } catch (\Exception $e) {
-            Log::error('Forecast Weather API Error: ' . $e->getMessage());
+            Log::error('Forecast Weather API Error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -170,7 +177,7 @@ class WeatherService
             'wind_direction' => isset($data['wind']['deg']) ? $data['wind']['deg'] : null,
             'visibility' => isset($data['visibility']) ? round($data['visibility'] / 1000, 1) : null,
             'clouds' => isset($data['clouds']['all']) ? $data['clouds']['all'] : null,
-            'date' => isset($data['dt_txt']) ? Carbon::parse($data['dt_txt'])->format('M d, Y H:i') : Carbon::now()->format('M d, Y H:i')
+            'date' => isset($data['dt_txt']) ? Carbon::parse($data['dt_txt'])->format('M d, Y H:i') : Carbon::now()->format('M d, Y H:i'),
         ];
     }
 
@@ -204,7 +211,7 @@ class WeatherService
             'sand' => '🌪️',
             'ash' => '🌋',
             'squall' => '💨',
-            'tornado' => '🌪️'
+            'tornado' => '🌪️',
         ];
 
         $description = strtolower($description);

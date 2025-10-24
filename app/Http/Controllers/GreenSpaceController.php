@@ -24,6 +24,7 @@ class GreenSpaceController extends Controller
             'description' => 'nullable|string',
             'type' => 'nullable|string',
         ]);
+
         return GreenSpace::create($validated);
     }
 
@@ -44,6 +45,7 @@ class GreenSpaceController extends Controller
             'type' => 'nullable|string',
         ]);
         $greenSpace->update($validated);
+
         return $greenSpace;
     }
 
@@ -51,6 +53,7 @@ class GreenSpaceController extends Controller
     {
         $greenSpace = GreenSpace::findOrFail($id);
         $greenSpace->delete();
+
         return response()->json(['message' => 'Deleted successfully']);
     }
 
@@ -58,23 +61,23 @@ class GreenSpaceController extends Controller
     {
         try {
             $request->validate([
-                'phone_number' => 'required|string|min:8|max:20'
+                'phone_number' => 'required|string|min:8|max:20',
             ]);
 
             $greenSpace = GreenSpace::findOrFail($id);
 
-            if (!$greenSpace->availability) {
+            if (! $greenSpace->availability) {
                 return response()->json(['error' => 'This green space is not available'], 400);
             }
 
             $phoneNumber = $request->input('phone_number');
-            $smsService = new SmsService();
+            $smsService = new SmsService;
 
             $formattedPhone = $smsService->formatPhoneNumber($phoneNumber);
 
-            if (!$smsService->validatePhoneNumber($formattedPhone)) {
+            if (! $smsService->validatePhoneNumber($formattedPhone)) {
                 return response()->json([
-                    'error' => 'Format de numéro de téléphone invalide. Veuillez utiliser le format international (ex: +21612345678)'
+                    'error' => 'Format de numéro de téléphone invalide. Veuillez utiliser le format international (ex: +21612345678)',
                 ], 400);
             }
 
@@ -90,18 +93,18 @@ class GreenSpaceController extends Controller
             $response = [
                 'message' => 'Green space booked successfully',
                 'greenSpace' => $greenSpace,
-                'sms_sent' => (bool) ($smsResult['ok'] ?? false)
+                'sms_sent' => (bool) ($smsResult['ok'] ?? false),
             ];
 
-            if (!($smsResult['ok'] ?? false)) {
+            if (! ($smsResult['ok'] ?? false)) {
                 $response['warning'] = 'La réservation a été effectuée mais l\'envoi du SMS a échoué.';
-                if (!empty($smsResult['error'])) {
+                if (! empty($smsResult['error'])) {
                     $response['sms_error'] = $smsResult['error'];
                 }
                 Log::warning('SMS non envoyé pour la réservation', [
                     'green_space_id' => $greenSpace->id,
                     'to' => $formattedPhone,
-                    'error' => $smsResult['error'] ?? null
+                    'error' => $smsResult['error'] ?? null,
                 ]);
             }
 
@@ -109,12 +112,13 @@ class GreenSpaceController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'error' => 'Données invalides',
-                'details' => $e->errors()
+                'details' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Erreur lors de la réservation: ' . $e->getMessage());
+            Log::error('Erreur lors de la réservation: '.$e->getMessage());
+
             return response()->json([
-                'error' => 'Une erreur est survenue lors de la réservation'
+                'error' => 'Une erreur est survenue lors de la réservation',
             ], 500);
         }
     }

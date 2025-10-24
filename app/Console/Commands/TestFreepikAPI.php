@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\FreepikImageService;
+use Illuminate\Console\Command;
 
 class TestFreepikAPI extends Command
 {
@@ -27,23 +27,21 @@ class TestFreepikAPI extends Command
     public function handle()
     {
         $this->info('Testing Freepik API integration...');
-        
-        $freepikService = new FreepikImageService();
-        
+
+        $freepikService = new FreepikImageService;
+
         $result = $freepikService->generateEventImage(
             'Test Event',
             'This is a test event for API testing',
             'Test Location'
         );
-        
+
         if ($result) {
-            $this->info('✅ Image generated successfully: ' . $result);
+            $this->info('✅ Image generated successfully: '.$result);
         } else {
             $this->error('❌ Image generation failed. Check logs for details.');
         }
-        
+
         return 0;
     }
 }
-
-

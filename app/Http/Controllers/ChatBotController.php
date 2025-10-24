@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ChatBot;
 use App\Services\GeminiService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ChatBotController extends Controller
@@ -40,10 +40,10 @@ class ChatBotController extends Controller
     {
         $sessionId = $request->get('session_id', session()->getId());
         $history = ChatBot::getSessionHistory($sessionId);
-        
+
         return response()->json([
             'success' => true,
-            'history' => $history
+            'history' => $history,
         ]);
     }
 
@@ -54,38 +54,38 @@ class ChatBotController extends Controller
     {
         $request->validate([
             'message' => 'required|string|max:1000',
-            'session_id' => 'nullable|string'
+            'session_id' => 'nullable|string',
         ]);
 
         $userMessage = $request->input('message');
         $sessionId = $request->input('session_id', session()->getId());
-        
+
         // Vérifier si Gemini est configuré
-        if (!$this->geminiService->isConfigured()) {
+        if (! $this->geminiService->isConfigured()) {
             return response()->json([
                 'success' => false,
                 'response' => 'Le service IA n\'est pas configuré. Veuillez contacter l\'administrateur.',
                 'type' => 'error',
                 'context' => [],
-                'session_id' => $sessionId
+                'session_id' => $sessionId,
             ]);
         }
-        
+
         // Obtenir le contexte de la conversation
         $context = $this->getConversationContext($sessionId);
-        
+
         // Générer la réponse avec Gemini
         $botResponse = $this->geminiService->generateResponse($userMessage, $context);
-        
+
         // Sauvegarder la conversation
         ChatBot::saveConversation($sessionId, $userMessage, $botResponse['response'], $botResponse['context'], $botResponse['type']);
-        
+
         return response()->json([
             'success' => $botResponse['success'],
             'response' => $botResponse['response'],
             'type' => $botResponse['type'],
             'context' => $botResponse['context'],
-            'session_id' => $sessionId
+            'session_id' => $sessionId,
         ]);
     }
 
@@ -98,14 +98,14 @@ class ChatBotController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
-        
+
         $context = [];
         foreach ($recentMessages as $msg) {
             if ($msg->context) {
                 $context = array_merge($context, $msg->context);
             }
         }
-        
+
         return $context;
     }
 

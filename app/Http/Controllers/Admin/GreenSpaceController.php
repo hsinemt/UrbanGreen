@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GreenSpace;
-use App\Models\Plant;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class GreenSpaceController extends Controller
@@ -17,6 +16,7 @@ class GreenSpaceController extends Controller
     public function index(): View
     {
         $greenSpaces = GreenSpace::withCount('plants')->paginate(10);
+
         return view('dashboard.components.green-spaces.index', compact('greenSpaces'));
     }
 
@@ -54,6 +54,7 @@ class GreenSpaceController extends Controller
     public function show(GreenSpace $greenSpace): View
     {
         $greenSpace->load('plants');
+
         return view('dashboard.components.green-spaces.show', compact('greenSpace'));
     }
 

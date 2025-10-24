@@ -1,19 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\FeedbackController;
-use App\Http\Controllers\ResourceController;
-use App\Http\Controllers\GreenSpaceController;
-use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ChatBotController;
+use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DonationController;
-use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\GreenSpaceController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ResourceSuggestionController;
-
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Route;
 
 // Home
 Route::get('/', function () {
@@ -108,6 +107,7 @@ Route::get('/projects/all', function () {
         'completed_count' => \App\Models\Projet::where('status', 'completed')->count(),
         'in_progress_count' => \App\Models\Projet::where('status', 'in_progress')->count(),
     ];
+
     return view('frontOffice.pages.projects.show', compact('projects', 'stats'));
 })->name('projects.all');
 
@@ -129,7 +129,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/projects/{projet}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 });
 // Backward-compatible link from old static page
-Route::get('/projects/project-details', function () { return redirect()->route('projects.index'); });
+Route::get('/projects/project-details', function () {
+    return redirect()->route('projects.index');
+});
 Route::get('/projects/{projet}', [ProjectController::class, 'show'])->name('projects.show');
 
 // Causes
@@ -170,14 +172,12 @@ Route::get('events/search/live', [EventController::class, 'search'])->name('even
 Route::post('events/{id}/assign-activity', [App\Http\Controllers\EventController::class, 'assignActivity'])->name('events.assign-activity');
 Route::delete('events/{id}/remove-activity', [App\Http\Controllers\EventController::class, 'removeActivity'])->name('events.remove-activity');
 // Line 1: This expects $id parameter
-//Route::get('events/{id}/summary', [EventController::class, 'getSummary'])->name('events.summary');
+// Route::get('events/{id}/summary', [EventController::class, 'getSummary'])->name('events.summary');
 
 // Line 2: Duplicate - expects $event parameter
 Route::get('/events/{event}/summary', [EventController::class, 'getSummary'])->name('events.summary');
 
-
 // Activities Resource Routes
-use App\Http\Controllers\ActivityController;
 Route::resource('activities', App\Http\Controllers\ActivityController::class);
 Route::post('activities/bulk-delete', [App\Http\Controllers\ActivityController::class, 'bulkDelete'])->name('activities.bulk-delete');
 Route::get('activities/search/live', [App\Http\Controllers\ActivityController::class, 'search'])->name('activities.search');

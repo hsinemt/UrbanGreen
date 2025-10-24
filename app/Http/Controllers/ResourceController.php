@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Resource;
 use App\Models\Event;
+use App\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +16,7 @@ class ResourceController extends Controller
     public function index()
     {
         $resources = Resource::with(['supplier', 'event'])->latest()->paginate(10);
+
         return view('dashboard.components.resources.index', compact('resources'));
     }
 
@@ -52,7 +53,7 @@ class ResourceController extends Controller
                 ->with('success', 'Resource created successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error creating resource: ' . $e->getMessage())
+                ->with('error', 'Error creating resource: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -63,6 +64,7 @@ class ResourceController extends Controller
     public function show(Resource $resource)
     {
         $resource->load(['supplier', 'event']);
+
         return view('dashboard.components.resources.show', compact('resource'));
     }
 
@@ -128,7 +130,7 @@ class ResourceController extends Controller
                 ->with('success', 'Resource updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error updating resource: ' . $e->getMessage())
+                ->with('error', 'Error updating resource: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -145,7 +147,7 @@ class ResourceController extends Controller
                 ->with('success', 'Resource deleted successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error deleting resource: ' . $e->getMessage());
+                ->with('error', 'Error deleting resource: '.$e->getMessage());
         }
     }
 
@@ -155,7 +157,7 @@ class ResourceController extends Controller
     public function addToEvent(Event $event)
     {
         // Check if user is a supplier
-        if (!Auth::check() || !Auth::user()->isSupplier()) {
+        if (! Auth::check() || ! Auth::user()->isSupplier()) {
             return redirect()->route('events.show', $event->id)
                 ->with('error', 'Only suppliers can add resources to events.');
         }
@@ -169,7 +171,7 @@ class ResourceController extends Controller
     public function storeToEvent(Request $request, Event $event)
     {
         // Check if user is a supplier
-        if (!Auth::check() || !Auth::user()->isSupplier()) {
+        if (! Auth::check() || ! Auth::user()->isSupplier()) {
             return redirect()->route('events.show', $event->id)
                 ->with('error', 'Only suppliers can add resources to events.');
         }
@@ -201,7 +203,7 @@ class ResourceController extends Controller
                 ->with('success', 'Resource added to event successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error adding resource: ' . $e->getMessage())
+                ->with('error', 'Error adding resource: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -232,7 +234,7 @@ class ResourceController extends Controller
     public function editSupplier(Resource $resource)
     {
         // Check if user is the supplier who added this resource
-        if (!Auth::check() || !Auth::user()->isSupplier() || $resource->supplier_id !== Auth::id()) {
+        if (! Auth::check() || ! Auth::user()->isSupplier() || $resource->supplier_id !== Auth::id()) {
             return redirect()->route('events.show', $resource->event_id)
                 ->with('error', 'You can only edit your own resources.');
         }
@@ -246,7 +248,7 @@ class ResourceController extends Controller
     public function updateSupplier(Request $request, Resource $resource)
     {
         // Check if user is the supplier who added this resource
-        if (!Auth::check() || !Auth::user()->isSupplier() || $resource->supplier_id !== Auth::id()) {
+        if (! Auth::check() || ! Auth::user()->isSupplier() || $resource->supplier_id !== Auth::id()) {
             return redirect()->route('events.show', $resource->event_id)
                 ->with('error', 'You can only edit your own resources.');
         }
@@ -275,7 +277,7 @@ class ResourceController extends Controller
                 ->with('success', 'Resource updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error updating resource: ' . $e->getMessage())
+                ->with('error', 'Error updating resource: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -286,7 +288,7 @@ class ResourceController extends Controller
     public function destroySupplier(Resource $resource)
     {
         // Check if user is the supplier who added this resource
-        if (!Auth::check() || !Auth::user()->isSupplier() || $resource->supplier_id !== Auth::id()) {
+        if (! Auth::check() || ! Auth::user()->isSupplier() || $resource->supplier_id !== Auth::id()) {
             return redirect()->route('events.show', $resource->event_id)
                 ->with('error', 'You can only delete your own resources.');
         }
@@ -299,7 +301,7 @@ class ResourceController extends Controller
                 ->with('success', 'Resource deleted successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error deleting resource: ' . $e->getMessage());
+                ->with('error', 'Error deleting resource: '.$e->getMessage());
         }
     }
 }

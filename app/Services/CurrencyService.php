@@ -2,15 +2,18 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class CurrencyService
 {
     protected $apiKey;
+
     protected $baseUrl;
+
     protected $cacheKey = 'currency_rates';
+
     protected $cacheDuration = 300; // 5 minutes pour des taux en temps réel
 
     public function __construct()
@@ -24,43 +27,47 @@ class CurrencyService
      */
     public function getExchangeRates($baseCurrency = 'EUR')
     {
-        $cacheKey = $this->cacheKey . '_' . $baseCurrency . '_' . date('Y-m-d-H-i');
-        
+        $cacheKey = $this->cacheKey.'_'.$baseCurrency.'_'.date('Y-m-d-H-i');
+
         return Cache::remember($cacheKey, $this->cacheDuration, function () use ($baseCurrency) {
             try {
                 // Essayer d'abord Fixer.io (temps réel)
-                $response = Http::timeout(10)->get($this->baseUrl . 'latest', [
+                $response = Http::timeout(10)->get($this->baseUrl.'latest', [
                     'access_key' => $this->apiKey,
                     'base' => $baseCurrency,
-                    'symbols' => 'USD,EUR,GBP,CHF,TND,CAD,AUD,JPY,CNY,AED,SAR,EGP,MAD,DZD'
+                    'symbols' => 'USD,EUR,GBP,CHF,TND,CAD,AUD,JPY,CNY,AED,SAR,EGP,MAD,DZD',
                 ]);
-                
+
                 if ($response->successful()) {
                     $data = $response->json();
                     if ($data['success']) {
                         Log::info('Currency rates updated from Fixer.io', ['base' => $baseCurrency]);
+
                         return [
                             'base' => $data['base'],
                             'date' => $data['date'],
-                            'rates' => $data['rates']
+                            'rates' => $data['rates'],
                         ];
                     }
                 }
-                
+
                 // Fallback vers ExchangeRate-API
-                $fallbackResponse = Http::timeout(10)->get('https://api.exchangerate-api.com/v4/latest/' . $baseCurrency);
-                
+                $fallbackResponse = Http::timeout(10)->get('https://api.exchangerate-api.com/v4/latest/'.$baseCurrency);
+
                 if ($fallbackResponse->successful()) {
                     $fallbackData = $fallbackResponse->json();
                     Log::info('Currency rates updated from ExchangeRate-API (fallback)', ['base' => $baseCurrency]);
+
                     return $fallbackData;
                 }
-                
+
                 Log::error('All currency APIs failed');
+
                 return $this->getFallbackRates();
-                
+
             } catch (\Exception $e) {
                 Log::error('Currency API error', ['error' => $e->getMessage()]);
+
                 return $this->getFallbackRates();
             }
         });
@@ -76,7 +83,7 @@ class CurrencyService
         }
 
         $rates = $this->getExchangeRates($fromCurrency);
-        
+
         if (isset($rates['rates'][$toCurrency])) {
             return $amount * $rates['rates'][$toCurrency];
         }
@@ -84,6 +91,7 @@ class CurrencyService
         // Si la conversion directe n'est pas disponible, essayer via EUR
         if ($fromCurrency !== 'EUR' && $toCurrency !== 'EUR') {
             $eurAmount = $this->convert($amount, $fromCurrency, 'EUR');
+
             return $this->convert($eurAmount, 'EUR', $toCurrency);
         }
 
@@ -104,7 +112,7 @@ class CurrencyService
     public function getRate($fromCurrency, $toCurrency)
     {
         $rates = $this->getExchangeRates($fromCurrency);
-        
+
         if (isset($rates['rates'][$toCurrency])) {
             return $rates['rates'][$toCurrency];
         }
@@ -135,7 +143,7 @@ class CurrencyService
                 'EGP' => 33.0,
                 'MAD' => 10.8,
                 'DZD' => 145.0,
-            ]
+            ],
         ];
     }
 
@@ -144,8 +152,9 @@ class CurrencyService
      */
     public function refreshRates($baseCurrency = 'EUR')
     {
-        $cacheKey = $this->cacheKey . '_' . $baseCurrency . '_' . date('Y-m-d-H-i');
+        $cacheKey = $this->cacheKey.'_'.$baseCurrency.'_'.date('Y-m-d-H-i');
         Cache::forget($cacheKey);
+
         return $this->getExchangeRates($baseCurrency);
     }
 
@@ -195,7 +204,8 @@ class CurrencyService
         ];
 
         $symbol = $symbols[$currency] ?? $currency;
-        return $symbol . ' ' . number_format($amount, 2);
+
+        return $symbol.' '.number_format($amount, 2);
     }
 
     /**
@@ -206,19 +216,20 @@ class CurrencyService
         try {
             // Utiliser une API gratuite pour les taux en temps réel
             $response = Http::timeout(5)->get('https://api.exchangerate-api.com/v4/latest/EUR');
-            
+
             if ($response->successful()) {
                 $data = $response->json();
+
                 return [
                     'success' => true,
                     'base' => $data['base'],
                     'date' => $data['date'],
-                    'rates' => $data['rates']
+                    'rates' => $data['rates'],
                 ];
             }
-            
+
             return ['success' => false, 'message' => 'API non disponible'];
-            
+
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }

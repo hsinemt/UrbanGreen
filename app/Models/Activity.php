@@ -24,7 +24,9 @@ class Activity extends Model
 
     // Status constants for better code maintainability
     const STATUS_PENDING = 'pending';
+
     const STATUS_IN_PROGRESS = 'in_progress';
+
     const STATUS_COMPLETED = 'completed';
 
     // Get all available statuses

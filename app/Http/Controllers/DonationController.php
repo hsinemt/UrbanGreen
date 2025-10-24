@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CurrencyHelper;
 use App\Models\Donation;
 use App\Models\Wallet;
-use App\Models\Event;
-use App\Helpers\CurrencyHelper;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
 
@@ -17,39 +16,39 @@ class DonationController extends Controller
     public function index(Request $request)
     {
         $query = Donation::with('wallet.event');
-        
+
         // Filtre par devise
         if ($request->filled('currency')) {
             $query->where('currency', $request->currency);
         }
-        
+
         // Filtre par méthode de paiement
         if ($request->filled('payment_method')) {
             $query->where('payment_method', $request->payment_method);
         }
-        
+
         // Filtre par wallet
         if ($request->filled('wallet_id')) {
             $query->where('wallet_id', $request->wallet_id);
         }
-        
+
         $donations = $query->orderBy('date', 'desc')->get();
-        
+
         // Obtenir les options pour les filtres
         $currencies = Donation::select('currency')->distinct()->pluck('currency')->sort();
         $paymentMethods = Donation::select('payment_method')->distinct()->pluck('payment_method')->sort();
         $wallets = Wallet::with('event')->get();
-        
+
         // Calculer les statistiques en TND
         $totalAmountTND = CurrencyHelper::calculateTotalInTND($donations);
         $statisticsByCurrency = CurrencyHelper::getStatisticsByCurrency($donations);
-        
+
         return view('frontOffice.donations.index', compact(
-            'donations', 
-            'currencies', 
+            'donations',
+            'currencies',
             'paymentMethods',
             'wallets',
-            'totalAmountTND', 
+            'totalAmountTND',
             'statisticsByCurrency'
         ));
     }
@@ -60,6 +59,7 @@ class DonationController extends Controller
     public function create()
     {
         $wallets = Wallet::with('event')->get();
+
         return view('frontOffice.donations.create', compact('wallets'));
     }
 
@@ -73,7 +73,7 @@ class DonationController extends Controller
             'currency' => 'required|string|size:3',
             'date' => 'required|date',
             'payment_method' => 'required|string|max:255',
-            'wallet_id' => 'required|exists:wallets,id'
+            'wallet_id' => 'required|exists:wallets,id',
         ]);
 
         // Fallback non-Stripe (au cas où). Par défaut, on utilise Stripe via checkout()
@@ -95,7 +95,7 @@ class DonationController extends Controller
             'currency' => 'required|string|size:3',
             'date' => 'required|date',
             'payment_method' => 'required|string|max:255',
-            'wallet_id' => 'required|exists:wallets,id'
+            'wallet_id' => 'required|exists:wallets,id',
         ]);
 
         $stripe = new StripeClient(config('services.stripe.secret'));
@@ -114,7 +114,7 @@ class DonationController extends Controller
                     'currency' => 'eur',
                     'unit_amount' => $amountInEurCents,
                     'product_data' => [
-                        'name' => 'Donation - ' . ($wallet->event->name ?? 'Event') . ' / ' . $wallet->name,
+                        'name' => 'Donation - '.($wallet->event->name ?? 'Event').' / '.$wallet->name,
                         'metadata' => [
                             'wallet_id' => (string) $wallet->id,
                         ],
@@ -122,7 +122,7 @@ class DonationController extends Controller
                 ],
                 'quantity' => 1,
             ]],
-            'success_url' => route('donations.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('donations.stripe.success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('donations.stripe.cancel'),
             'metadata' => [
                 'wallet_id' => (string) $wallet->id,
@@ -142,19 +142,19 @@ class DonationController extends Controller
     public function success(Request $request)
     {
         $sessionId = $request->query('session_id');
-        if (!$sessionId) {
+        if (! $sessionId) {
             return redirect()->route('donations.index')->with('error', 'Session Stripe introuvable.');
         }
 
         $stripe = new StripeClient(config('services.stripe.secret'));
         $session = $stripe->checkout->sessions->retrieve($sessionId, ['expand' => ['payment_intent']]);
 
-        if (!$session || $session->payment_status !== 'paid') {
+        if (! $session || $session->payment_status !== 'paid') {
             return redirect()->route('donations.index')->with('error', 'Paiement non confirmé.');
         }
 
         // Récupérer les métadonnées pour créer la donation dans la devise d'origine
-        $meta = $session->metadata ?? new \stdClass();
+        $meta = $session->metadata ?? new \stdClass;
         $walletId = (int) ($meta->wallet_id ?? 0);
         $originalAmount = (float) ($meta->original_amount ?? 0);
         $originalCurrency = (string) ($meta->original_currency ?? 'EUR');
@@ -201,6 +201,7 @@ class DonationController extends Controller
     public function show(Donation $donation)
     {
         $donation->load('wallet.event');
+
         return view('frontOffice.donations.show', compact('donation'));
     }
 
@@ -210,6 +211,7 @@ class DonationController extends Controller
     public function edit(Donation $donation)
     {
         $wallets = Wallet::with('event')->get();
+
         return view('frontOffice.donations.edit', compact('donation', 'wallets'));
     }
 
@@ -223,20 +225,20 @@ class DonationController extends Controller
             'currency' => 'required|string|size:3',
             'date' => 'required|date',
             'payment_method' => 'required|string|max:255',
-            'wallet_id' => 'required|exists:wallets,id'
+            'wallet_id' => 'required|exists:wallets,id',
         ]);
 
         $oldWallet = $donation->wallet;
         $oldAmount = $donation->amount;
-        
+
         $donation->update($request->all());
-        
+
         // Mettre à jour les statistiques des wallets
         if ($oldWallet && $oldWallet->id != $request->wallet_id) {
             // Retirer de l'ancien wallet
             $oldWallet->decrement('donation_count');
             $oldWallet->decrement('total_amount', $oldAmount);
-            
+
             // Ajouter au nouveau wallet
             $newWallet = Wallet::find($request->wallet_id);
             $newWallet->increment('donation_count');
@@ -257,9 +259,9 @@ class DonationController extends Controller
     public function destroy(Donation $donation)
     {
         $wallet = $donation->wallet;
-        
+
         $donation->delete();
-        
+
         // Mettre à jour les statistiques du wallet
         if ($wallet) {
             $wallet->decrement('donation_count');

@@ -24,8 +24,6 @@ class ResourceSuggestionController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @param ResourceSuggestionService $suggestionService
      */
     public function __construct(ResourceSuggestionService $suggestionService)
     {
@@ -42,8 +40,7 @@ class ResourceSuggestionController extends Controller
      *
      * Results are cached for 15 minutes to improve performance.
      *
-     * @param Event $event The event to get suggestions for
-     * @return JsonResponse
+     * @param  Event  $event  The event to get suggestions for
      *
      * @response 200 {
      *   "success": true,
@@ -56,12 +53,10 @@ class ResourceSuggestionController extends Controller
      *   },
      *   "message": "Resource suggestions generated successfully"
      * }
-     *
      * @response 404 {
      *   "success": false,
      *   "message": "Event not found"
      * }
-     *
      * @response 500 {
      *   "success": false,
      *   "message": "Failed to generate suggestions",
@@ -73,7 +68,7 @@ class ResourceSuggestionController extends Controller
         try {
             Log::info('Resource suggestion request received', [
                 'event_id' => $event->id,
-                'event_name' => $event->name
+                'event_name' => $event->name,
             ]);
 
             // Generate suggestions using the service
@@ -82,26 +77,26 @@ class ResourceSuggestionController extends Controller
             Log::info('Resource suggestions generated successfully', [
                 'event_id' => $event->id,
                 'suggestions_count' => count($result['suggestions']),
-                'confidence_score' => $result['confidence_score']
+                'confidence_score' => $result['confidence_score'],
             ]);
 
             return response()->json([
                 'success' => true,
                 'data' => $result,
-                'message' => 'Resource suggestions generated successfully'
+                'message' => 'Resource suggestions generated successfully',
             ], 200);
 
         } catch (\Exception $e) {
             Log::error('Failed to generate resource suggestions', [
                 'event_id' => $event->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to generate suggestions',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Wallet;
 use App\Models\Event;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 
 class WalletController extends Controller
@@ -18,7 +18,7 @@ class WalletController extends Controller
 
         if ($request->filled('q')) {
             $q = $request->get('q');
-            $query->where(function($sub) use ($q) {
+            $query->where(function ($sub) use ($q) {
                 $sub->where('name', 'like', "%{$q}%");
             });
         }
@@ -29,7 +29,7 @@ class WalletController extends Controller
 
         $wallets = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
 
-        $events = Event::orderBy('name')->get(['id','name']);
+        $events = Event::orderBy('name')->get(['id', 'name']);
 
         $stats = [
             'count' => Wallet::count(),
@@ -38,7 +38,7 @@ class WalletController extends Controller
             'avg_progress' => Wallet::selectRaw('AVG(CASE WHEN target_amount>0 THEN (total_amount/target_amount)*100 ELSE 0 END) as avg_prog')->value('avg_prog'),
         ];
 
-        return view('dashboard.wallets.index', compact('wallets','events','stats'));
+        return view('dashboard.wallets.index', compact('wallets', 'events', 'stats'));
     }
 
     /**
@@ -47,6 +47,7 @@ class WalletController extends Controller
     public function create()
     {
         $events = Event::all();
+
         return view('dashboard.wallets.create', compact('events'));
     }
 
@@ -58,7 +59,7 @@ class WalletController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'target_amount' => 'required|numeric|min:0',
-            'event_id' => 'required|exists:events,id'
+            'event_id' => 'required|exists:events,id',
         ]);
 
         Wallet::create($request->all());
@@ -73,6 +74,7 @@ class WalletController extends Controller
     public function show(Wallet $wallet)
     {
         $wallet->load(['event', 'donations']);
+
         return view('dashboard.wallets.show', compact('wallet'));
     }
 
@@ -82,6 +84,7 @@ class WalletController extends Controller
     public function edit(Wallet $wallet)
     {
         $events = Event::all();
+
         return view('dashboard.wallets.edit', compact('wallet', 'events'));
     }
 
@@ -93,7 +96,7 @@ class WalletController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'target_amount' => 'required|numeric|min:0',
-            'event_id' => 'required|exists:events,id'
+            'event_id' => 'required|exists:events,id',
         ]);
 
         $wallet->update($request->all());

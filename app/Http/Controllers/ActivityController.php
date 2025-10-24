@@ -13,22 +13,23 @@ class ActivityController extends Controller
     public function index(Request $request)
     {
         $query = Activity::query();
-        
+
         // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
-        
+
         // Filter by status
-        if ($request->has('status') && !empty($request->status)) {
+        if ($request->has('status') && ! empty($request->status)) {
             $query->where('status', $request->status);
         }
-        
+
         $activities = $query->latest()->get();
+
         return view('frontOffice.pages.activities.index', compact('activities'));
     }
 
@@ -64,6 +65,7 @@ class ActivityController extends Controller
     public function show(string $id)
     {
         $activity = Activity::with('events')->findOrFail($id);
+
         return view('frontOffice.pages.activities.show', compact('activity'));
     }
 
@@ -73,6 +75,7 @@ class ActivityController extends Controller
     public function edit(string $id)
     {
         $activity = Activity::findOrFail($id);
+
         return view('frontOffice.pages.activities.edit', compact('activity'));
     }
 
@@ -82,7 +85,7 @@ class ActivityController extends Controller
     public function update(Request $request, string $id)
     {
         $activity = Activity::findOrFail($id);
-        
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -120,6 +123,7 @@ class ActivityController extends Controller
         Activity::whereIn('id', $request->activity_ids)->delete();
 
         $count = count($request->activity_ids);
+
         return redirect()->route('activities.index')->with('success', "{$count} activity(ies) deleted successfully!");
     }
 
@@ -129,31 +133,31 @@ class ActivityController extends Controller
     public function search(Request $request)
     {
         $query = Activity::query();
-        
+
         // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
-        
+
         // Filter by status
-        if ($request->has('status') && !empty($request->status)) {
+        if ($request->has('status') && ! empty($request->status)) {
             $query->where('status', $request->status);
         }
-        
+
         $activities = $query->latest()->get();
-        
+
         // Return JSON response for AJAX
         if ($request->ajax()) {
             return response()->json([
                 'html' => view('frontOffice.pages.activities.partials.activity-list', compact('activities'))->render(),
-                'count' => $activities->count()
+                'count' => $activities->count(),
             ]);
         }
-        
+
         return view('frontOffice.pages.activities.index', compact('activities'));
     }
 }

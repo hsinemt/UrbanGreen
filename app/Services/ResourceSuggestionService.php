@@ -7,7 +7,6 @@ use App\Models\Resource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Smart Resource Suggestion Service
@@ -20,9 +19,13 @@ use Illuminate\Support\Facades\DB;
 class ResourceSuggestionService
 {
     private const CACHE_DURATION = 15 * 60; // 15 minutes in seconds
+
     private const OPENAI_MODEL = 'gpt-3.5-turbo';
+
     private const API_TIMEOUT = 30; // 30 seconds timeout
+
     private const LOW_CONFIDENCE_THRESHOLD = 60; // Use AI when confidence < 60%
+
     private const TOP_SUGGESTIONS = 10; // Return top 10 suggestions
 
     /**
@@ -75,9 +78,6 @@ class ResourceSuggestionService
 
     /**
      * Generate resource suggestions for an event.
-     *
-     * @param Event $event
-     * @return array
      */
     public function suggest(Event $event): array
     {
@@ -87,26 +87,27 @@ class ResourceSuggestionService
         $cached = Cache::get($cacheKey);
         if ($cached) {
             Log::info('Returning cached resource suggestions', ['event_id' => $event->id]);
+
             return $cached;
         }
 
         Log::info('Generating new resource suggestions', [
             'event_id' => $event->id,
-            'event_name' => $event->name
+            'event_name' => $event->name,
         ]);
 
         // Step 1: Get suggestions from historical data
         $historicalSuggestions = $this->getHistoricalSuggestions($event);
         Log::info('Historical suggestions retrieved', [
             'event_id' => $event->id,
-            'count' => count($historicalSuggestions)
+            'count' => count($historicalSuggestions),
         ]);
 
         // Step 2: Get suggestions from keyword matching
         $keywordSuggestions = $this->getKeywordSuggestions($event);
         Log::info('Keyword suggestions retrieved', [
             'event_id' => $event->id,
-            'count' => count($keywordSuggestions)
+            'count' => count($keywordSuggestions),
         ]);
 
         // Step 3: Merge and calculate confidence
@@ -114,26 +115,26 @@ class ResourceSuggestionService
         Log::info('Suggestions merged', [
             'event_id' => $event->id,
             'total_count' => count($mergedSuggestions),
-            'top_5_resources' => array_slice(array_column($mergedSuggestions, 'name'), 0, 5)
+            'top_5_resources' => array_slice(array_column($mergedSuggestions, 'name'), 0, 5),
         ]);
 
         // Calculate overall confidence score
         $confidenceScore = $this->calculateOverallConfidence($mergedSuggestions);
         Log::info('Confidence score calculated', [
             'event_id' => $event->id,
-            'confidence' => $confidenceScore
+            'confidence' => $confidenceScore,
         ]);
 
         // Step 4: Use AI enhancement if confidence is low OR no suggestions found
         $useAI = (empty($mergedSuggestions) || $confidenceScore < self::LOW_CONFIDENCE_THRESHOLD)
-                 && !empty(config('services.openai.api_key'));
+                 && ! empty(config('services.openai.api_key'));
 
         if ($useAI) {
             $reason = empty($mergedSuggestions) ? 'no suggestions found' : 'low confidence detected';
             Log::info("Using AI enhancement - {$reason}", [
                 'event_id' => $event->id,
                 'confidence' => $confidenceScore,
-                'existing_suggestions_count' => count($mergedSuggestions)
+                'existing_suggestions_count' => count($mergedSuggestions),
             ]);
 
             try {
@@ -144,12 +145,12 @@ class ResourceSuggestionService
                 Log::info('AI enhancement completed', [
                     'event_id' => $event->id,
                     'new_confidence' => $confidenceScore,
-                    'total_suggestions' => count($mergedSuggestions)
+                    'total_suggestions' => count($mergedSuggestions),
                 ]);
             } catch (\Exception $e) {
                 Log::warning('AI enhancement failed, using base suggestions', [
                     'event_id' => $event->id,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -161,14 +162,14 @@ class ResourceSuggestionService
             'event_id' => $event->id,
             'final_count' => count($topSuggestions),
             'confidence_score' => round($confidenceScore, 2),
-            'suggestions' => array_map(function($s) {
+            'suggestions' => array_map(function ($s) {
                 return ['name' => $s['name'], 'confidence' => $s['confidence']];
-            }, $topSuggestions)
+            }, $topSuggestions),
         ]);
 
         $result = [
             'suggestions' => $topSuggestions,
-            'confidence_score' => round($confidenceScore, 2)
+            'confidence_score' => round($confidenceScore, 2),
         ];
 
         // Cache the result
@@ -179,16 +180,13 @@ class ResourceSuggestionService
 
     /**
      * Get resource suggestions based on historical data from similar events.
-     *
-     * @param Event $event
-     * @return array
      */
     private function getHistoricalSuggestions(Event $event): array
     {
         $suggestions = [];
 
         // Find similar past events based on name and description
-        $eventText = strtolower($event->name . ' ' . $event->description);
+        $eventText = strtolower($event->name.' '.$event->description);
 
         // Get past events (excluding current event)
         $pastEvents = Event::where('id', '!=', $event->id)
@@ -201,13 +199,13 @@ class ResourceSuggestionService
 
         Log::info('Analyzing historical events', [
             'event_id' => $event->id,
-            'past_events_count' => $pastEvents->count()
+            'past_events_count' => $pastEvents->count(),
         ]);
 
         $similarEvents = [];
 
         foreach ($pastEvents as $pastEvent) {
-            $pastEventText = strtolower($pastEvent->name . ' ' . $pastEvent->description);
+            $pastEventText = strtolower($pastEvent->name.' '.$pastEvent->description);
 
             // Calculate similarity using keyword overlap
             $similarity = $this->calculateTextSimilarity($eventText, $pastEventText);
@@ -217,18 +215,18 @@ class ResourceSuggestionService
                     'id' => $pastEvent->id,
                     'name' => $pastEvent->name,
                     'similarity' => round($similarity, 2),
-                    'resources_count' => $pastEvent->resources->count()
+                    'resources_count' => $pastEvent->resources->count(),
                 ];
 
                 foreach ($pastEvent->resources as $resource) {
                     $resourceKey = strtolower(trim($resource->name));
 
-                    if (!isset($suggestions[$resourceKey])) {
+                    if (! isset($suggestions[$resourceKey])) {
                         $suggestions[$resourceKey] = [
                             'name' => $resource->name,
                             'type' => $resource->type,
                             'score' => 0,
-                            'source' => 'historical'
+                            'source' => 'historical',
                         ];
                     }
 
@@ -242,7 +240,7 @@ class ResourceSuggestionService
             'event_id' => $event->id,
             'similar_events_count' => count($similarEvents),
             'similar_events' => array_slice($similarEvents, 0, 5), // Log top 5
-            'unique_resources_found' => count($suggestions)
+            'unique_resources_found' => count($suggestions),
         ]);
 
         return $suggestions;
@@ -250,21 +248,18 @@ class ResourceSuggestionService
 
     /**
      * Get resource suggestions based on keyword matching.
-     *
-     * @param Event $event
-     * @return array
      */
     private function getKeywordSuggestions(Event $event): array
     {
         $suggestions = [];
-        $eventText = strtolower($event->name . ' ' . $event->description);
+        $eventText = strtolower($event->name.' '.$event->description);
 
         // Log the event text being analyzed
         Log::info('Analyzing event for keyword matching', [
             'event_id' => $event->id,
             'event_name' => $event->name,
             'event_text_length' => strlen($eventText),
-            'event_text_preview' => substr($eventText, 0, 200)
+            'event_text_preview' => substr($eventText, 0, 200),
         ]);
 
         $matchedKeywords = [];
@@ -277,18 +272,18 @@ class ResourceSuggestionService
                 Log::info('Keyword match found', [
                     'keyword' => $keyword,
                     'event_id' => $event->id,
-                    'resources_count' => count($resources)
+                    'resources_count' => count($resources),
                 ]);
 
                 foreach ($resources as $resourceName) {
                     $resourceKey = strtolower(trim($resourceName));
 
-                    if (!isset($suggestions[$resourceKey])) {
+                    if (! isset($suggestions[$resourceKey])) {
                         $suggestions[$resourceKey] = [
                             'name' => $resourceName,
                             'type' => 'equipment', // Default type
                             'score' => 0,
-                            'source' => 'keyword'
+                            'source' => 'keyword',
                         ];
                     }
 
@@ -303,7 +298,7 @@ class ResourceSuggestionService
             'event_id' => $event->id,
             'matched_keywords_count' => count($matchedKeywords),
             'matched_keywords' => $matchedKeywords,
-            'unique_resources_found' => count($suggestions)
+            'unique_resources_found' => count($suggestions),
         ]);
 
         return $suggestions;
@@ -311,10 +306,6 @@ class ResourceSuggestionService
 
     /**
      * Merge suggestions from different sources.
-     *
-     * @param array $historical
-     * @param array $keyword
-     * @return array
      */
     private function mergeSuggestions(array $historical, array $keyword): array
     {
@@ -335,9 +326,6 @@ class ResourceSuggestionService
 
     /**
      * Calculate overall confidence score based on all suggestions.
-     *
-     * @param array $suggestions
-     * @return float
      */
     private function calculateOverallConfidence(array $suggestions): float
     {
@@ -358,24 +346,21 @@ class ResourceSuggestionService
     /**
      * Get AI-powered suggestions using OpenAI API.
      *
-     * @param Event $event
-     * @param array $existingSuggestions
-     * @return array
      * @throws \Exception
      */
     private function getAISuggestions(Event $event, array $existingSuggestions): array
     {
         $apiKey = config('services.openai.api_key') ?: env('OPENAI_API_KEY');
 
-        if (!$apiKey) {
-            throw new \Exception("OpenAI API key not configured");
+        if (! $apiKey) {
+            throw new \Exception('OpenAI API key not configured');
         }
 
         // Prepare existing suggestions for context
         $existingNames = array_column($existingSuggestions, 'name');
-        $existingContext = !empty($existingNames)
-            ? "Current suggestions: " . implode(', ', $existingNames)
-            : "No suggestions found yet";
+        $existingContext = ! empty($existingNames)
+            ? 'Current suggestions: '.implode(', ', $existingNames)
+            : 'No suggestions found yet';
 
         // Build the prompt
         $prompt = "For an environmental event called '{$event->name}' with description: '{$event->description}', suggest 10 specific resources/equipment needed. Consider it's a greenspace management or environmental event. {$existingContext}. Return a JSON array with objects containing 'name' and 'type' fields.";
@@ -385,12 +370,12 @@ class ResourceSuggestionService
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => 'You are an expert in environmental projects and urban greenspace management. Suggest practical resources and equipment for environmental events. Always respond with valid JSON only.'
+                    'content' => 'You are an expert in environmental projects and urban greenspace management. Suggest practical resources and equipment for environmental events. Always respond with valid JSON only.',
                 ],
                 [
                     'role' => 'user',
-                    'content' => $prompt
-                ]
+                    'content' => $prompt,
+                ],
             ],
             'temperature' => 0.7,
             'max_tokens' => 500,
@@ -398,25 +383,25 @@ class ResourceSuggestionService
 
         try {
             $response = Http::withOptions([
-                'verify' => false
+                'verify' => false,
             ])->withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
+                'Authorization' => 'Bearer '.$apiKey,
                 'Content-Type' => 'application/json',
             ])->timeout(self::API_TIMEOUT)->post('https://api.openai.com/v1/chat/completions', $payload);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 Log::error('OpenAI API error', [
                     'status' => $response->status(),
-                    'body' => $response->body()
+                    'body' => $response->body(),
                 ]);
-                throw new \Exception("Failed to get AI suggestions: " . $response->body());
+                throw new \Exception('Failed to get AI suggestions: '.$response->body());
             }
 
             $data = $response->json();
             $content = $data['choices'][0]['message']['content'] ?? null;
 
-            if (!$content) {
-                throw new \Exception("Invalid response from OpenAI API");
+            if (! $content) {
+                throw new \Exception('Invalid response from OpenAI API');
             }
 
             // Clean the content in case it has markdown code blocks
@@ -426,16 +411,16 @@ class ResourceSuggestionService
 
             $aiData = json_decode($content, true);
 
-            if (!$aiData) {
+            if (! $aiData) {
                 Log::error('Failed to parse OpenAI response', ['content' => $content]);
-                throw new \Exception("Failed to parse OpenAI response");
+                throw new \Exception('Failed to parse OpenAI response');
             }
 
             return $aiData;
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error('OpenAI API connection timeout', ['error' => $e->getMessage()]);
-            throw new \Exception("Request timed out. Please try again.");
+            throw new \Exception('Request timed out. Please try again.');
         } catch (\Exception $e) {
             Log::error('OpenAI API call failed', ['error' => $e->getMessage()]);
             throw $e;
@@ -444,15 +429,11 @@ class ResourceSuggestionService
 
     /**
      * Integrate AI suggestions with existing suggestions.
-     *
-     * @param array $existing
-     * @param array $aiSuggestions
-     * @return array
      */
     private function integrateAISuggestions(array $existing, array $aiSuggestions): array
     {
         foreach ($aiSuggestions as $aiSuggestion) {
-            if (!isset($aiSuggestion['name'])) {
+            if (! isset($aiSuggestion['name'])) {
                 continue;
             }
 
@@ -468,7 +449,7 @@ class ResourceSuggestionService
                     'name' => $aiSuggestion['name'],
                     'type' => $aiSuggestion['type'] ?? 'equipment',
                     'score' => 50, // AI suggestions get base score of 50
-                    'source' => 'ai'
+                    'source' => 'ai',
                 ];
             }
         }
@@ -478,9 +459,6 @@ class ResourceSuggestionService
 
     /**
      * Get top suggestions with actual resource IDs from database.
-     *
-     * @param array $suggestions
-     * @return array
      */
     private function getTopSuggestionsWithIds(array $suggestions): array
     {
@@ -505,7 +483,7 @@ class ResourceSuggestionService
             $result[] = [
                 'id' => $resource ? $resource->id : null,
                 'name' => $suggestion['name'],
-                'confidence' => round($confidence, 2)
+                'confidence' => round($confidence, 2),
             ];
         }
 
@@ -514,10 +492,6 @@ class ResourceSuggestionService
 
     /**
      * Calculate text similarity based on common keywords.
-     *
-     * @param string $text1
-     * @param string $text2
-     * @return float
      */
     private function calculateTextSimilarity(string $text1, string $text2): float
     {

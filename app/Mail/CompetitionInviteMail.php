@@ -13,6 +13,7 @@ class CompetitionInviteMail extends Mailable
     use Queueable, SerializesModels;
 
     public Competition $competition;
+
     public User $association;
 
     public function __construct(Competition $competition, User $association)
@@ -29,5 +30,3 @@ class CompetitionInviteMail extends Mailable
             ->view('emails.competitions.invite');
     }
 }
-
-

@@ -15,12 +15,12 @@ class EnsureUserIsSupplier
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login')
                 ->with('error', 'Please login to continue.');
         }
 
-        if (!auth()->user()->isSupplier()) {
+        if (! auth()->user()->isSupplier()) {
             return redirect()->back()
                 ->with('error', 'Access denied. Only suppliers can perform this action.');
         }

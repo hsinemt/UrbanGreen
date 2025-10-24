@@ -31,7 +31,4 @@ class Competition extends Model
     {
         return $this->belongsToMany(User::class, 'competition_association', 'competition_id', 'association_id');
     }
-
 }
-
-

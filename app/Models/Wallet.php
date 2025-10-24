@@ -14,13 +14,13 @@ class Wallet extends Model
         'donation_count',
         'total_amount',
         'target_amount',
-        'event_id'
+        'event_id',
     ];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
         'target_amount' => 'decimal:2',
-        'donation_count' => 'integer'
+        'donation_count' => 'integer',
     ];
 
     // Relation avec Event
@@ -41,6 +41,7 @@ class Wallet extends Model
         if ($this->target_amount == 0) {
             return 0;
         }
+
         return round(($this->total_amount / $this->target_amount) * 100, 2);
     }
 

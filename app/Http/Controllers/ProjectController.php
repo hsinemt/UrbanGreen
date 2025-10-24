@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Projet;
 use App\Models\ProjectStatusChange;
+use App\Models\Projet;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
@@ -24,9 +24,9 @@ class ProjectController extends Controller
 
         // Filters: search (name/description), status, start/end dates
         if ($search = request('q')) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
-                  ->orWhere('description', 'like', "%$search%");
+                    ->orWhere('description', 'like', "%$search%");
             });
         }
         if ($status = request('status')) {
@@ -36,7 +36,7 @@ class ProjectController extends Controller
             $query->whereDate('start_date', '>=', $start);
         }
         if ($end = request('end_date')) {
-            $query->whereDate('end_date', '<=', $end)->orWhere(function($q) use ($end){
+            $query->whereDate('end_date', '<=', $end)->orWhere(function ($q) use ($end) {
                 // include ongoing projects with null end_date if end filter provided
                 $q->whereNull('end_date')->whereDate('start_date', '<=', $end);
             });
@@ -66,11 +66,12 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
+        if (! Auth::check() || ! (Auth::user()->isAssociation() || Auth::user()->isPartner())) {
             abort(403, 'Only associations can create projects.');
         }
-        $projet = new Projet();
+        $projet = new Projet;
         $statuses = Projet::allowedStatuses();
+
         return view('frontOffice.pages.projects.form', compact('projet', 'statuses'));
     }
 
@@ -79,12 +80,13 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
+        if (! Auth::check() || ! (Auth::user()->isAssociation() || Auth::user()->isPartner())) {
             abort(403, 'Only associations can create projects.');
         }
         $validated = $this->validateRequest($request);
         $validated['user_id'] = Auth::id();
         $projet = Projet::create($validated);
+
         return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
 
@@ -93,8 +95,8 @@ class ProjectController extends Controller
      */
     public function show(Projet $projet)
     {
-//        // Load relationships
-//        $projet->load(['risks', 'issues']);
+        //        // Load relationships
+        //        $projet->load(['risks', 'issues']);
 
         // Get related projects (same status)
         $relatedProjects = Projet::where('id', '!=', $projet->id)
@@ -110,10 +112,11 @@ class ProjectController extends Controller
      */
     public function edit(Projet $projet)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
+        if (! Auth::check() || ! (Auth::user()->isAssociation() || Auth::user()->isPartner())) {
             abort(403, 'Only associations can edit projects.');
         }
         $statuses = Projet::allowedStatuses();
+
         return view('frontOffice.pages.projects.form', compact('projet', 'statuses'));
     }
 
@@ -122,14 +125,14 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Projet $projet)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
+        if (! Auth::check() || ! (Auth::user()->isAssociation() || Auth::user()->isPartner())) {
             abort(403, 'Only associations can update projects.');
         }
         $validated = $this->validateRequest($request);
 
         // Workflow guard: log status transitions
         if (isset($validated['status']) && $validated['status'] !== $projet->status) {
-            if (!Projet::canTransition($projet->status, $validated['status'])) {
+            if (! Projet::canTransition($projet->status, $validated['status'])) {
                 return back()->withErrors(['status' => 'Invalid status transition'])->withInput();
             }
         }
@@ -145,6 +148,7 @@ class ProjectController extends Controller
                 'user_id' => auth()->id(),
             ]);
         }
+
         return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
     }
 
@@ -153,10 +157,11 @@ class ProjectController extends Controller
      */
     public function destroy(Projet $projet)
     {
-        if (!Auth::check() || !(Auth::user()->isAssociation() || Auth::user()->isPartner())) {
+        if (! Auth::check() || ! (Auth::user()->isAssociation() || Auth::user()->isPartner())) {
             abort(403, 'Only associations can delete projects.');
         }
         $projet->delete();
+
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }
 
@@ -170,7 +175,7 @@ class ProjectController extends Controller
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'status' => ["required", "in:$statusValues"],
+            'status' => ['required', "in:$statusValues"],
             'user_id' => ['nullable', 'exists:users,id'],
             'slug' => ['nullable', 'string', 'max:255'],
             'priority' => ['nullable', 'integer', 'between:1,5'],
@@ -196,36 +201,36 @@ class ProjectController extends Controller
 
         // Filters: search, status, user, date range
         if ($search = $request->get('q')) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
-                  ->orWhere('description', 'like', "%$search%");
+                    ->orWhere('description', 'like', "%$search%");
             });
         }
-        
+
         if ($status = $request->get('status')) {
             $query->where('status', $status);
         }
-        
+
         if ($userId = $request->get('user_id')) {
             $query->where('user_id', $userId);
         }
-        
+
         if ($start = $request->get('start_date')) {
             $query->whereDate('start_date', '>=', $start);
         }
-        
+
         if ($end = $request->get('end_date')) {
-            $query->whereDate('end_date', '<=', $end)->orWhere(function($q) use ($end){
+            $query->whereDate('end_date', '<=', $end)->orWhere(function ($q) use ($end) {
                 $q->whereNull('end_date')->whereDate('start_date', '<=', $end);
             });
         }
 
         $projects = $query->latest()->paginate(15);
-        
+
         // Get filter options
         $users = User::whereIn('role', [User::ROLE_ASSOCIATION, User::ROLE_PARTNER])->get();
         $statuses = Projet::allowedStatuses();
-        
+
         // Statistics - use the same filtered query
         $statsQuery = clone $query;
         $stats = [
@@ -245,10 +250,10 @@ class ProjectController extends Controller
 
     public function dashboardCreate()
     {
-        $projet = new Projet();
+        $projet = new Projet;
         $statuses = Projet::allowedStatuses();
         $users = User::whereIn('role', [User::ROLE_ASSOCIATION, User::ROLE_PARTNER])->get();
-        
+
         return view('dashboard.components.projects.create', compact('projet', 'statuses', 'users'));
     }
 
@@ -256,14 +261,14 @@ class ProjectController extends Controller
     {
         $validated = $this->validateRequest($request);
         $projet = Projet::create($validated);
-        
+
         return redirect()->route('back.projects.index')->with('success', 'Project created successfully.');
     }
 
     public function dashboardShow(Projet $projet)
     {
         $projet->load(['user', 'statusChanges.user']);
-        
+
         // Get related projects
         $relatedProjects = Projet::where('id', '!=', $projet->id)
             ->where('status', $projet->status)
@@ -277,7 +282,7 @@ class ProjectController extends Controller
     {
         $statuses = Projet::allowedStatuses();
         $users = User::whereIn('role', [User::ROLE_ASSOCIATION, User::ROLE_PARTNER])->get();
-        
+
         return view('dashboard.components.projects.edit', compact('projet', 'statuses', 'users'));
     }
 
@@ -287,7 +292,7 @@ class ProjectController extends Controller
 
         // Log status transitions
         if (isset($validated['status']) && $validated['status'] !== $projet->status) {
-            if (!Projet::canTransition($projet->status, $validated['status'])) {
+            if (! Projet::canTransition($projet->status, $validated['status'])) {
                 return back()->withErrors(['status' => 'Invalid status transition'])->withInput();
             }
         }
@@ -303,13 +308,14 @@ class ProjectController extends Controller
                 'user_id' => auth()->id(),
             ]);
         }
-        
+
         return redirect()->route('back.projects.index')->with('success', 'Project updated successfully.');
     }
 
     public function dashboardDestroy(Projet $projet)
     {
         $projet->delete();
+
         return redirect()->route('back.projects.index')->with('success', 'Project deleted successfully.');
     }
 }
