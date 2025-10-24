@@ -23,6 +23,20 @@ class FeedbackController extends Controller
     }
 
     /**
+     * Download feedback list as PDF.
+     * Opens a printable page where users can save as PDF using browser's print function.
+     */
+    public function downloadPdf()
+    {
+        $feedback = Feedback::with(['user', 'event'])
+            ->latest()
+            ->get();
+
+        // Return print-optimized HTML view for PDF generation via browser
+        return view('dashboard.feedback.pdf', compact('feedback'));
+    }
+
+    /**
      * Get all feedback for an event (API).
      */
     public function index(Event $event)

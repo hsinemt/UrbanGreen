@@ -20,8 +20,12 @@
 
 @section('content')
     <div class="card h-100 p-0 radius-12">
-        <div class="card-header border-bottom bg-base py-16 px-24">
+        <div class="card-header border-bottom bg-base py-16 px-24 d-flex justify-content-between align-items-center">
             <h6 class="text-lg fw-semibold mb-0">All Feedback</h6>
+            <a href="{{ route('back.feedback.download-pdf') }}" class="btn btn-primary-600 radius-8 px-20 py-11" target="_blank">
+                <iconify-icon icon="solar:printer-minimalistic-bold" class="icon text-xl"></iconify-icon>
+                Print / Save as PDF
+            </a>
         </div>
         <div class="card-body p-24">
             @if($feedback->count() > 0)

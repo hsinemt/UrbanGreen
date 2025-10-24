@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin', [DashboardController::class, 'home'])->name('back.home');
 Route::get('/admin/users', [UsersController::class, 'index'])->name('back.users.index');
 Route::get('/admin/feedback', [FeedbackController::class, 'adminIndex'])->name('back.feedback.index');
+Route::get('/admin/feedback/download-pdf', [FeedbackController::class, 'downloadPdf'])->name('back.feedback.download-pdf');
 
 Route::prefix('admin')->group(function () {
     Route::resource('resource', ResourceController::class);
