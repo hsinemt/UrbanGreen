@@ -1,0 +1,117 @@
+# ========================================
+# .dockerignore for UrbanGreen Laravel Project
+# Excludes unnecessary files from Docker build context
+# ========================================
+
+# Git repository
+.git
+.gitignore
+.gitattributes
+
+# Environment files (never include secrets)
+.env
+.env.*
+!.env.example
+
+# Docker files (not needed in image)
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile
+.dockerignore
+
+# Documentation
+README.md
+*.md
+DEVOPS.md
+CURRENCY_API_SETUP.md
+EVENT_IMAGE_FIX_README.md
+GEMINI_SETUP.md
+RESOURCE_SUGGESTION_SYSTEM.md
+TWILIO_SETUP.md
+
+# Node.js
+node_modules
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Testing
+tests
+.phpunit.result.cache
+phpunit.xml
+.phpunit.cache
+coverage
+test_*.php
+
+# Storage directories (will be created at runtime)
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+storage/app/public/*
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+!storage/logs/.gitignore
+
+# Bootstrap cache
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+# IDE and editor files
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Build artifacts
+public/hot
+public/storage
+public/build
+public/mix-manifest.json
+
+# Development tools
+.php_cs
+.php_cs.cache
+.php-cs-fixer.cache
+.phpunit.result.cache
+
+# Composer development files
+composer.phar
+
+# Vagrant
+.vagrant
+
+# Laravel specific
+.phpunit.cache
+.phpunit.result.cache
+auth.json
+
+# CI/CD
+.github
+
+# Backup files
+*.sql
+*.sql.gz
+database/backups
+
+# Misc
+*.txt
+!robots.txt
+.editorconfig
