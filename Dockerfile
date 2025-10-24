@@ -13,7 +13,6 @@ WORKDIR /var/www/html
 
 # Install system dependencies and PHP extensions
 RUN apk add --no-cache \
-    # Build dependencies
     $PHPIZE_DEPS \
     # Required libraries
     curl \
@@ -88,22 +87,12 @@ RUN apk add --no-cache \
     freetype \
     icu-libs \
     mysql-client \
-    # Add supervisor for queue workers and scheduler
     supervisor \
-    # Add nginx for serving static files (optional)
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && docker-php-ext-install -j$(nproc) \
-        pdo_mysql \
-        mbstring \
-        exif \
-        pcntl \
-        bcmath \
-        gd \
-        zip \
-        intl \
-        opcache \
     && rm -rf /tmp/* /var/cache/apk/*
+
+# Copy PHP extensions from builder stage (including Redis and all other extensions)
+COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
+COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
 # Copy custom PHP configuration
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
