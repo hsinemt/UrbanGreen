@@ -234,6 +234,7 @@ jobs:
             APP_NAME=${{ vars.APP_NAME }}
             APP_ENV=${{ vars.APP_ENV }}
 
+
       - name: Image digest
         run: echo "${{ steps.meta.outputs.tags }}"
 
