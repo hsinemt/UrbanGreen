@@ -19,6 +19,8 @@ Route::get('/admin/users', [UsersController::class, 'index'])->name('back.users.
 Route::get('/admin/feedback', [FeedbackController::class, 'adminIndex'])->name('back.feedback.index');
 Route::get('/admin/feedback/download-pdf', [FeedbackController::class, 'downloadPdf'])->name('back.feedback.download-pdf');
 
+
+
 Route::prefix('admin')->group(function () {
     Route::resource('resource', ResourceController::class);
 });
