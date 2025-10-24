@@ -6,8 +6,8 @@
     <section class="cs_hero cs_style_1 cs_heading_bg cs_center cs_bg_filed" data-src="{{ asset('frontOffice/img/nature/hero_bg.jpg') }}">
         <div class="container">
             <div class="cs_hero_thumb wow fadeIn" data-wow-duration="1s" data-wow-delay="0.25s">
-                <div class="cs_hero_thumb_left"><img src="{{asset('frontOffice/img/nature/hero_img_1.jpg')}} "alt="Thumb"></div>
-                <div class="cs_hero_thumb_right"><img src="{{asset('frontOffice/img/nature/hero_img_2.jpg')}} " alt="Thumb"></div>
+                <div class="cs_hero_thumb_left"><img src="{{asset('frontOffice/img/nature/park.jpg')}} "alt="Thumb"></div>
+                <div class="cs_hero_thumb_right"><img src="{{asset('frontOffice/img/nature/family.jpg')}} " alt="Thumb"></div>
                 <div class="cs_rotate_text_box cs_bg_filed cs_center" data-src="{{asset('frontOffice/img/nature/hero_rotate_text_bg.svg')}} ">
                     <img src="{{asset('frontOffice/img/nature/hero_rotate_text.svg')}} " alt="">
                 </div>
@@ -74,34 +74,34 @@
     </section>
     <!-- End Hero Section -->
     <!-- Start Feature Section -->
-    <section>
-        <div class="cs_height_150 cs_height_lg_80"></div>
-        <div class="container">
-            <div class="row cs_row_gap_50 cs_gap_y_50">
-                <div class="col-lg-4">
-                    <div class="cs_iconbox cs_style_1">
-                        <div class="cs_iconbox_icon cs_mb_26 cs_mb_lg_20"><img src="assets/frontOffice/img/nature/climate_change_icon.svg" alt=""></div>
-                        <h2 class="cs_fs_38 cs_semibold cs_mb_22 cs_mb_lg_15">Climate Change</h2>
-                        <p class="mb-0">Discuss the science, impacts, and solutions related to climate change, including global warming, extreme weather events, and the transition to renewable energy sources.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="cs_iconbox cs_style_1">
-                        <div class="cs_iconbox_icon cs_mb_26 cs_mb_lg_20"><img src="assets/frontOffice/img/nature/sustainable_living.png" alt=""></div>
-                        <h2 class="cs_fs_38 cs_semibold cs_mb_22 cs_mb_lg_15">Sustainable Living</h2>
-                        <p class="mb-0">Provide tips and information on sustainable practices in areas such as energy conservation, waste reduction, and eco-friendly lifestyle choices.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="cs_iconbox cs_style_1">
-                        <div class="cs_iconbox_icon cs_mb_26 cs_mb_lg_20"><img src="assets/frontOffice/img/nature/deforestation.svg" alt=""></div>
-                        <h2 class="cs_fs_38 cs_semibold cs_mb_22 cs_mb_lg_15">Deforestation</h2>
-                        <p class="mb-0">Discuss the impact of deforestation on ecosystems, climate, and biodiversity, as well as reforestation and afforestation efforts.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+{{--    <section>--}}
+{{--        <div class="cs_height_150 cs_height_lg_80"></div>--}}
+{{--        <div class="container">--}}
+{{--            <div class="row cs_row_gap_50 cs_gap_y_50">--}}
+{{--                <div class="col-lg-4">--}}
+{{--                    <div class="cs_iconbox cs_style_1">--}}
+{{--                        <div class="cs_iconbox_icon cs_mb_26 cs_mb_lg_20"><img src="assets/frontOffice/img/nature/climate_change_icon.svg" alt=""></div>--}}
+{{--                        <h2 class="cs_fs_38 cs_semibold cs_mb_22 cs_mb_lg_15">Climate Change</h2>--}}
+{{--                        <p class="mb-0">Discuss the science, impacts, and solutions related to climate change, including global warming, extreme weather events, and the transition to renewable energy sources.</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-4">--}}
+{{--                    <div class="cs_iconbox cs_style_1">--}}
+{{--                        <div class="cs_iconbox_icon cs_mb_26 cs_mb_lg_20"><img src="assets/frontOffice/img/nature/sustainable_living.png" alt=""></div>--}}
+{{--                        <h2 class="cs_fs_38 cs_semibold cs_mb_22 cs_mb_lg_15">Sustainable Living</h2>--}}
+{{--                        <p class="mb-0">Provide tips and information on sustainable practices in areas such as energy conservation, waste reduction, and eco-friendly lifestyle choices.</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-4">--}}
+{{--                    <div class="cs_iconbox cs_style_1">--}}
+{{--                        <div class="cs_iconbox_icon cs_mb_26 cs_mb_lg_20"><img src="assets/frontOffice/img/nature/deforestation.svg" alt=""></div>--}}
+{{--                        <h2 class="cs_fs_38 cs_semibold cs_mb_22 cs_mb_lg_15">Deforestation</h2>--}}
+{{--                        <p class="mb-0">Discuss the impact of deforestation on ecosystems, climate, and biodiversity, as well as reforestation and afforestation efforts.</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
     <!-- End Feature Section -->
     <!-- Start About Section -->
     <section class="cs_shape_wrap">
@@ -110,7 +110,7 @@
         <div class="container">
             <div class="row align-items-center cs_gap_y_50">
                 <div class="col-lg-6 wow fadeIn" data-wow-duration="0.8s" data-wow-delay="0.25s">
-                    <a href="https://www.youtube.com/embed/rRid6GCJtgc" class="cs_video_block cs_style_1 cs_bg_filed cs_video_open cs_center" data-src="assets/frontOffice/img/nature/video_block_bg.jpg">
+                    <a href="https://www.youtube.com/embed/rRid6GCJtgc" class="cs_video_block cs_style_1 cs_bg_filed cs_video_open cs_center" data-src="assets/frontOffice/img/nature/about.jpg">
               <span class="cs_player_btn cs_white_color">
                 <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M35 0C15.7004 0 0 15.7004 0 35C0 54.2996 15.7004 70 35 70C54.2996 70 70 54.2996 70 35C70 15.7004 54.2996 0 35 0ZM35 64.1667C18.9175 64.1667 5.83333 51.0825 5.83333 35C5.83333 18.9175 18.9175 5.83333 35 5.83333C51.0825 5.83333 64.1667 18.9175 64.1667 35C64.1667 51.0825 51.0825 64.1667 35 64.1667ZM23.3333 51.4704L52.6167 35L23.3333 18.5296V51.4733V51.4704ZM29.1667 28.5017L40.7167 35L29.1667 41.4983V28.5017Z" fill="currentColor"/>
@@ -144,17 +144,17 @@
                             </li>
                         </ul>
                         <div class="cs_height_45 cs_height_lg_30"></div>
-                        <a href="about.html" class="cs_btn cs_style_1">
-                            Learn More
-                            <i>
-                                <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                            </i>
-                        </a>
+{{--                        <a href="about.html" class="cs_btn cs_style_1">--}}
+{{--                            Learn More--}}
+{{--                            <i>--}}
+{{--                                <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                    <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>--}}
+{{--                                </svg>--}}
+{{--                                <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                    <path d="M0.5 9L8.5 1M8.5 1L0.5 1M8.5 1L8.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>--}}
+{{--                                </svg>--}}
+{{--                            </i>--}}
+{{--                        </a>--}}
                     </div>
                 </div>
             </div>
@@ -307,67 +307,67 @@
     <div class="cs_height_125 cs_height_lg_60"></div>
     <!-- End Funfact  -->
     <!-- Start Faq Section -->
-    <section class="cs_gray_bg_2">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="cs_pr_95">
-                        <div class="cs_height_93 cs_height_lg_80"></div>
-                        <div class="cs_section_heading cs_style_1">
-                            <h3 class="cs_fs_21 cs_semibold cs_accent_color cs_mb_13">FAQ</h3>
-                            <h2 class="cs_fs_51 mb-0">Have Any Questions?</h2>
-                        </div>
-                        <div class="cs_height_50 cs_height_lg_50"></div>
-                        <div class="cs_accordians cs_style_1">
-                            <div class="cs_accordian active">
-                                <div class="cs_accordian_head">
-                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">1. What is the primary goal of this website?</h2>
-                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>
-                                </div>
-                                <div class="cs_accordian_body">
-                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>
-                                </div>
-                            </div><!-- .cs_accordian -->
-                            <div class="cs_accordian">
-                                <div class="cs_accordian_head">
-                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">2. How can I support your website's mission?</h2>
-                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>
-                                </div>
-                                <div class="cs_accordian_body">
-                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>
-                                </div>
-                            </div><!-- .cs_accordian -->
-                            <div class="cs_accordian">
-                                <div class="cs_accordian_head">
-                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">3. How do you ensure the sustainability of website?</h2>
-                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>
-                                </div>
-                                <div class="cs_accordian_body">
-                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>
-                                </div>
-                            </div><!-- .cs_accordian -->
-                            <div class="cs_accordian">
-                                <div class="cs_accordian_head">
-                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">4. How can I get involved in environmental initiatives?</h2>
-                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>
-                                </div>
-                                <div class="cs_accordian_body">
-                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>
-                                </div>
-                            </div><!-- .cs_accordian -->
-                        </div>
-                        <div class="cs_height_100 cs_height_lg_50"></div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="cs_half_screen_right">
-                        <div class="cs_half_screen_thumb cs_bg_filed" data-src="{{asset('frontOffice/img/nature/faq_bg.jpg')}} "></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="cs_height_0 cs_height_lg_80"></div>
-    </section>
+{{--    <section class="cs_gray_bg_2">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-lg-6">--}}
+{{--                    <div class="cs_pr_95">--}}
+{{--                        <div class="cs_height_93 cs_height_lg_80"></div>--}}
+{{--                        <div class="cs_section_heading cs_style_1">--}}
+{{--                            <h3 class="cs_fs_21 cs_semibold cs_accent_color cs_mb_13">FAQ</h3>--}}
+{{--                            <h2 class="cs_fs_51 mb-0">Have Any Questions?</h2>--}}
+{{--                        </div>--}}
+{{--                        <div class="cs_height_50 cs_height_lg_50"></div>--}}
+{{--                        <div class="cs_accordians cs_style_1">--}}
+{{--                            <div class="cs_accordian active">--}}
+{{--                                <div class="cs_accordian_head">--}}
+{{--                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">1. What is the primary goal of this website?</h2>--}}
+{{--                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>--}}
+{{--                                </div>--}}
+{{--                                <div class="cs_accordian_body">--}}
+{{--                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>--}}
+{{--                                </div>--}}
+{{--                            </div><!-- .cs_accordian -->--}}
+{{--                            <div class="cs_accordian">--}}
+{{--                                <div class="cs_accordian_head">--}}
+{{--                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">2. How can I support your website's mission?</h2>--}}
+{{--                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>--}}
+{{--                                </div>--}}
+{{--                                <div class="cs_accordian_body">--}}
+{{--                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>--}}
+{{--                                </div>--}}
+{{--                            </div><!-- .cs_accordian -->--}}
+{{--                            <div class="cs_accordian">--}}
+{{--                                <div class="cs_accordian_head">--}}
+{{--                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">3. How do you ensure the sustainability of website?</h2>--}}
+{{--                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>--}}
+{{--                                </div>--}}
+{{--                                <div class="cs_accordian_body">--}}
+{{--                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>--}}
+{{--                                </div>--}}
+{{--                            </div><!-- .cs_accordian -->--}}
+{{--                            <div class="cs_accordian">--}}
+{{--                                <div class="cs_accordian_head">--}}
+{{--                                    <h2 class="cs_accordian_title cs_fs_21 cs_semibold">4. How can I get involved in environmental initiatives?</h2>--}}
+{{--                                    <span class="cs_accordian_toggle"><i class="fa-solid fa-angle-down"></i></span>--}}
+{{--                                </div>--}}
+{{--                                <div class="cs_accordian_body">--}}
+{{--                                    <p>Our primary goal is to raise awareness about environmental issues, provide educational resources, and inspire positive environmental action.</p>--}}
+{{--                                </div>--}}
+{{--                            </div><!-- .cs_accordian -->--}}
+{{--                        </div>--}}
+{{--                        <div class="cs_height_100 cs_height_lg_50"></div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-6">--}}
+{{--                    <div class="cs_half_screen_right">--}}
+{{--                        <div class="cs_half_screen_thumb cs_bg_filed" data-src="{{asset('frontOffice/img/nature/faq_bg.jpg')}} "></div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="cs_height_0 cs_height_lg_80"></div>--}}
+{{--    </section>--}}
     <!-- End Faq Section -->
     <!-- Start Donation Section -->
     <section>
@@ -493,143 +493,143 @@
     </section>
     <!-- End Donation Section -->
     <!-- Start Testimonial Section -->
-    <section class="cs_half_bg_wrap">
-        <div class="cs_height_145 cs_height_lg_75"></div>
-        <div class="cs_half_bg_bottom cs_accent_bg cs_bg_filed" data-src="{{asset('frontOffice/img/nature/testimonial_bg.svg')}} "></div>
-        <div class="container">
-            <div class="cs_slider cs_style_1 cs_slider_gap_24 cs_ptb_12">
-                <div class="cs_slider_heading_1">
-                    <div class="cs_section_heading cs_style_1">
-                        <h3 class="cs_fs_21 cs_semibold cs_accent_color cs_mb_13 wow fadeIn" data-wow-duration="0.8s" data-wow-delay="0.25s">Testimonial</h3>
-                        <h2 class="cs_fs_51 mb-0 wow fadeInRight" data-wow-duration="0.8s" data-wow-delay="0.25s">What People Think About Us</h2>
-                    </div>
-                    <div class="cs_pagination cs_style_2 cs_hide_lg"></div>
-                </div>
-                <div class="cs_height_90 cs_height_lg_50"></div>
-                <div class="cs_slider_container" data-autoplay="0" data-loop="1" data-speed="600" data-center="0" data-variable-width="0" data-slides-per-view="responsive" data-xs-slides="1" data-sm-slides="2" data-md-slides="2" data-lg-slides="3" data-add-slides="3">
-                    <div class="cs_slider_wrapper">
-                        <div class="cs_slide">
-                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">
-                                <div class="cs_testimonial_avatar cs_mb_42">
-                                    <img src="{{asset('frontOffice/img/nature/avatar_img_1.png')}} " alt="Avatar">
-                                    <div class="cs_testimonial_avatar_right">
-                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Angrew Bolar</h3>
-                                        <p class="mb-0 cs_accent_color">Volunteer</p>
-                                    </div>
-                                </div>
-                                <blockquote class="cs_fs_18 cs_mb_45">The resources have been a tremendous help in making my lifestyle more eco-friendly. Plus, the campaigns are a fantastic way to get involved. Keep up the excellent work!</blockquote>
-                                <div class="cs_rating cs_accent_color" data-rating="5">
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <div class="cs_rating_percentage">
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cs_slide">
-                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">
-                                <div class="cs_testimonial_avatar cs_mb_42">
-                                    <img src="{{asset('frontOffice/img/nature/avatar_img_2.png')}} " alt="Avatar">
-                                    <div class="cs_testimonial_avatar_right">
-                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Milisa Geui</h3>
-                                        <p class="mb-0 cs_accent_color">Volunteer</p>
-                                    </div>
-                                </div>
-                                <blockquote class="cs_fs_18 cs_mb_45">I particularly appreciate the emphasis on practical tips for sustainable living. It's refreshing to find a place that not only highlights the issues but also provides solutions.</blockquote>
-                                <div class="cs_rating cs_accent_color" data-rating="5">
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <div class="cs_rating_percentage">
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cs_slide">
-                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">
-                                <div class="cs_testimonial_avatar cs_mb_42">
-                                    <img src="{{asset('frontOffice/img/nature/avatar_img_3.png')}} " alt="Avatar">
-                                    <div class="cs_testimonial_avatar_right">
-                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Michaku</h3>
-                                        <p class="mb-0 cs_accent_color">Volunteer</p>
-                                    </div>
-                                </div>
-                                <blockquote class="cs_fs_18 cs_mb_45">I love being part of a community that cares about the planet, and this website has been instrumental in connecting me with like-minded individuals. Thank you!</blockquote>
-                                <div class="cs_rating cs_accent_color" data-rating="5">
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <div class="cs_rating_percentage">
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cs_slide">
-                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">
-                                <div class="cs_testimonial_avatar cs_mb_42">
-                                    <img src="{{asset('frontOffice/img/nature/avatar_img_2.png')}} " alt="Avatar">
-                                    <div class="cs_testimonial_avatar_right">
-                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Milisa Geui</h3>
-                                        <p class="mb-0 cs_accent_color">Volunteer</p>
-                                    </div>
-                                </div>
-                                <blockquote class="cs_fs_18 cs_mb_45">I particularly appreciate the emphasis on practical tips for sustainable living. It's refreshing to find a place that not only highlights the issues but also provides solutions.</blockquote>
-                                <div class="cs_rating cs_accent_color" data-rating="5">
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <div class="cs_rating_percentage">
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                        <i class="fa-solid fa-star fa-fw"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cs_slider_arrows cs_style_3 cs_type_1 cs_show_lg">
-                    <div class="cs_left_arrow rounded-circle cs_center">
-                        <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.292892 7.29289C-0.0976315 7.68342 -0.0976315 8.31658 0.292892 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928932C7.68054 0.538408 7.04738 0.538408 6.65685 0.928932L0.292892 7.29289ZM22 7L1 7V9L22 9V7Z" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <div class="cs_right_arrow rounded-circle cs_center">
-                        <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21.7071 8.70711C22.0976 8.31658 22.0976 7.68342 21.7071 7.29289L15.3431 0.928932C14.9526 0.538408 14.3195 0.538408 13.9289 0.928932C13.5384 1.31946 13.5384 1.95262 13.9289 2.34315L19.5858 8L13.9289 13.6569C13.5384 14.0474 13.5384 14.6805 13.9289 15.0711C14.3195 15.4616 14.9526 15.4616 15.3431 15.0711L21.7071 8.70711ZM0 9L21 9V7L0 7L0 9Z" fill="currentColor"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="cs_height_150 cs_height_lg_80"></div>
-    </section>
+{{--    <section class="cs_half_bg_wrap">--}}
+{{--        <div class="cs_height_145 cs_height_lg_75"></div>--}}
+{{--        <div class="cs_half_bg_bottom cs_accent_bg cs_bg_filed" data-src="{{asset('frontOffice/img/nature/testimonial_bg.svg')}} "></div>--}}
+{{--        <div class="container">--}}
+{{--            <div class="cs_slider cs_style_1 cs_slider_gap_24 cs_ptb_12">--}}
+{{--                <div class="cs_slider_heading_1">--}}
+{{--                    <div class="cs_section_heading cs_style_1">--}}
+{{--                        <h3 class="cs_fs_21 cs_semibold cs_accent_color cs_mb_13 wow fadeIn" data-wow-duration="0.8s" data-wow-delay="0.25s">Testimonial</h3>--}}
+{{--                        <h2 class="cs_fs_51 mb-0 wow fadeInRight" data-wow-duration="0.8s" data-wow-delay="0.25s">What People Think About Us</h2>--}}
+{{--                    </div>--}}
+{{--                    <div class="cs_pagination cs_style_2 cs_hide_lg"></div>--}}
+{{--                </div>--}}
+{{--                <div class="cs_height_90 cs_height_lg_50"></div>--}}
+{{--                <div class="cs_slider_container" data-autoplay="0" data-loop="1" data-speed="600" data-center="0" data-variable-width="0" data-slides-per-view="responsive" data-xs-slides="1" data-sm-slides="2" data-md-slides="2" data-lg-slides="3" data-add-slides="3">--}}
+{{--                    <div class="cs_slider_wrapper">--}}
+{{--                        <div class="cs_slide">--}}
+{{--                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">--}}
+{{--                                <div class="cs_testimonial_avatar cs_mb_42">--}}
+{{--                                    <img src="{{asset('frontOffice/img/nature/avatar_img_1.png')}} " alt="Avatar">--}}
+{{--                                    <div class="cs_testimonial_avatar_right">--}}
+{{--                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Angrew Bolar</h3>--}}
+{{--                                        <p class="mb-0 cs_accent_color">Volunteer</p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <blockquote class="cs_fs_18 cs_mb_45">The resources have been a tremendous help in making my lifestyle more eco-friendly. Plus, the campaigns are a fantastic way to get involved. Keep up the excellent work!</blockquote>--}}
+{{--                                <div class="cs_rating cs_accent_color" data-rating="5">--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <div class="cs_rating_percentage">--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="cs_slide">--}}
+{{--                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">--}}
+{{--                                <div class="cs_testimonial_avatar cs_mb_42">--}}
+{{--                                    <img src="{{asset('frontOffice/img/nature/avatar_img_2.png')}} " alt="Avatar">--}}
+{{--                                    <div class="cs_testimonial_avatar_right">--}}
+{{--                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Milisa Geui</h3>--}}
+{{--                                        <p class="mb-0 cs_accent_color">Volunteer</p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <blockquote class="cs_fs_18 cs_mb_45">I particularly appreciate the emphasis on practical tips for sustainable living. It's refreshing to find a place that not only highlights the issues but also provides solutions.</blockquote>--}}
+{{--                                <div class="cs_rating cs_accent_color" data-rating="5">--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <div class="cs_rating_percentage">--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="cs_slide">--}}
+{{--                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">--}}
+{{--                                <div class="cs_testimonial_avatar cs_mb_42">--}}
+{{--                                    <img src="{{asset('frontOffice/img/nature/avatar_img_3.png')}} " alt="Avatar">--}}
+{{--                                    <div class="cs_testimonial_avatar_right">--}}
+{{--                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Michaku</h3>--}}
+{{--                                        <p class="mb-0 cs_accent_color">Volunteer</p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <blockquote class="cs_fs_18 cs_mb_45">I love being part of a community that cares about the planet, and this website has been instrumental in connecting me with like-minded individuals. Thank you!</blockquote>--}}
+{{--                                <div class="cs_rating cs_accent_color" data-rating="5">--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <div class="cs_rating_percentage">--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="cs_slide">--}}
+{{--                            <div class="cs_testimonial cs_style_1 cs_shadow_1 cs_white_bg">--}}
+{{--                                <div class="cs_testimonial_avatar cs_mb_42">--}}
+{{--                                    <img src="{{asset('frontOffice/img/nature/avatar_img_2.png')}} " alt="Avatar">--}}
+{{--                                    <div class="cs_testimonial_avatar_right">--}}
+{{--                                        <h3 class="cs_fs_21 cs_semibold cs_mb_2">Milisa Geui</h3>--}}
+{{--                                        <p class="mb-0 cs_accent_color">Volunteer</p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <blockquote class="cs_fs_18 cs_mb_45">I particularly appreciate the emphasis on practical tips for sustainable living. It's refreshing to find a place that not only highlights the issues but also provides solutions.</blockquote>--}}
+{{--                                <div class="cs_rating cs_accent_color" data-rating="5">--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <i class="fa-regular fa-star"></i>--}}
+{{--                                    <div class="cs_rating_percentage">--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                        <i class="fa-solid fa-star fa-fw"></i>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="cs_slider_arrows cs_style_3 cs_type_1 cs_show_lg">--}}
+{{--                    <div class="cs_left_arrow rounded-circle cs_center">--}}
+{{--                        <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                            <path d="M0.292892 7.29289C-0.0976315 7.68342 -0.0976315 8.31658 0.292892 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928932C7.68054 0.538408 7.04738 0.538408 6.65685 0.928932L0.292892 7.29289ZM22 7L1 7V9L22 9V7Z" fill="currentColor"/>--}}
+{{--                        </svg>--}}
+{{--                    </div>--}}
+{{--                    <div class="cs_right_arrow rounded-circle cs_center">--}}
+{{--                        <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
+{{--                            <path d="M21.7071 8.70711C22.0976 8.31658 22.0976 7.68342 21.7071 7.29289L15.3431 0.928932C14.9526 0.538408 14.3195 0.538408 13.9289 0.928932C13.5384 1.31946 13.5384 1.95262 13.9289 2.34315L19.5858 8L13.9289 13.6569C13.5384 14.0474 13.5384 14.6805 13.9289 15.0711C14.3195 15.4616 14.9526 15.4616 15.3431 15.0711L21.7071 8.70711ZM0 9L21 9V7L0 7L0 9Z" fill="currentColor"/>--}}
+{{--                        </svg>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="cs_height_150 cs_height_lg_80"></div>--}}
+{{--    </section>--}}
     <!-- End Testimonial Section -->
     <!-- Start Team Section -->
     <section class="cs_shape_wrap">
@@ -645,10 +645,10 @@
             <div class="row cs_gap_y_50 cs_row_gap_60">
                 <div class="col-lg-6">
                     <div class="cs_team cs_style_1">
-                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/team_member_1.jpg')}} " alt=""></div>
+                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/hsine.jpg')}} " alt=""></div>
                         <div class="cs_team_right">
                             <p class="text-uppercase cs_accent_color cs_mb_1">CEO FOUNDER</p>
-                            <h3 class="cs_fs_38 cs_mb_18">Jhon Beboral</h3>
+                            <h3 class="cs_fs_38 cs_mb_18">Hsine Mtiraoui</h3>
                             <hr class="cs_mb_12">
                             <p class="cs_mb_20">Team component built to improve trust and culture within your.</p>
                             <div class="cs_team_social_list cs_heading_color">
@@ -661,10 +661,10 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="cs_team cs_style_1">
-                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/team_member_2.jpg')}} " alt=""></div>
+                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/firas.jpg')}} " alt=""></div>
                         <div class="cs_team_right">
                             <p class="text-uppercase cs_accent_color cs_mb_1">VOLUNTEER</p>
-                            <h3 class="cs_fs_38 cs_mb_18">Peter Dobar</h3>
+                            <h3 class="cs_fs_38 cs_mb_18">Firas Bessalahr</h3>
                             <hr class="cs_mb_12">
                             <p class="cs_mb_20">Team component built to improve trust and culture within your.</p>
                             <div class="cs_team_social_list cs_heading_color">
@@ -677,10 +677,10 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="cs_team cs_style_1">
-                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/team_member_3.jpg')}} " alt=""></div>
+                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/eya.jpg')}} " alt=""></div>
                         <div class="cs_team_right">
                             <p class="text-uppercase cs_accent_color cs_mb_1">MANAGER</p>
-                            <h3 class="cs_fs_38 cs_mb_18">Jubena Lili</h3>
+                            <h3 class="cs_fs_38 cs_mb_18">Eya Abaab</h3>
                             <hr class="cs_mb_12">
                             <p class="cs_mb_20">Team component built to improve trust and culture within your.</p>
                             <div class="cs_team_social_list cs_heading_color">
@@ -696,7 +696,23 @@
                         <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/team_member_4.jpg')}} " alt=""></div>
                         <div class="cs_team_right">
                             <p class="text-uppercase cs_accent_color cs_mb_1">VOLUNTEER</p>
-                            <h3 class="cs_fs_38 cs_mb_18">Zixan Bony</h3>
+                            <h3 class="cs_fs_38 cs_mb_18">Aziz Hamed</h3>
+                            <hr class="cs_mb_12">
+                            <p class="cs_mb_20">Team component built to improve trust and culture within your.</p>
+                            <div class="cs_team_social_list cs_heading_color">
+                                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="cs_team cs_style_1">
+                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/team_member_4.jpg')}} " alt=""></div>
+                        <div class="cs_team_right">
+                            <p class="text-uppercase cs_accent_color cs_mb_1">VOLUNTEER</p>
+                            <h3 class="cs_fs_38 cs_mb_18">Mehdi Belhaj Yahya</h3>
                             <hr class="cs_mb_12">
                             <p class="cs_mb_20">Team component built to improve trust and culture within your.</p>
                             <div class="cs_team_social_list cs_heading_color">
@@ -713,7 +729,7 @@
     </section>
     <!-- End Team Section -->
     <!-- Start CTA Section -->
-    <section class="cs_bg_filed text-center" data-src="{{asset('frontOffice/img/nature/cta_bg.jpg')}} ">
+    <section class="cs_bg_filed text-center" data-src="{{asset('frontOffice/img/nature/volunteer.jpg')}} ">
         <div class="cs_height_140 cs_height_lg_75"></div>
         <div class="container">
             <div class="row">

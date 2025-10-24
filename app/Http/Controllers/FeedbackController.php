@@ -11,6 +11,18 @@ class FeedbackController extends Controller
     // Remove the __construct() method entirely since we're using middleware in routes
 
     /**
+     * Display all feedback for admin dashboard.
+     */
+    public function adminIndex()
+    {
+        $feedback = Feedback::with(['user', 'event'])
+            ->latest()
+            ->paginate(20);
+
+        return view('dashboard.feedback.index', compact('feedback'));
+    }
+
+    /**
      * Get all feedback for an event (API).
      */
     public function index(Event $event)

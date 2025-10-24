@@ -7,6 +7,7 @@ use App\Http\Controllers\BackOffice\EventController;
 use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/admin', [DashboardController::class, 'home'])->name('back.home');
 Route::get('/admin/users', [UsersController::class, 'index'])->name('back.users.index');
+Route::get('/admin/feedback', [FeedbackController::class, 'adminIndex'])->name('back.feedback.index');
 
 Route::prefix('admin')->group(function () {
     Route::resource('resource', ResourceController::class);

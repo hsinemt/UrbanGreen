@@ -18,6 +18,33 @@
     </div>
 @endsection
 
+@section('content')
+    <div class="row gy-4">
+        <!-- Quick Access Buttons -->
+        <div class="col-12">
+            <div class="card h-100 p-0 radius-12">
+                <div class="card-body p-24">
+                    <h6 class="mb-20 fw-semibold">Quick Access</h6>
+                    <div class="row gy-3">
+                        <div class="col-md-6">
+                            <a href="{{ route('resource.index') }}" class="btn btn-primary w-100 py-3 d-flex align-items-center justify-content-center gap-2">
+                                <iconify-icon icon="solar:box-outline" class="icon text-xl"></iconify-icon>
+                                <span class="fw-semibold">View Resources</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ route('back.feedback.index') }}" class="btn btn-success w-100 py-3 d-flex align-items-center justify-content-center gap-2">
+                                <iconify-icon icon="solar:chat-round-line-outline" class="icon text-xl"></iconify-icon>
+                                <span class="fw-semibold">View Feedback</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
 {{--@section('content')--}}
 {{--    <div class="row gy-4">--}}
 {{--        <div class="col-xxl-8">--}}
