@@ -16,22 +16,22 @@ class ImageGenerationService
         // Try Freepik API first
         $freepikService = new FreepikImageService();
         $image = $freepikService->generateEventImage($eventName, $eventDescription, $location);
-        
+
         if ($image) {
             return $image;
         }
-        
+
         // Fallback: Try Unsplash API for a themed image
         $image = $this->generateFromUnsplash($eventName, $eventDescription, $location);
-        
+
         if ($image) {
             return $image;
         }
-        
+
         // Final fallback: Create a simple placeholder
         return $this->createPlaceholderImage($eventName);
     }
-    
+
     /**
      * Generate image from Unsplash as fallback
      */
@@ -40,28 +40,36 @@ class ImageGenerationService
         try {
             // Create search query based on event details
             $query = $this->createSearchQuery($eventName, $eventDescription, $location);
-            
-            $response = Http::timeout(10)->get('https://api.unsplash.com/search/photos', [
-                'query' => $query,
-                'per_page' => 1,
-                'orientation' => 'landscape'
-            ]);
-            
+
+            $response = Http::timeout(10)
+                ->withOptions([
+                    'verify' => config('app.ssl_verify', true)
+                ])
+                ->get('https://api.unsplash.com/search/photos', [
+                    'query' => $query,
+                    'per_page' => 1,
+                    'orientation' => 'landscape'
+                ]);
+
             if ($response->successful()) {
                 $data = $response->json();
-                
+
                 if (isset($data['results'][0]['urls']['regular'])) {
                     $imageUrl = $data['results'][0]['urls']['regular'];
-                    
+
                     // Download and store the image
-                    $imageResponse = Http::timeout(10)->get($imageUrl);
-                    
+                    $imageResponse = Http::timeout(10)
+                        ->withOptions([
+                            'verify' => config('app.ssl_verify', true)
+                        ])
+                        ->get($imageUrl);
+
                     if ($imageResponse->successful()) {
                         $imageContent = $imageResponse->body();
                         $filename = 'events/' . uniqid() . '_' . time() . '.jpg';
-                        
+
                         $stored = Storage::disk('public')->put($filename, $imageContent);
-                        
+
                         if ($stored) {
                             Log::info('Unsplash image stored successfully', ['filename' => $filename]);
                             return $filename;
@@ -69,14 +77,14 @@ class ImageGenerationService
                     }
                 }
             }
-            
+
             return null;
         } catch (\Exception $e) {
             Log::error('Unsplash API Error: ' . $e->getMessage());
             return null;
         }
     }
-    
+
     /**
      * Create a placeholder image
      */
@@ -85,22 +93,22 @@ class ImageGenerationService
         try {
             // Create a simple SVG placeholder
             $svg = $this->createSVGPlaceholder($eventName);
-            
+
             $filename = 'events/' . uniqid() . '_' . time() . '.svg';
             $stored = Storage::disk('public')->put($filename, $svg);
-            
+
             if ($stored) {
                 Log::info('Placeholder image created', ['filename' => $filename]);
                 return $filename;
             }
-            
+
             return null;
         } catch (\Exception $e) {
             Log::error('Placeholder creation error: ' . $e->getMessage());
             return null;
         }
     }
-    
+
     /**
      * Create SVG placeholder
      */
@@ -108,7 +116,7 @@ class ImageGenerationService
     {
         $colors = ['#28a745', '#007bff', '#6f42c1', '#fd7e14', '#20c997'];
         $color = $colors[array_rand($colors)];
-        
+
         return '<?xml version="1.0" encoding="UTF-8"?>
 <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
   <rect width="400" height="300" fill="' . $color . '" opacity="0.1"/>
@@ -121,28 +129,28 @@ class ImageGenerationService
   </text>
 </svg>';
     }
-    
+
     /**
      * Create search query for Unsplash
      */
     private function createSearchQuery($eventName, $eventDescription = null, $location = null)
     {
         $query = 'event';
-        
+
         if ($eventDescription) {
             $themes = $this->extractThemes($eventDescription);
             if (!empty($themes)) {
                 $query .= ' ' . implode(' ', $themes);
             }
         }
-        
+
         if ($location) {
             $query .= ' ' . $location;
         }
-        
+
         return $query;
     }
-    
+
     /**
      * Extract themes from description
      */
@@ -150,7 +158,7 @@ class ImageGenerationService
     {
         $themes = [];
         $description = strtolower($description);
-        
+
         $themeKeywords = [
             'nature' => ['green', 'eco', 'environment', 'sustainability', 'nature', 'climate', 'tree', 'forest'],
             'charity' => ['charity', 'donation', 'help', 'support', 'fundraising'],
@@ -161,7 +169,7 @@ class ImageGenerationService
             'art' => ['art', 'creative', 'design', 'culture', 'music'],
             'business' => ['business', 'networking', 'conference', 'meeting']
         ];
-        
+
         foreach ($themeKeywords as $theme => $keywords) {
             foreach ($keywords as $keyword) {
                 if (strpos($description, $keyword) !== false) {
@@ -170,7 +178,7 @@ class ImageGenerationService
                 }
             }
         }
-        
+
         return array_unique($themes);
     }
 }

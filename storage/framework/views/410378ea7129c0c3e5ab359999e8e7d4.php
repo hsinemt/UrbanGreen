@@ -1,6 +1,6 @@
-<footer class="cs_footer cs_style_1 cs_heading_bg cs_bg_filed" data-src="{{ asset('img/nature/footer_bg.jpg') }}">
+<footer class="cs_footer cs_style_1 cs_heading_bg cs_bg_filed" data-src="<?php echo e(asset('img/nature/footer_bg.jpg')); ?>">
   <div class="container">
-    <div class="cs_newsletter cs_style_2 cs_accent_bg cs_bg_filed" data-src="{{ asset('img/cta_bg.svg') }}">
+    <div class="cs_newsletter cs_style_2 cs_accent_bg cs_bg_filed" data-src="<?php echo e(asset('img/cta_bg.svg')); ?>">
       <div class="cs_newsletter_left">
         <h2 class="cs_fs_28 cs_mb_9 cs_semibold">Subscribe Our Newsletter</h2>
         <p class="mb-0 cs_heading_color">Join the style revolution and subscribe to our fashion shop</p>
@@ -26,7 +26,7 @@
       <div class="cs_footer_col">
         <div class="cs_footer_widget">
           <div class="cs_footer_text_widget">
-              <img src="{{ asset('frontOffice/img/logo.svg') }}" alt="Logo">
+              <img src="<?php echo e(asset('frontOffice/img/logo.svg')); ?>" alt="Logo">
             <p>We're committed to environmental awareness and action. Join us in making a difference.</p>
           </div>
           <div class="cs_social_btns cs_style_1">
@@ -49,11 +49,11 @@
         <div class="cs_footer_widget">
           <h2 class="cs_footer_widget_title cs_fs_21 cs_white_color cs_semibold cs_mb_32">Useful Links</h2>
           <ul class="cs_footer_widget_menu">
-            <li><a href="{{ route('home') }}">Home</a></li>
-            <li><a href="{{ route('about') }}">About</a></li>
-            <li><a href="{{ route('services.index') }}">Services</a></li>
-            <li><a href="{{ route('contact') }}">Donation</a></li>
-            <li><a href="{{ route('contact') }}">Contact</a></li>
+            <li><a href="<?php echo e(route('home')); ?>">Home</a></li>
+            <li><a href="<?php echo e(route('about')); ?>">About</a></li>
+            <li><a href="<?php echo e(route('services.index')); ?>">Services</a></li>
+            <li><a href="<?php echo e(route('contact')); ?>">Donation</a></li>
+            <li><a href="<?php echo e(route('contact')); ?>">Contact</a></li>
           </ul>
         </div>
       </div>
@@ -61,10 +61,10 @@
         <div class="cs_footer_widget">
           <h2 class="cs_footer_widget_title cs_fs_21 cs_white_color cs_semibold cs_mb_32">Services</h2>
           <ul class="cs_footer_widget_menu">
-            <li><a href="{{ route('services.show', ['slug' => 'eco-friendly-product']) }}">Eco Friendly Product</a></li>
-            <li><a href="{{ route('services.show', ['slug' => 'advocacy-and-campaign']) }}">Advocacy and Campaign</a></li>
-            <li><a href="{{ route('services.show', ['slug' => 'sustainable-gardening']) }}">Sustainable Gardening</a></li>
-            <li><a href="{{ route('services.show', ['slug' => 'wildlife-saving']) }}">Wildlife Saving</a></li>
+            <li><a href="<?php echo e(route('services.show', ['slug' => 'eco-friendly-product'])); ?>">Eco Friendly Product</a></li>
+            <li><a href="<?php echo e(route('services.show', ['slug' => 'advocacy-and-campaign'])); ?>">Advocacy and Campaign</a></li>
+            <li><a href="<?php echo e(route('services.show', ['slug' => 'sustainable-gardening'])); ?>">Sustainable Gardening</a></li>
+            <li><a href="<?php echo e(route('services.show', ['slug' => 'wildlife-saving'])); ?>">Wildlife Saving</a></li>
           </ul>
         </div>
       </div>
@@ -94,3 +94,4 @@
 <div class="cs_scrollup">
   <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 16 16"><path fill="currentColor" d="M7.5 13.022V14.5a.5.5 0 0 0 1 0v-1.478a4.886 4.886 0 0 0 2.775-8.486l-2.437-2.2a1.25 1.25 0 0 0-1.676 0l-2.437 2.2A4.886 4.886 0 0 0 7.5 13.022Zm3.105-7.744A3.886 3.886 0 0 1 8.5 12.015V7.501a.5.5 0 0 0-1 0v4.514a3.886 3.886 0 0 1-2.105-6.737l2.437-2.2a.25.25 0 0 1 .336 0l2.437 2.2Z"></path></svg>
 </div>
+<?php /**PATH E:\Education\Laravel\project\UrbanGreen\resources\views/frontOffice/partials/footer.blade.php ENDPATH**/ ?>

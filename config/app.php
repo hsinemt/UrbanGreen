@@ -107,6 +107,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | SSL Certificate Verification
+    |--------------------------------------------------------------------------
+    |
+    | This option controls whether SSL certificates should be verified when
+    | making HTTP requests. On Windows systems with SSL certificate issues,
+    | you can set this to false in your .env file (SSL_VERIFY=false).
+    | For production environments, always keep this as true.
+    |
+    */
+
+    'ssl_verify' => env('SSL_VERIFY', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Maintenance Mode Driver
     |--------------------------------------------------------------------------
     |

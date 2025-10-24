@@ -25,7 +25,7 @@ class WeatherService
         try {
             // First, get coordinates for the location
             $coordinates = $this->getCoordinates($location);
-            
+
             if (!$coordinates) {
                 return null;
             }
@@ -54,7 +54,7 @@ class WeatherService
     private function getCoordinates($location)
     {
         try {
-            $response = Http::timeout(10)->get($this->baseUrl . '/weather', [
+            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl . '/weather', [
                 'q' => $location,
                 'appid' => $this->apiKey,
                 'units' => 'metric'
@@ -83,7 +83,7 @@ class WeatherService
     private function getCurrentWeather($lat, $lon)
     {
         try {
-            $response = Http::timeout(10)->get($this->baseUrl . '/weather', [
+            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl . '/weather', [
                 'lat' => $lat,
                 'lon' => $lon,
                 'appid' => $this->apiKey,
@@ -108,7 +108,7 @@ class WeatherService
     private function getForecastWeather($lat, $lon, $targetDate)
     {
         try {
-            $response = Http::timeout(10)->get($this->baseUrl . '/forecast', [
+            $response = Http::withoutVerifying()->timeout(10)->get($this->baseUrl . '/forecast', [
                 'lat' => $lat,
                 'lon' => $lon,
                 'appid' => $this->apiKey,
@@ -117,10 +117,10 @@ class WeatherService
 
             if ($response->successful()) {
                 $data = $response->json();
-                
+
                 // Find the closest forecast to the target date
                 $closestForecast = $this->findClosestForecast($data['list'], $targetDate);
-                
+
                 if ($closestForecast) {
                     return $this->formatWeatherData($closestForecast);
                 }
@@ -208,7 +208,7 @@ class WeatherService
         ];
 
         $description = strtolower($description);
-        
+
         foreach ($emojis as $key => $emoji) {
             if (strpos($description, $key) !== false) {
                 return $emoji;

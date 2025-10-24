@@ -5,6 +5,7 @@ namespace App\Services;
 use Twilio\Rest\Client;
 use Twilio\Exceptions\RestException;
 use Illuminate\Support\Facades\Log;
+use Twilio\Http\CurlClient;
 
 class SmsService
 {
@@ -27,7 +28,14 @@ class SmsService
             throw new \Exception('Twilio credentials not configured properly');
         }
 
-        $this->client = new Client($sid, $token);
+        // Create a custom HTTP client with SSL verification disabled for local development
+        // WARNING: Only use this in development. In production, use proper SSL certificates.
+        $httpClient = new CurlClient([
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+
+        $this->client = new Client($sid, $token, null, null, $httpClient);
         $this->fromNumber = $from;
     }
 

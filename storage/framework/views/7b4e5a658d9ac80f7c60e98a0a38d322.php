@@ -3,69 +3,69 @@
         <div class="container">
             <div class="cs_main_header_in">
                 <div class="cs_main_header_left">
-                    <a class="cs_site_branding" href="{{ route('home') }}">
-                        <img src="{{ asset('frontOffice/img/logo.svg') }}" alt="Logo">
+                    <a class="cs_site_branding" href="<?php echo e(route('home')); ?>">
+                        <img src="<?php echo e(asset('frontOffice/img/logo.svg')); ?>" alt="Logo">
                     </a>
                 </div>
                 <div class="cs_main_header_center">
                     <div class="cs_nav">
                         <ul class="cs_nav_list">
                             <li>
-                                <a href="{{ route('home') }}">Home</a>
+                                <a href="<?php echo e(route('home')); ?>">Home</a>
                             </li>
-{{--                            <li><a href="{{ route('about') }}">About</a></li>--}}
+
                             <li class="menu-item-has-children">
                                 <a href="#">Pages</a>
                                 <ul>
-{{--                                    <li><a href="{{ route('services.index') }}">Services</a></li>--}}
-{{--                                    <li><a href="{{ route('services.show', ['slug' => 'service-details']) }}">Service Details</a></li>--}}
-{{--                                    <li><a href="{{ route('team') }}">Team</a></li>--}}
-{{--                                    <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>--}}
-{{--                                    <li><a href="{{ route('campaigns.show', ['slug' => 'campaign-details']) }}">Campaign Details</a></li>--}}
+
+
+
+
+
 
                                     <li class="menu-item-has-children">
-                                        <a href="{{ route('projects.index') }}">Projects</a>
+                                        <a href="<?php echo e(route('projects.index')); ?>">Projects</a>
                                         <ul>
-                                            <li><a href="{{ route('projects.index') }}">My Projects</a></li>
-                                            <li><a href="{{ route('projects.all') }}">All Projects</a></li>
+                                            <li><a href="<?php echo e(route('projects.index')); ?>">My Projects</a></li>
+                                            <li><a href="<?php echo e(route('projects.all')); ?>">All Projects</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="{{ route('events.index') }}">Events</a></li>
-                                    <li><a href="{{ route('activities.index') }}">Activities</a></li>
-                                    @auth
-                                        @if(Auth::user()->isPartner())
-                                            <li><a href="{{ route('competitions.index') }}">Competitions</a></li>
-                                        @endif
-                                    @endauth
-{{--                                    <li><a href="{{ route('projects.show', ['projet' => 1]) }}">Project Details</a></li>--}}
-{{--                                    <li><a href="{{ route('gallery') }}">Gallery</a></li>--}}
-                                    <li><a href="{{ route('greenspaces.page') }}">Green Spaces</a></li>
-                                    <li><a href="{{ route('plants.page') }}">Plants</a></li>
+                                    <li><a href="<?php echo e(route('events.index')); ?>">Events</a></li>
+                                    <li><a href="<?php echo e(route('activities.index')); ?>">Activities</a></li>
+                                    <?php if(auth()->guard()->check()): ?>
+                                        <?php if(Auth::user()->isPartner()): ?>
+                                            <li><a href="<?php echo e(route('competitions.index')); ?>">Competitions</a></li>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+
+                                    <li><a href="<?php echo e(route('greenspaces.page')); ?>">Green Spaces</a></li>
+                                    <li><a href="<?php echo e(route('plants.page')); ?>">Plants</a></li>
                                 </ul>
                             </li>
-{{--                            <li><a href="{{ route('campaigns.index') }}">Campaigns</a></li>--}}
-                            <li><a href="{{ route('currency.index') }}">Taux de Change</a></li>
-{{--                            <li class="menu-item-has-children">--}}
-{{--                                <a href="{{ route('products.index') }}">Shop</a>--}}
-{{--                                <ul>--}}
-{{--                                    <li><a href="{{ route('products.index') }}">Shop</a></li>--}}
-{{--                                    <li><a href="{{ route('products.show', ['slug' => 'product-details']) }}">Product Details</a></li>--}}
-{{--                                    <li><a href="{{ route('cart') }}">Cart</a></li>--}}
-{{--                                    <li><a href="{{ route('checkout') }}">Checkout</a></li>--}}
-{{--                                    <li><a href="{{ route('order.received') }}">Order Received</a></li>--}}
-{{--                                    <li><a href="{{ route('wishlist') }}">Wishlist</a></li>--}}
-{{--                                </ul>--}}
-{{--                            </li>--}}
-{{--                            <li><a href="{{ route('blog.index') }}">Blog</a></li>--}}
-                            <li><a href="{{ route('donations.index') }}">Donations</a></li>
-                            <li><a href="{{ route('chatbot.front.index') }}">AI Assistant</a></li>
-{{--                            <li><a href="{{ route('contact') }}">Contact</a></li>--}}
+
+                            <li><a href="<?php echo e(route('currency.index')); ?>">Taux de Change</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+                            <li><a href="<?php echo e(route('donations.index')); ?>">Donations</a></li>
+                            <li><a href="<?php echo e(route('chatbot.front.index')); ?>">AI Assistant</a></li>
+
                         </ul>
                     </div>
                 </div>
                 <div class="cs_main_header_right">
-                    @auth
-                    @if(Auth::user()->isAssociation())
+                    <?php if(auth()->guard()->check()): ?>
+                    <?php if(Auth::user()->isAssociation()): ?>
                         <!-- Notifications Bell -->
                         <div class="cs_notification_menu" style="margin-right: 15px;">
                             <button class="cs_btn cs_style_1 cs_btn_sm" id="notificationBtn" style="position: relative;">
@@ -92,30 +92,30 @@
                                 </div>
                             </div>
                         </div>
-                          @endif
+                          <?php endif; ?>
                         <div class="cs_user_menu">
                             <button class="cs_btn cs_style_1 cs_btn_sm cs_user_btn" id="userMenuBtn">
                                 <i class="fa-solid fa-user"></i>
-                                <span>{{ Auth::user()->full_name }}</span>
+                                <span><?php echo e(Auth::user()->full_name); ?></span>
                                 <i class="fa-solid fa-chevron-down cs_dropdown_arrow"></i>
                             </button>
                             <div class="cs_user_dropdown" id="userDropdown">
-                                <a href="{{ route('user.profile') }}" class="cs_dropdown_item">
+                                <a href="<?php echo e(route('user.profile')); ?>" class="cs_dropdown_item">
                                     <i class="fa-solid fa-user-circle"></i> My Profile
                                 </a>
-                                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                                    @csrf
+                                <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
+                                    <?php echo csrf_field(); ?>
                                     <button type="submit" class="cs_dropdown_item cs_logout_btn">
                                         <i class="fa-solid fa-right-from-bracket"></i> Logout
                                     </button>
                                 </form>
                             </div>
                         </div>
-                    @else
+                    <?php else: ?>
                         <button class="cs_btn cs_style_1 cs_btn_sm" id="loginBtn">
                             <i class="fa-solid fa-user"></i> Login
                         </button>
-                    @endauth
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -123,8 +123,8 @@
 </header>
 
 <!-- Login/Signup Modal -->
-@guest
-    <div class="cs_auth_modal {{ session('showLogin') || session('showSignup') || $errors->any() ? 'cs_active' : '' }}" id="authModal">
+<?php if(auth()->guard()->guest()): ?>
+    <div class="cs_auth_modal <?php echo e(session('showLogin') || session('showSignup') || $errors->any() ? 'cs_active' : ''); ?>" id="authModal">
         <div class="cs_auth_modal_overlay" id="modalOverlay"></div>
         <div class="cs_auth_modal_content">
             <button class="cs_auth_modal_close" id="closeModal">
@@ -133,33 +133,47 @@
 
             <div class="cs_auth_forms">
                 <!-- Login Form -->
-                <div class="cs_auth_form {{ session('showSignup') ? 'cs_hidden' : '' }}" id="loginForm">
+                <div class="cs_auth_form <?php echo e(session('showSignup') ? 'cs_hidden' : ''); ?>" id="loginForm">
                     <div class="cs_auth_header">
                         <h2 class="cs_fs_38 cs_semibold cs_mb_15">Welcome Back!</h2>
                         <p class="cs_mb_30">Sign in to continue your environmental journey</p>
                     </div>
 
-                    @if($errors->any() && session('showLogin'))
+                    <?php if($errors->any() && session('showLogin')): ?>
                         <div class="cs_alert cs_alert_danger cs_mb_20">
                             <ul class="cs_mb_0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
+                                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <li><?php echo e($error); ?></li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    <form action="{{ route('login') }}" method="POST">
-                        @csrf
+                    <form action="<?php echo e(route('login')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Email Address</label>
-                            <input type="email" name="email" class="cs_form_input @error('email') is-invalid @enderror"
-                                   placeholder="your@email.com" value="{{ old('email') }}" required>
+                            <input type="email" name="email" class="cs_form_input <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                   placeholder="your@email.com" value="<?php echo e(old('email')); ?>" required>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Password</label>
-                            <input type="password" name="password" class="cs_form_input @error('password') is-invalid @enderror"
+                            <input type="password" name="password" class="cs_form_input <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                    placeholder="Enter your password" required>
                         </div>
 
@@ -207,51 +221,79 @@
                 </div>
 
                 <!-- Signup Form -->
-                <div class="cs_auth_form {{ session('showSignup') || $errors->any() ? '' : 'cs_hidden' }}" id="signupForm">
+                <div class="cs_auth_form <?php echo e(session('showSignup') || $errors->any() ? '' : 'cs_hidden'); ?>" id="signupForm">
                     <div class="cs_auth_header">
                         <h2 class="cs_fs_38 cs_semibold cs_mb_15">Join Us Today!</h2>
                         <p class="cs_mb_30">Start making a difference for our planet</p>
                     </div>
 
-                    @if($errors->any() && session('showSignup'))
+                    <?php if($errors->any() && session('showSignup')): ?>
                         <div class="cs_alert cs_alert_danger cs_mb_20">
                             <ul class="cs_mb_0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
+                                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <li><?php echo e($error); ?></li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    <form action="{{ route('register') }}" method="POST">
-                        @csrf
+                    <form action="<?php echo e(route('register')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
 
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Full Name</label>
-                            <input type="text" name="full_name" class="cs_form_input @error('full_name') is-invalid @enderror"
-                                   placeholder="John Doe" value="{{ old('full_name') }}" required>
+                            <input type="text" name="full_name" class="cs_form_input <?php $__errorArgs = ['full_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                   placeholder="John Doe" value="<?php echo e(old('full_name')); ?>" required>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Email Address</label>
-                            <input type="email" name="email" class="cs_form_input @error('email') is-invalid @enderror"
-                                   placeholder="your@email.com" value="{{ old('email') }}" required>
+                            <input type="email" name="email" class="cs_form_input <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                   placeholder="your@email.com" value="<?php echo e(old('email')); ?>" required>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">I am a...</label>
-                            <select name="role" class="cs_form_input @error('role') is-invalid @enderror" required>
-                                <option value="" disabled {{ old('role') ? '' : 'selected' }}>Select your role</option>
-                                <option value="volunteer" {{ old('role') === 'volunteer' ? 'selected' : '' }}>Volunteer</option>
-                                <option value="association" {{ old('role') === 'association' ? 'selected' : '' }}>Association/NGO</option>
-                                <option value="partner" {{ old('role') === 'partner' ? 'selected' : '' }}>Partner Organization</option>
-                                <option value="supplier" {{ old('role') === 'supplier' ? 'selected' : '' }}>Supplier/Vendor</option>
+                            <select name="role" class="cs_form_input <?php $__errorArgs = ['role'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" required>
+                                <option value="" disabled <?php echo e(old('role') ? '' : 'selected'); ?>>Select your role</option>
+                                <option value="volunteer" <?php echo e(old('role') === 'volunteer' ? 'selected' : ''); ?>>Volunteer</option>
+                                <option value="association" <?php echo e(old('role') === 'association' ? 'selected' : ''); ?>>Association/NGO</option>
+                                <option value="partner" <?php echo e(old('role') === 'partner' ? 'selected' : ''); ?>>Partner Organization</option>
+                                <option value="supplier" <?php echo e(old('role') === 'supplier' ? 'selected' : ''); ?>>Supplier/Vendor</option>
                             </select>
                         </div>
 
                         <div class="cs_form_group cs_mb_20">
                             <label class="cs_form_label cs_fs_18 cs_semibold cs_mb_10">Password</label>
-                            <input type="password" name="password" class="cs_form_input @error('password') is-invalid @enderror"
+                            <input type="password" name="password" class="cs_form_input <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                    placeholder="Create a strong password" required>
                         </div>
 
@@ -305,7 +347,7 @@
             </div>
         </div>
     </div>
-@endguest
+<?php endif; ?>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -425,7 +467,7 @@
             console.log('Loading notifications...');
             document.getElementById('debugInfo').textContent = 'Loading notifications...';
 
-            fetch('{{ route("back.notifications.unread") }}')
+            fetch('<?php echo e(route("back.notifications.unread")); ?>')
                 .then(response => response.json())
                 .then(notifications => {
                     console.log('Notifications received:', notifications);
@@ -443,7 +485,7 @@
             console.log('Loading notification count...');
             document.getElementById('debugInfo').textContent = 'Loading count...';
 
-            fetch('{{ route("back.notifications.count") }}')
+            fetch('<?php echo e(route("back.notifications.count")); ?>')
                 .then(response => response.json())
                 .then(response => {
                     console.log('Notification count received:', response);
@@ -510,7 +552,7 @@
         }
 
         function markAsRead(notificationId) {
-            fetch(`{{ url('admin/notifications') }}/${notificationId}/read`, {
+            fetch(`<?php echo e(url('admin/notifications')); ?>/${notificationId}/read`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -524,7 +566,7 @@
         }
 
         function markAllAsRead() {
-            fetch('{{ route("back.notifications.read-all") }}', {
+            fetch('<?php echo e(route("back.notifications.read-all")); ?>', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -631,3 +673,4 @@
     color: #6c757d;
 }
 </style>
+<?php /**PATH E:\Education\Laravel\project\UrbanGreen\resources\views/frontOffice/partials/header.blade.php ENDPATH**/ ?>

@@ -168,6 +168,12 @@ Route::post('events/bulk-delete', [EventController::class, 'bulkDelete'])->name(
 Route::get('events/search/live', [EventController::class, 'search'])->name('events.search');
 Route::post('events/{id}/assign-activity', [App\Http\Controllers\EventController::class, 'assignActivity'])->name('events.assign-activity');
 Route::delete('events/{id}/remove-activity', [App\Http\Controllers\EventController::class, 'removeActivity'])->name('events.remove-activity');
+// Line 1: This expects $id parameter
+//Route::get('events/{id}/summary', [EventController::class, 'getSummary'])->name('events.summary');
+
+// Line 2: Duplicate - expects $event parameter
+Route::get('/events/{event}/summary', [EventController::class, 'getSummary'])->name('events.summary');
+
 
 // Activities Resource Routes
 use App\Http\Controllers\ActivityController;

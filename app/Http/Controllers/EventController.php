@@ -7,9 +7,29 @@ use App\Services\ImageGenerationService;
 use App\Services\WeatherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\CommentSummaryService;
 
 class EventController extends Controller
 {
+    /**
+     * Generate AI summary of event comments.
+     */
+    public function getSummary(Event $event, CommentSummaryService $summaryService)
+    {
+        try {
+            $summary = $summaryService->getSummary($event);
+
+            return response()->json([
+                'success' => true,
+                'data' => $summary
+            ], 200, ['Content-Type' => 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400, ['Content-Type' => 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+        }
+    }
     /**
      * Display a listing of the resource.
      */
@@ -258,4 +278,33 @@ class EventController extends Controller
 
         return redirect()->route('events.show', $event->id)->with('success', 'Activity removed successfully!');
     }
+
+    /**
+     * Get AI-generated summary for event comments.
+     */
+//    public function getSummary(string $id)
+//    {
+//        try {
+//            $event = Event::findOrFail($id);
+//
+//            $summaryService = new \App\Services\CommentSummaryService();
+//            $summary = $summaryService->getSummary($event);
+//
+//            // Return with proper UTF-8 encoding flags to handle any special characters
+//            return response()->json([
+//                'success' => true,
+//                'data' => $summary
+//            ], 200, ['Content-Type' => 'application/json; charset=utf-8'],
+//                JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
+//            );
+//
+//        } catch (\Exception $e) {
+//            return response()->json([
+//                'success' => false,
+//                'error' => $e->getMessage()
+//            ], 400, ['Content-Type' => 'application/json; charset=utf-8'],
+//                JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
+//            );
+//        }
+//    }
 }

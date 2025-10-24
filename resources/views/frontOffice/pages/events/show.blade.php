@@ -32,6 +32,7 @@
             color: #6c757d;
             font-size: 3rem;
         }
+
     .weather-info {
         background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
         border-radius: 10px;
@@ -169,7 +170,8 @@
                         <div class="row">
                             <div class="col-md-8">
                                 @if($event->image)
-                                    <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->name }}" class="event-image mb-4 rounded smooth-transition">
+{{--                                    <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->name }}" class="event-image mb-4 rounded smooth-transition">--}}
+                                    <img src="{{ asset('storage/events/' . basename($event->image)) }}" alt="{{ $event->name }}" class="event-image mb-4 rounded smooth-transition">
                                 @else
                                     <div class="event-placeholder mb-4 rounded">
                                         <i class="fas fa-image"></i>
@@ -291,6 +293,148 @@
                             </div>
                         @endif
 
+                        <!-- AI Comment Summary Section -->
+                        <div class="mt-4" id="summary-section">
+                            <h4 class="text-dark mb-3">
+                                <i class="fas fa-robot text-primary"></i> AI Comment Summary
+                            </h4>
+
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body">
+                                    @php
+                                        $mainCommentsCount = isset($topLevelFeedback) ? $topLevelFeedback->total() : 0;
+                                        $hasEnoughComments = $mainCommentsCount >= 5;
+                                    @endphp
+
+                                        <!-- Summary Button -->
+                                    <div id="summary-button-container" class="text-center py-3">
+                                        <button id="summarize-btn"
+                                                class="btn btn-primary btn-lg"
+                                                onclick="generateSummary()"
+                                            {{ !$hasEnoughComments ? 'disabled' : '' }}>
+                                            <i class="fas fa-magic me-2"></i> Summarize Comments
+                                        </button>
+
+                                        <p class="text-muted small mt-2 mb-0">
+                                            <i class="fas fa-info-circle"></i> Minimum 5 main comments required (replies not counted)
+                                        </p>
+
+                                        <p class="small mb-0 {{ $hasEnoughComments ? 'text-success' : 'text-warning' }}">
+                                            Current main comments: <strong>{{ $mainCommentsCount }}</strong>
+                                        </p>
+
+                                        @if(!$hasEnoughComments)
+                                            <div class="alert alert-warning mt-3 mb-0">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                Need at least 5 comments to generate summary
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Loading Spinner -->
+                                    <div id="summary-loading" class="text-center py-4" style="display: none;">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-3 text-muted"><strong>Analyzing comments with AI...</strong></p>
+                                        <p class="text-muted small">This typically takes 20-30 seconds. Please wait...</p>
+                                    </div>
+
+                                    <!-- Error Message -->
+                                    <div id="summary-error" class="alert alert-warning" style="display: none;">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <span id="error-message"></span>
+                                    </div>
+
+                                    <!-- Summary Display -->
+                                    <div id="summary-display" style="display: none;">
+                                        <!-- Summary Text -->
+                                        <div class="mb-4">
+                                            <h5 class="text-dark mb-3">
+                                                <i class="fas fa-file-alt text-primary"></i> Summary
+                                            </h5>
+                                            <p id="summary-text" class="text-muted"></p>
+                                        </div>
+
+                                        <!-- Sentiment Analysis -->
+                                        <div class="mb-4">
+                                            <h5 class="text-dark mb-3">
+                                                <i class="fas fa-chart-pie text-primary"></i> Sentiment Analysis
+                                            </h5>
+                                            <div class="mb-3">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span class="text-success"><i class="fas fa-smile"></i> Positive</span>
+                                                    <span id="positive-percent" class="fw-bold">0%</span>
+                                                </div>
+                                                <div class="progress" style="height: 20px;">
+                                                    <div id="positive-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span class="text-secondary"><i class="fas fa-meh"></i> Neutral</span>
+                                                    <span id="neutral-percent" class="fw-bold">0%</span>
+                                                </div>
+                                                <div class="progress" style="height: 20px;">
+                                                    <div id="neutral-bar" class="progress-bar bg-secondary" role="progressbar" style="width: 0%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span class="text-danger"><i class="fas fa-frown"></i> Negative</span>
+                                                    <span id="negative-percent" class="fw-bold">0%</span>
+                                                </div>
+                                                <div class="progress" style="height: 20px;">
+                                                    <div id="negative-bar" class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- What Worked Well -->
+                                        <div class="mb-4" id="praised-section">
+                                            <h5 class="text-dark mb-3">
+                                                <i class="fas fa-thumbs-up text-success"></i> What Worked Well
+                                            </h5>
+                                            <ul id="praised-list" class="list-unstyled">
+                                                <!-- Will be populated by JavaScript -->
+                                            </ul>
+                                        </div>
+
+                                        <!-- Suggestions -->
+                                        <div class="mb-4" id="suggestions-section">
+                                            <h5 class="text-dark mb-3">
+                                                <i class="fas fa-lightbulb text-warning"></i> Suggestions for Improvement
+                                            </h5>
+                                            <ul id="suggestions-list" class="list-unstyled">
+                                                <!-- Will be populated by JavaScript -->
+                                            </ul>
+                                        </div>
+
+                                        <!-- Footer Info -->
+                                        <div class="border-top pt-3">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-comments"></i>
+                                                        Based on <span id="comments-analyzed" class="fw-bold">0</span> comments
+                                                    </small>
+                                                </div>
+{{--                                                <div class="col-md-6 text-md-end">--}}
+{{--                                                    <small class="text-muted">--}}
+{{--                                                        <i class="fas fa-clock"></i>--}}
+{{--                                                        Last updated <span id="hours-ago" class="fw-bold">0</span> hours ago--}}
+{{--                                                    </small>--}}
+{{--                                                </div>--}}
+                                            </div>
+                                            <p class="text-muted small mt-2 mb-0">
+                                                <i class="fas fa-info-circle"></i> AI-generated summary - view comments below for full details
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Event Feedback Section (SINGLE VERSION - NOT DUPLICATED) -->
                         <div class="mt-4">
                             <h4 class="text-dark mb-3">
@@ -302,7 +446,9 @@
                                     <!-- Display All Feedbacks -->
                                     <h5 class="mb-4">
                                         All Feedback
-                                        @if(isset($topLevelFeedback))
+                                        @if(isset($topLevelFeedback) && isset($totalFeedbackCount))
+                                            <span class="text-muted">({{ $topLevelFeedback->total() }} main comments, {{ $totalFeedbackCount }} total including replies)</span>
+                                        @elseif(isset($topLevelFeedback))
                                             ({{ $topLevelFeedback->total() }})
                                         @endif
                                     </h5>
@@ -797,6 +943,159 @@
     </div>
 
     <script>
+        // AI Summary Generation
+        function generateSummary() {
+            const eventId = {{ $event->id }};
+            const summaryBtn = document.getElementById('summarize-btn');
+            const buttonContainer = document.getElementById('summary-button-container');
+            const loadingDiv = document.getElementById('summary-loading');
+            const errorDiv = document.getElementById('summary-error');
+            const displayDiv = document.getElementById('summary-display');
+
+            // Show loading state
+            buttonContainer.style.display = 'none';
+            errorDiv.style.display = 'none';
+            displayDiv.style.display = 'none';
+            loadingDiv.style.display = 'block';
+
+            // Create AbortController for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 35000); // 35 second timeout
+
+            // Make API call with timeout
+            fetch(`/events/${eventId}/summary`, {
+                signal: controller.signal
+            })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    return response.json();
+                })
+                .then(data => {
+                    loadingDiv.style.display = 'none';
+
+                    if (data.success) {
+                        displaySummary(data.data);
+                        displayDiv.style.display = 'block';
+                    } else {
+                        document.getElementById('error-message').textContent = data.message || 'Failed to generate summary';
+                        errorDiv.style.display = 'block';
+                        buttonContainer.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    clearTimeout(timeoutId);
+                    console.error('Error:', error);
+                    loadingDiv.style.display = 'none';
+                    errorDiv.style.display = 'block';
+                    buttonContainer.style.display = 'block';
+
+                    if (error.name === 'AbortError') {
+                        document.getElementById('error-message').textContent = 'Request timed out. Please try again or check your connection.';
+                    } else {
+                        document.getElementById('error-message').textContent = 'Failed to generate summary. Please try again.';
+                    }
+                });
+        }
+
+
+        function displaySummary(data) {
+            // Validate data structure
+            if (!data || typeof data !== 'object') {
+                console.error('Invalid data structure', data);
+                document.getElementById('error-message').textContent = 'Invalid response format';
+                document.getElementById('summary-error').style.display = 'block';
+                return;
+            }
+
+            // Summary text with fallback
+            const summaryText = data.summary || 'No summary available';
+            const summaryTextElement = document.getElementById('summary-text');
+            if (summaryTextElement) {
+                summaryTextElement.textContent = summaryText;
+            }
+
+            // Safely access sentiment data
+            const sentiment = data.sentiment || {};
+            const positive = sentiment.positive || 0;
+            const neutral = sentiment.neutral || 0;
+            const negative = sentiment.negative || 0;
+
+            // Update sentiment bars with null checks
+            const positivePercent = document.getElementById('positive-percent');
+            const positiveBar = document.getElementById('positive-bar');
+            if (positivePercent && positiveBar) {
+                positivePercent.textContent = positive + '%';
+                positiveBar.style.width = positive + '%';
+            }
+
+            const neutralPercent = document.getElementById('neutral-percent');
+            const neutralBar = document.getElementById('neutral-bar');
+            if (neutralPercent && neutralBar) {
+                neutralPercent.textContent = neutral + '%';
+                neutralBar.style.width = neutral + '%';
+            }
+
+            const negativePercent = document.getElementById('negative-percent');
+            const negativeBar = document.getElementById('negative-bar');
+            if (negativePercent && negativeBar) {
+                negativePercent.textContent = negative + '%';
+                negativeBar.style.width = negative + '%';
+            }
+
+            // What worked well
+            const praisedList = document.getElementById('praised-list');
+            const praisedSection = document.getElementById('praised-section');
+            if (praisedList && praisedSection) {
+                praisedList.innerHTML = '';
+                const praisedItems = data.praised || [];
+
+                if (praisedItems.length > 0) {
+                    praisedItems.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'mb-2';
+                        li.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i>${item}`;
+                        praisedList.appendChild(li);
+                    });
+                    praisedSection.style.display = 'block';
+                } else {
+                    praisedSection.style.display = 'none';
+                }
+            }
+
+            // Suggestions
+            const suggestionsList = document.getElementById('suggestions-list');
+            const suggestionsSection = document.getElementById('suggestions-section');
+            if (suggestionsList && suggestionsSection) {
+                suggestionsList.innerHTML = '';
+                const suggestionsItems = data.suggestions || [];
+
+                if (suggestionsItems.length > 0) {
+                    suggestionsItems.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'mb-2';
+                        li.innerHTML = `<i class="fas fa-arrow-right text-warning me-2"></i>${item}`;
+                        suggestionsList.appendChild(li);
+                    });
+                    suggestionsSection.style.display = 'block';
+                } else {
+                    suggestionsSection.style.display = 'none';
+                }
+            }
+
+            // Footer info with safe defaults
+            const commentsAnalyzed = document.getElementById('comments-analyzed');
+            if (commentsAnalyzed) {
+                commentsAnalyzed.textContent = data.total_comments_analyzed || 0;
+            }
+
+            const hoursAgo = document.getElementById('hours-ago');
+            if (hoursAgo) {
+                hoursAgo.textContent = data.hours_ago || 0;
+            }
+        }
+
+
+
         function toggleReply(feedbackId) {
             const replyForm = document.getElementById('reply-form-' + feedbackId);
             if (replyForm.style.display === 'none' || replyForm.style.display === '') {

@@ -75,6 +75,14 @@ class Event extends Model
     }
 
     /**
+     * Get the summary for this event.
+     */
+    public function summary()
+    {
+        return $this->hasOne(EventSummary::class);
+    }
+
+    /**
      * Get the total number of resources for this event.
      */
     public function getTotalResourcesAttribute()
