@@ -18,7 +18,7 @@ env:
   PHP_VERSION: '8.3.6'
   NODE_VERSION: '20'
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: hsinemt/urbangreen
 
 # ========================================
 # Jobs
