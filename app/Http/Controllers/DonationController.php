@@ -7,9 +7,26 @@ use App\Models\Donation;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
+use Stripe\HttpClient\CurlClient;
+use Stripe\ApiRequestor;
 
 class DonationController extends Controller
 {
+    /**
+     * Configure Stripe to skip SSL verification
+     */
+    private function configureStripeSSL()
+    {
+        // Create a CurlClient with SSL verification disabled
+        $httpClient = new CurlClient([
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ]);
+
+        // Set the custom HTTP client globally
+        ApiRequestor::setHttpClient($httpClient);
+    }
+
     /**
      * Display a listing of donations.
      */
@@ -98,6 +115,9 @@ class DonationController extends Controller
             'wallet_id' => 'required|exists:wallets,id',
         ]);
 
+        // Configure Stripe to skip SSL verification
+        $this->configureStripeSSL();
+
         $stripe = new StripeClient(config('services.stripe.secret'));
 
         // Stripe ne supporte pas TND. On convertit vers EUR pour le paiement.
@@ -145,6 +165,9 @@ class DonationController extends Controller
         if (! $sessionId) {
             return redirect()->route('donations.index')->with('error', 'Session Stripe introuvable.');
         }
+
+        // Configure Stripe to skip SSL verification
+        $this->configureStripeSSL();
 
         $stripe = new StripeClient(config('services.stripe.secret'));
         $session = $stripe->checkout->sessions->retrieve($sessionId, ['expand' => ['payment_intent']]);

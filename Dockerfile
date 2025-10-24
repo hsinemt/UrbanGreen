@@ -24,11 +24,19 @@ RUN apk add --no-cache \
     libjpeg-turbo-dev \
     freetype-dev \
     icu-dev \
+    # PDF processing dependencies
+    poppler-utils \
+    ghostscript \
+    imagemagick \
+    imagemagick-dev \
     # Database extensions
     mysql-client \
     # Redis support
     && pecl install redis \
     && docker-php-ext-enable redis \
+    # Install imagick for PDF manipulation
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     # Install PHP extensions
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
@@ -64,9 +72,9 @@ RUN composer install \
 COPY . .
 
 # Run Laravel optimization commands
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+#RUN php artisan config:cache \
+#    && php artisan route:cache \
+#    && php artisan view:cache
 
 # ========================================
 # Stage 2: Production Stage
@@ -88,9 +96,13 @@ RUN apk add --no-cache \
     icu-libs \
     mysql-client \
     supervisor \
+    # PDF runtime dependencies
+    poppler-utils \
+    ghostscript \
+    imagemagick \
     && rm -rf /tmp/* /var/cache/apk/*
 
-# Copy PHP extensions from builder stage (including Redis and all other extensions)
+# Copy PHP extensions from builder stage (including Redis, Imagick, and all other extensions)
 COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
 COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
@@ -140,14 +152,12 @@ RUN echo '#!/bin/sh' > /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
 
 # Switch to non-root user for security
-USER www-data
+#USER www-data
 
 # Expose PHP-FPM port
 EXPOSE 9000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-    CMD php artisan inspire || exit 1
+
 
 # Start the application
 CMD ["/usr/local/bin/start.sh"]

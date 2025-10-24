@@ -693,7 +693,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="cs_team cs_style_1">
-                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/team_member_4.jpg')}} " alt=""></div>
+                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/aziz.jpg')}} " alt=""></div>
                         <div class="cs_team_right">
                             <p class="text-uppercase cs_accent_color cs_mb_1">VOLUNTEER</p>
                             <h3 class="cs_fs_38 cs_mb_18">Aziz Hamed</h3>
@@ -709,7 +709,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="cs_team cs_style_1">
-                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/team_member_4.jpg')}} " alt=""></div>
+                        <div class="cs_team_thumb"><img src="{{asset('frontOffice/img/nature/mehdi.jpg')}} " alt=""></div>
                         <div class="cs_team_right">
                             <p class="text-uppercase cs_accent_color cs_mb_1">VOLUNTEER</p>
                             <h3 class="cs_fs_38 cs_mb_18">Mehdi Belhaj Yahya</h3>

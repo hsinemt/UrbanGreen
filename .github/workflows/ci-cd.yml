@@ -35,11 +35,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Install system dependencies for PDF processing
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            poppler-utils \
+            ghostscript \
+            libpoppler-cpp-dev \
+            libpoppler-glib-dev
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          extensions: pdo, sqlite, pdo_sqlite, mbstring, xml, ctype, json, tokenizer, bcmath
+          extensions: pdo, sqlite, pdo_sqlite, mbstring, xml, ctype, json, tokenizer, bcmath, gd, imagick
           coverage: xdebug
 
       - name: Get Composer cache directory

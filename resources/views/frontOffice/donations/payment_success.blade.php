@@ -32,7 +32,7 @@
             @if($donation->wallet)
             <p><strong>Wallet:</strong> {{ $donation->wallet->name }} ({{ $donation->wallet->event->name ?? 'N/A' }})</p>
             @endif
-            <p><strong>ID Paiement:</strong> {{ $session->payment_intent ?? 'N/A' }}</p>
+{{--            <p><strong>ID Paiement:</strong> {{ $session->payment_intent ?? 'N/A' }}</p>--}}
           </div>
 
           <div class="mt-4">

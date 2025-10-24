@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Competition;
-use App\Models\Notification;
 use App\Models\Projet;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CompetitionInviteMail;
 use Illuminate\Support\Facades\Http;
+use App\Models\Notification;
 
 class CompetitionController extends Controller
 {
@@ -24,17 +26,15 @@ class CompetitionController extends Controller
             $query->where('projet_id', $projectId);
         }
         if ($search = $request->get('q')) {
-            $query->where(function ($q) use ($search) {
+            $query->where(function($q) use ($search) {
                 $q->where('reward', 'like', "%$search%")
                     ->orWhere('description', 'like', "%$search%");
             });
         }
 
         $competitions = $query->latest()->paginate(10);
-
         return view('frontOffice.pages.competitions.index', compact('competitions'));
     }
-
     protected function createNotification($userIds, $data)
     {
         foreach ($userIds as $userId) {
@@ -47,19 +47,17 @@ class CompetitionController extends Controller
             ]);
         }
     }
-
     public function create()
     {
-        if (! Auth::check() || ! Auth::user()->isPartner()) {
+        if (!Auth::check() || !Auth::user()->isPartner()) {
             abort(403);
         }
         // Only projects created by this partner
         $projects = Projet::where('user_id', Auth::id())->get();
         // Associations to pick from
         $associations = User::where('role', User::ROLE_ASSOCIATION)->get();
-
         return view('frontOffice.pages.competitions.form', [
-            'competition' => new Competition,
+            'competition' => new Competition(),
             'projects' => $projects,
             'associations' => $associations,
         ]);
@@ -67,7 +65,7 @@ class CompetitionController extends Controller
 
     public function store(Request $request)
     {
-        if (! Auth::check() || ! Auth::user()->isPartner()) {
+        if (!Auth::check() || !Auth::user()->isPartner()) {
             abort(403);
         }
         $validated = $request->validate([
@@ -93,19 +91,21 @@ class CompetitionController extends Controller
             $validated['association_ids'],
             [
                 'title' => 'Nouvelle compétition',
-                'message' => 'Vous avez été ajouté à la compétition "'.$competition->name.'"',
-                'competition_id' => $competition->id,
+                'message' => 'Vous avez été ajouté à la compétition "' . $competition->name . '"',
+                'competition_id' => $competition->id
             ]
         );
         // Send email invites via Brevo HTTP API (batch)
         try {
             $associations = User::whereIn('id', $validated['association_ids'])->get();
-            $recipients = $associations->map(fn ($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
-            if (! empty($recipients)) {
+            $recipients = $associations->map(fn($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
+
+            if (!empty($recipients)) {
                 $subject = 'Competition Invitation';
                 $projectName = optional($competition->project)->name;
-                $html = "<p>you are now officially participating in the competition '".e($projectName)."' , we are happy to welcome you</p>";
-                Http::withHeaders([
+                $html = "<p>you are now officially participating in the competition '" . e($projectName) . "' , we are happy to welcome you</p>";
+
+                Http::withoutVerifying()->withHeaders([
                     'api-key' => env('BREVO_API_KEY'),
                     'accept' => 'application/json',
                     'content-type' => 'application/json',
@@ -117,8 +117,9 @@ class CompetitionController extends Controller
                 ]);
             }
         } catch (\Throwable $e) {
-            // Optionally log error
+            logger()->error('Brevo email failed: ' . $e->getMessage());
         }
+
 
         return redirect()->route('competitions.index')->with('success', 'Competition created successfully.');
     }
@@ -126,24 +127,22 @@ class CompetitionController extends Controller
     public function show(Competition $competition)
     {
         $competition->load(['partner', 'project', 'associations']);
-
         return view('frontOffice.pages.competitions.show', compact('competition'));
     }
 
     public function edit(Competition $competition)
     {
-        if (! Auth::check() || ! Auth::user()->isPartner() || $competition->partner_id !== Auth::id()) {
+        if (!Auth::check() || !Auth::user()->isPartner() || $competition->partner_id !== Auth::id()) {
             abort(403);
         }
         $projects = Projet::where('user_id', Auth::id())->get();
         $associations = User::where('role', User::ROLE_ASSOCIATION)->get();
-
         return view('frontOffice.pages.competitions.form', compact('competition', 'projects', 'associations'));
     }
 
     public function update(Request $request, Competition $competition)
     {
-        if (! Auth::check() || ! Auth::user()->isPartner() || $competition->partner_id !== Auth::id()) {
+        if (!Auth::check() || !Auth::user()->isPartner() || $competition->partner_id !== Auth::id()) {
             abort(403);
         }
         $validated = $request->validate([
@@ -167,17 +166,16 @@ class CompetitionController extends Controller
             $validated['association_ids'],
             [
                 'title' => 'Compétition mise à jour',
-                'message' => 'La compétition "'.$competition->name.'" a été mise à jour',
-                'competition_id' => $competition->id,
+                'message' => 'La compétition "' . $competition->name . '" a été mise à jour',
+                'competition_id' => $competition->id
             ]
         );
-
         return redirect()->route('competitions.index')->with('success', 'Competition updated successfully.');
     }
 
     public function destroy(Competition $competition)
     {
-        if (! Auth::check() || ! Auth::user()->isPartner() || $competition->partner_id !== Auth::id()) {
+        if (!Auth::check() || !Auth::user()->isPartner() || $competition->partner_id !== Auth::id()) {
             abort(403);
         }
         $competition->delete();
@@ -185,11 +183,10 @@ class CompetitionController extends Controller
             $competition->associations->pluck('id')->toArray(),
             [
                 'title' => 'Compétition supprimée',
-                'message' => 'La compétition "'.$competition->name.'" a été supprimée',
-                'competition_id' => $competition->id,
+                'message' => 'La compétition "' . $competition->name . '" a été supprimée',
+                'competition_id' => $competition->id
             ]
         );
-
         return redirect()->route('competitions.index')->with('success', 'Competition deleted successfully.');
     }
 
@@ -208,7 +205,7 @@ class CompetitionController extends Controller
         }
 
         if ($search = $request->get('q')) {
-            $query->where(function ($q) use ($search) {
+            $query->where(function($q) use ($search) {
                 $q->where('reward', 'like', "%$search%")
                     ->orWhere('description', 'like', "%$search%");
             });
@@ -238,7 +235,7 @@ class CompetitionController extends Controller
 
     public function dashboardCreate()
     {
-        $competition = new Competition;
+        $competition = new Competition();
         $projects = Projet::all();
         $partners = User::where('role', User::ROLE_PARTNER)->get();
         $associations = User::where('role', User::ROLE_ASSOCIATION)->get();
@@ -269,11 +266,11 @@ class CompetitionController extends Controller
         // Send email invites via Brevo HTTP API (batch)
         try {
             $associations = User::whereIn('id', $validated['association_ids'])->get();
-            $recipients = $associations->map(fn ($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
-            if (! empty($recipients)) {
+            $recipients = $associations->map(fn($u) => ['email' => $u->email, 'name' => $u->name])->values()->all();
+            if (!empty($recipients)) {
                 $subject = 'Competition Invitation';
                 $projectName = optional($competition->project)->name;
-                $html = "<p>you are now officially participating in the competition '".e($projectName)."' , we are happy to welcome you</p>";
+                $html = "<p>you are now officially participating in the competition '" . e($projectName) . "' , we are happy to welcome you</p>";
                 Http::withHeaders([
                     'api-key' => env('BREVO_API_KEY'),
                     'accept' => 'application/json',
@@ -295,7 +292,6 @@ class CompetitionController extends Controller
     public function dashboardShow(Competition $competition)
     {
         $competition->load(['partner', 'project', 'associations']);
-
         return view('dashboard.components.competitions.show', compact('competition'));
     }
 
@@ -334,7 +330,8 @@ class CompetitionController extends Controller
     public function dashboardDestroy(Competition $competition)
     {
         $competition->delete();
-
         return redirect()->route('back.competitions.index')->with('success', 'Competition deleted successfully.');
     }
 }
+
+
